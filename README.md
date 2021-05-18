@@ -36,7 +36,7 @@ npm install
 node enrollUser.js
 ```
 
-然后可以参考(商业票据教程)[https://hyperledger-fabric.readthedocs.io/zh_CN/release-2.2/tutorial/commercial_paper.html]上的方式运行样例程序调用合约。
+然后可以参考[商业票据教程](https://hyperledger-fabric.readthedocs.io/zh_CN/release-2.2/tutorial/commercial_paper.html)上的方式运行样例程序调用合约。
 
 自己修改链码中的合约后，只需进入 `darkpool_dev/contract` 目录，再次执行：
 
