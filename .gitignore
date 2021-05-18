@@ -1,1 +1,5 @@
-.vscode/
+ver
+**/.vscode
+**/gateway/*
+**/package-lock.json
+**/node_modules
