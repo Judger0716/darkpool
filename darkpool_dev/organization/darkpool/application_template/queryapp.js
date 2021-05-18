@@ -20,8 +20,9 @@
 const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
+const { exit } = require('process');
 
-const username = "balaji"
+const username = "wanweitao"
 
 // Main program function
 async function main() {
@@ -63,12 +64,22 @@ async function main() {
         // Get addressability to commercial paper contract
         console.log('Use org.papernet.commercialpaper smart contract.');
 
-        const contract = await network.getContract('papercontract', 'org.papernet.commercialpaper');
+        const contract = await network.getContract('contract', 'org.papernet.commercialpaper');
 
         // queries - commercial paper
         console.log('-----------------------------------------------------------------------------------------');
-        console.log('****** Submitting commercial paper queries ****** \n\n ');
+        console.log('****** Submitting token queries ****** \n\n ');
 
+
+        let queryResponse = await contract.evaluateTransaction('Symbol');
+        console.log(queryResponse)
+        let json = JSON.parse(queryResponse.toString());
+        console.log(json);
+        console.log('\n\n');
+        console.log('\n  Symbol query complete.');
+        console.log('-----------------------------------------------------------------------------------------\n\n');
+
+        /*
 
         // 1 asset history
         console.log('1. Query Commercial Paper History....');
@@ -129,6 +140,8 @@ async function main() {
 
         console.log('\n  Named query by "value" complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
+
+        */
     } catch (error) {
 
         console.log(`Error processing transaction. ${error}`);
