@@ -2,9 +2,9 @@
   "name": "nodejs",
   "version": "1.0.0",
   "description": "",
-  "main": "buy.js",
+  "main": "issue.js",
   "scripts": {
-    "test": "rm -rf _idwallet && node addToWallet.js && node buy.js"
+    "test": "rm -rf _idwallet && node addToWallet.js && node issue.js"
   },
   "keywords": [],
   "author": "",

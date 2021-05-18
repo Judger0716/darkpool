@@ -15,22 +15,22 @@ const path = require('path');
 async function main() {
     try {
         // load the network configuration
-        let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/connection-org1.yaml', 'utf8'));
+        let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/connection-org2.yaml', 'utf8'));
 
         // Create a new CA client for interacting with the CA.
-        const caInfo = connectionProfile.certificateAuthorities['ca.org1.example.com'];
+        const caInfo = connectionProfile.certificateAuthorities['ca.org2.example.com'];
         const caTLSCACerts = caInfo.tlsCACerts.pem;
         const ca = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
 
         // Create a new file system based wallet for managing identities.
-        const walletPath = path.join(process.cwd(), '../identity/user/balaji/wallet');
+        const walletPath = path.join(process.cwd(), '../identity/user/isabella/wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
 
         // Check to see if we've already enrolled the admin user.
-        const userExists = await wallet.get('balaji');
+        const userExists = await wallet.get('isabella');
         if (userExists) {
-            console.log('An identity for the client user "balaji" already exists in the wallet');
+            console.log('An identity for the client user "user1" already exists in the wallet');
             return;
         }
 
@@ -41,14 +41,14 @@ async function main() {
                 certificate: enrollment.certificate,
                 privateKey: enrollment.key.toBytes(),
             },
-            mspId: 'Org1MSP',
+            mspId: 'Org2MSP',
             type: 'X.509',
         };
-        await wallet.put('balaji', x509Identity);
-        console.log('Successfully enrolled client user "balaji" and imported it into the wallet');
+        await wallet.put('isabella', x509Identity);
+        console.log('Successfully enrolled client user "isabella" and imported it into the wallet');
 
     } catch (error) {
-        console.error(`Failed to enroll client user "balaji": ${error}`);
+        console.error(`Failed to enroll client user "isabella": ${error}`);
         process.exit(1);
     }
 }
