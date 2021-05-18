@@ -2,9 +2,9 @@
 
 ## 介绍
 
-我们需要开发的内容都在 `darkpool_dev` 目录下，其中 `contract` 是链码，`organization` 是两个组织的配置文件以及客户端文件。
+我们需要开发的内容都在 `darkpool_dev` 目录下，根目录下的其余文件夹皆是依赖文件，可以先不用管；`darkpool_dev` 目录中 `contract` 是链码，`organization` 是两个组织的配置文件以及客户端文件。
 
-我们计划将所有的合约放在一个链码里面，虽然目前链码目录下还只有一个合约。链码目录下的 `install_chaincode.sh` 会自动安装和目录同名的链码到两个组织的 peer 节点上。
+我们计划将所有的合约放在一个链码里面，目前链码目录下有两个合约，他们通过 `index.js` 文件被引入。链码目录下的 `install_chaincode.sh` 会自动安装和目录同名的链码到两个组织的 peer 节点上。
 
 `organization` 目录下的两个组织：`darkpool` 对应的是组织2，`token` 对应的是组织1。
 

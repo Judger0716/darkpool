@@ -21,6 +21,7 @@ cd "${DIR}/../test-network/"
 docker kill cliDarkPool cliToken logspout || true
 ./network.sh down
 
+rm -rf ${DIR}/contract/ver
 rm -rf ${DIR}/organization/darkpool/gateway/connection-org1.yaml ${DIR}/organization/token/gateway/connection-org2.yaml
 rm -rf ${DIR}/organization/darkpool/identity ${DIR}/organization/token/identity
 
