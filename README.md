@@ -24,7 +24,7 @@
 ./install_chaincode.sh
 ```
 
-来安装链码。然后进入两个组织的 `application` 目录下，首先执行：、
+来安装链码。然后进入两个组织的 `application` 目录下，首先执行：
 
 ```shell
 npm install
