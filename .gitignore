@@ -1,6 +1,9 @@
 ver
+cp.tar.gz
+**/identity
+**/.gradle
 **/.vscode
-**/gateway/connection-org*.yaml
 **/package-lock.json
 **/node_modules
-
+**/gateway/connection-org1.yaml
+**/gateway/connection-org2.yaml
