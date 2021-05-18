@@ -17,7 +17,10 @@ const decimalsKey = 'decimals';
 const totalSupplyKey = 'totalSupply';
 
 class TokenERC20Contract extends Contract {
-
+    constructor() {
+        // Unique namespace when multiple contracts per chaincode file
+        super('Token');
+    }
     /**
      * Return the name of the token - e.g. "MyToken".
      * The original function name is `name` in ERC20 specification.
