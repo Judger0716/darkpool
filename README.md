@@ -6,7 +6,7 @@
 
 我们计划将所有的合约放在一个链码里面，目前链码目录下有两个合约，他们通过 `index.js` 文件被引入。链码目录下的 `install_chaincode.sh` 会自动安装和目录同名的链码到两个组织的 peer 节点上。
 
-`organization` 目录下的两个组织：`darkpool` 对应的是组织2，`token` 对应的是组织1。
+`organization` 目录下的两个组织：`darkpool` 对应的是组织1(Org1)，`token` 对应的是组织2(Org2)。
 
 每个组织的目录下都有 `application`，我们主要需要参考其中的 `queryapp.js` 来了解以特定用户身份调用合约的方式，以及参考 `enrollUser.js` 来添加新用户。
 
