@@ -62,20 +62,23 @@ async function main() {
         const network = await gateway.getNetwork('mychannel');
 
         // Get addressability to commercial paper contract
-        console.log('Use org.papernet.commercialpaper smart contract.');
+        console.log('Use Token smart contract.');
 
-        const contract = await network.getContract('contract', 'org.papernet.commercialpaper');
+        const contract = await network.getContract('contract', 'Token');
 
         // queries - commercial paper
         console.log('-----------------------------------------------------------------------------------------');
         console.log('****** Submitting token queries ****** \n\n ');
 
 
-        let queryResponse = await contract.evaluateTransaction('Symbol');
-        console.log(queryResponse)
-        let json = JSON.parse(queryResponse.toString());
-        console.log(json);
-        console.log('\n\n');
+        let queryResponse = await contract.submitTransaction('SetOption', 'Dogecoin', 'DOGE', '6');
+        console.log(queryResponse.toString());
+        console.log('\n  SetOption query complete.');
+        console.log('-----------------------------------------------------------------------------------------\n\n');
+
+
+        let queryResponse2 = await contract.evaluateTransaction('Symbol');
+        console.log(queryResponse2.toString());
         console.log('\n  Symbol query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
