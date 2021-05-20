@@ -7,7 +7,7 @@
 'use strict';
 
 // Utility class for ledger state
-const State = require('./../ledger-api/state.js');
+const State = require('../ledger-api/state.js');
 
 // Enumerate commercial paper state values
 const cpState = {

@@ -7,7 +7,7 @@
 'use strict';
 
 // Utility class for collections of ledger states --  a state list
-const StateList = require('./../ledger-api/statelist.js');
+const StateList = require('../ledger-api/statelist.js');
 
 const CommercialPaper = require('./paper.js');
 

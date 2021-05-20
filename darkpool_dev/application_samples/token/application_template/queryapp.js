@@ -64,7 +64,7 @@ async function main() {
         // Get addressability to commercial paper contract
         console.log('Use Token smart contract.');
 
-        const contract = await network.getContract('contract', 'Token');
+        const contract = await network.getContract('tokenContract', 'Token');
 
         // queries - commercial paper
         console.log('-----------------------------------------------------------------------------------------');
@@ -81,8 +81,13 @@ async function main() {
         console.log(queryResponse2.toString());
         console.log('\n  Symbol query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
+     /*
+        let queryResponse3 = await contract.evaluateTransaction('ClientAccountID');
+        console.log(queryResponse3.toString());
+        console.log('\n  ClientAccountID query complete.');
+        console.log('-----------------------------------------------------------------------------------------\n\n');
 
-        /*
+   
 
         // 1 asset history
         console.log('1. Query Commercial Paper History....');

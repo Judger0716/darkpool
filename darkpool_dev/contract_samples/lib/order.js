@@ -23,6 +23,8 @@ class OrderContract extends Contract {
   }
 
   async create(ctx, owner, type, amount, price) {
-    
+    {
+      
+    }
   }
 }

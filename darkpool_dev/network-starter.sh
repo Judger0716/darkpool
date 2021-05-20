@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-function _exit(){
+function _exit() {
     printf "Exiting:%s\n" "$1"
     exit -1
 }
@@ -12,7 +12,7 @@ set -ev
 set -o pipefail
 
 # Where am I?
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 export FABRIC_CFG_PATH="${DIR}/../config"
 
@@ -23,8 +23,8 @@ docker kill cliDarkPool cliToken logspout || true
 ./network.sh up createChannel -ca -s couchdb
 
 # Copy the connection profiles so they are in the correct organizations.
-cp "${DIR}/../test-network/organizations/peerOrganizations/org1.example.com/connection-org1.yaml" "${DIR}/organization/token/gateway/"
-cp "${DIR}/../test-network/organizations/peerOrganizations/org2.example.com/connection-org2.yaml" "${DIR}/organization/darkpool/gateway/"
+cp "${DIR}/../test-network/organizations/peerOrganizations/org1.example.com/connection-org1.*" "${DIR}/organization/token/gateway/"
+cp "${DIR}/../test-network/organizations/peerOrganizations/org2.example.com/connection-org2.*" "${DIR}/organization/darkpool/gateway/"
 
 cp "${DIR}/../test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/"* "${DIR}/../test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem"
 cp "${DIR}/../test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/"* "${DIR}/../test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/priv_sk"

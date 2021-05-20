@@ -21,9 +21,10 @@ cd "${DIR}/../test-network/"
 docker kill cliDarkPool cliToken logspout || true
 ./network.sh down
 
-rm -rf ${DIR}/contract/ver
-rm -rf ${DIR}/organization/darkpool/gateway/connection-org1.yaml ${DIR}/organization/token/gateway/connection-org2.yaml
-rm -rf ${DIR}/organization/darkpool/identity ${DIR}/organization/token/identity
+rm -rf ${DIR}/contracts/*/ver
+rm -rf ${DIR}/tokenApp/wallet
+rm -rf ${DIR}/organization/darkpool/gateway/connection-org2.*
+rm -rf ${DIR}/organization/token/gateway/connection-org1.*
 
 # remove any stopped containers
 docker rm $(docker ps -aq)
