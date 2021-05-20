@@ -1,5 +1,7 @@
 # Hyperledger Fabric 开发框架
 
+## 待更新，已经修改了目录结构！
+
 ## 介绍
 
 我们需要开发的内容都在 `darkpool_dev` 目录下，根目录下的其余文件夹皆是依赖文件，可以先不用管；`darkpool_dev` 目录中 `contract` 是链码，`organization` 是两个组织的配置文件以及客户端文件。
