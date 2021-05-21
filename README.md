@@ -74,3 +74,14 @@ node queryCommittee.js
 
 就会自动安装新版本的链码。
 
+## 前端测试
+
+# 用户的注册与登录
+
+执行完开发流程命令后，进入`darkpool_dev/UserApp`目录，执行：
+
+```shell
+node server.js
+```
+
+随后打开浏览器，输入`http://localhost:9000`地址进入主界面，即可完成用户的登录与注册。
