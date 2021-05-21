@@ -41,7 +41,7 @@ async function main() {
         const userName = username;
 
         // Load connection profile; will be used to locate a gateway
-        let connectionProfile = yaml.safeLoad(fs.readFileSync('../organization/token/gateway/connection-org1.yaml', 'utf8'));
+        let connectionProfile = yaml.safeLoad(fs.readFileSync('../organization/darkpool/gateway/connection-org2.yaml', 'utf8'));
 
         // Set connection options; identity and wallet
         let connectionOptions = {
@@ -64,50 +64,34 @@ async function main() {
         // Get addressability to commercial paper contract
         console.log('Use Token smart contract.');
 
-        const contract = await network.getContract('tokenContract', 'Token');
+        const contract = await network.getContract('committeeContract', 'Committee');
 
         // queries - commercial paper
         console.log('-----------------------------------------------------------------------------------------');
-        console.log('****** Submitting Token queries ****** \n\n ');
+        console.log('****** Submitting Committee queries ****** \n\n ');
 
+        /*
+                let queryResponse = await contract.submitTransaction('SetOption', 'Dogecoin', 'DOGE', '6');
+                console.log(queryResponse.toString());
+                console.log('\n  SetOption query complete.');
+                console.log('-----------------------------------------------------------------------------------------\n\n');
+        */
 
-        let queryResponse = await contract.submitTransaction('SetOption', 'Dogecoin', 'DOGE', '6');
+        let queryResponse = await contract.evaluateTransaction('GetCandidates');
         console.log(queryResponse.toString());
-        console.log('\n  SetOption query complete.');
+        console.log('\n  GetCandidates query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
-
-        queryResponse = await contract.evaluateTransaction('Symbol');
+        queryResponse = await contract.submitTransaction('Apply', '50');
         console.log(queryResponse.toString());
-        console.log('\n  Symbol query complete.');
+        console.log('\n  apply query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
-        queryResponse = await contract.evaluateTransaction('ClientAccountID');
+        queryResponse = await contract.evaluateTransaction('GetCandidates');
         console.log(queryResponse.toString());
-        console.log('\n  ClientAccountID query complete.');
+        console.log('\n  GetCandidates query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
-        let ID = queryResponse.toString();
-
-        queryResponse = await contract.evaluateTransaction('BalanceOf', ID);
-        console.log(queryResponse.toString());
-        console.log('\n  BalanceOf query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
-
-        queryResponse = await contract.submitTransaction('Mint', '100');
-        console.log(queryResponse.toString());
-        console.log('\n  Mint query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
-
-        queryResponse = await contract.evaluateTransaction('BalanceOf', ID);
-        console.log(queryResponse.toString());
-        console.log('\n  BalanceOf query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
-
-        queryResponse = await contract.submitTransaction('Transfer', 'x509::/OU=client/OU=org2/OU=department1/CN=g::/C=UK/ST=Hampshire/L=Hursley/O=org2.example.com/CN=ca.org2.example.com', '50');
-        console.log(queryResponse.toString());
-        console.log('\n  Mint query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
 
         /*
            let queryResponse3 = await contract.evaluateTransaction('ClientAccountID');

@@ -20,7 +20,7 @@
 const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
-const CommercialPaper = require('../../magnetocorp/contract/lib/paper.js');
+const CommercialPaper = require('../../magnetocorp/contract/lib/paper.js.js');
 
 
 // Main program function
