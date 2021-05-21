@@ -76,7 +76,7 @@ node queryCommittee.js
 
 ## 前端测试
 
-# 用户的注册与登录
+### 用户的注册与登录
 
 执行完开发流程命令后，进入`darkpool_dev/UserApp`目录，执行：
 
