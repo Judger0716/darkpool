@@ -23,6 +23,7 @@ docker kill cliDarkPool cliToken logspout || true
 
 rm -rf ${DIR}/contracts/*/ver
 rm -rf ${DIR}/tokenApp/wallet
+rm -rf ${DIR}/userApp/wallet
 rm -rf ${DIR}/organization/darkpool/gateway/connection-org2.*
 rm -rf ${DIR}/organization/token/gateway/connection-org1.*
 
