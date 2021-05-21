@@ -1,19 +1,3 @@
-/*
- * Copyright IBM Corp. All Rights Reserved.
- *
- * SPDX-License-Identifier: Apache-2.0
-*/
-
-/*
- * This application has 6 basic steps:
- * 1. Select an identity from a wallet
- * 2. Connect to network gateway
- * 3. Access PaperNet network
- * 4. Construct request to query the ledger
- * 5. Evaluate transactions (queries)
- * 6. Process responses
- */
-
 'use strict';
 
 // Bring key classes into scope, most importantly Fabric SDK network class
@@ -22,10 +6,8 @@ const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
-const username = "g"
-
 // Main program function
-async function main() {
+exports.QueryBalance = async function (username) {
 
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet(process.cwd() + '/wallet');
@@ -93,6 +75,7 @@ async function main() {
         console.log(queryResponse.toString());
         console.log('\n  BalanceOf query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
+        return queryResponse.toString();
 
         /*
            let queryResponse3 = await contract.evaluateTransaction('ClientAccountID');
@@ -176,15 +159,3 @@ async function main() {
 
     }
 }
-main().then(() => {
-
-    console.log('Queryapp program complete.');
-
-}).catch((e) => {
-
-    console.log('Queryapp program exception.');
-    console.log(e);
-    console.log(e.stack);
-    process.exit(-1);
-
-});
