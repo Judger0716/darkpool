@@ -335,7 +335,7 @@ class TokenERC20Contract extends Contract {
 
         console.log(`minter account ${minter} balance updated from ${currentBalance} to ${updatedBalance}`);
         return true;
-    }
+}
 
     /**
      * Burn redeem tokens from minter's account balance
