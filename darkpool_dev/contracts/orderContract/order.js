@@ -25,6 +25,9 @@ class Order extends Contract {
 
   async GetOrderID(ctx) {
     let id = await ctx.stub.getState(orderIDKey);
+    if (!id || id.length === 0) {
+      return "0";
+    }
     return id.toString();
   }
 

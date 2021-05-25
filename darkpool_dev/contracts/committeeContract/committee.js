@@ -24,6 +24,9 @@ class Committee extends Contract {
 
   async GetCurrentVersion(ctx) {
     let version = await ctx.stub.getState(versionKey);
+    if (!version || oid.version === 0) {
+      return "0";
+    }
     return version.toString();
   }
 

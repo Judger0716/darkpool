@@ -90,17 +90,6 @@ app.post('/getinfo', async function (req, res){
     });
 })
 
-<<<<<<< HEAD
-=======
-// Query Transfer Info
-app.post('/gettransfer', async function (req ,res){
-    res.json({
-        'transfer_list': transfer_list
-    });
-})
-
-
->>>>>>> d72e9867f9616207039c61b05645deeb0432227d
 // SERVER LISTENING
 var server = app.listen(9000, async function () {
 
