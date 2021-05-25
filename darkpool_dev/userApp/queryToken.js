@@ -30,7 +30,6 @@ exports.QueryBalance = async function (username) {
             identity: userName,
             wallet: wallet,
             discovery: { enabled: true, asLocalhost: true }
-
         };
 
         // Connect to gateway using application specified parameters
@@ -58,9 +57,10 @@ exports.QueryBalance = async function (username) {
                 console.log('\n  SetOption query complete.');
                 console.log('-----------------------------------------------------------------------------------------\n\n');
         */
-
+        
         let queryResponse = await contract.evaluateTransaction('Symbol');
-        console.log(queryResponse.toString());
+        var symbol = queryResponse.toString();
+        console.log(symbol);
         console.log('\n  Symbol query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
@@ -72,10 +72,14 @@ exports.QueryBalance = async function (username) {
         let ID = queryResponse.toString();
 
         queryResponse = await contract.evaluateTransaction('BalanceOf', ID);
-        console.log(queryResponse.toString());
+        var balance = queryResponse.toString();
+        console.log(balance);
         console.log('\n  BalanceOf query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
-        return queryResponse.toString();
+        return {
+            'symbol': symbol,
+            'balance': balance
+        };
 
         /*
            let queryResponse3 = await contract.evaluateTransaction('ClientAccountID');
