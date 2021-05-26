@@ -43,15 +43,15 @@
         <!-- 账户相关，由vue变量account控制 -->
         <div id="account" style="margin-left: 2%; margin-top: 20px; font-size: 30px;">
 
-            <el-button class="mbutton" type="success" icon="el-icon-user-solid" @click="infoFormVisible = true; get_userinfo()">查看账户信息</el-button>
+            <el-button class="mbutton" type="success" icon="el-icon-user-solid" @click="get_userinfo()">查看账户信息</el-button>
             <el-button class="mbutton" type="warning" icon="el-icon-s-home" @click="exitlogin()">退出登录</el-button>
             
             <!-- 查看个人信息 -->
             <el-dialog title="账户信息" :visible.sync="infoFormVisible" width="50%">
-                <li v-for="token in userinfo">
+                <li v-for="(value,key) in userinfo">
 					<br />
-					<p><span>代币种类:</span><span v-text="token.symbol" class="userinfo"></span></p>
-					<p><span>代币余额:</span><span v-text="token.balance" class="userinfo"></span></p>
+					<p><span>代币种类: {[key]}</span></p>
+					<p><span>代币余额: {[value]}</span></p>
 				</li>
                 <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
                     <el-button type="primary" @click="infoFormVisible = false">确 定</el-button>
@@ -66,8 +66,8 @@
             <!-- 选项卡样式 -->
             <el-tabs type="border-card" @tab-click="handleClick" style="opacity: 0.95;">
 
-                <!-- 交易查找 -->
-                <el-tab-pane label="交易查询" name="transfer">
+                <!-- 转账查询 -->
+                <el-tab-pane label="转账查询" name="transfer">
                     <li v-for="tf in transfer_list">
                         <br />
                         <p><span>发起方:</span><span v-text="tf.from"></span></p>
@@ -75,6 +75,12 @@
                         <p><span>金额:</span><span v-text="tf.value"></span></p>
                     </li>
                 </el-tab-pane>
+                
+                <!-- 订单查询 -->
+                <el-tab-pane label="订单查询" name="order">
+                    
+                </el-tab-pane>
+                
             </el-tabs>
             
         </div>
@@ -86,9 +92,9 @@
             el: "#account",
             delimiters: ["{[", "]}"],
             data: {
-                userinfo: [], // 当前用户信息
+                userinfo: {}, // 当前用户信息
                 infoFormVisible: false,  // 查看用户信息对话框
-                formLabelWidth: '150px'
+                formLabelWidth: '150px',
             },
             methods: {
                 // 退出登录，跳转
@@ -103,10 +109,8 @@
                     .then(Response => {
                         console.log('Symbol',Response['data']['symbol'])
                         console.log('Balance',Response['data']['balance'])
-                        this.userinfo.push({
-                            'symbol': Response['data']['symbol'],
-                            'balance': Response['data']['balance']
-                        })
+                        this.userinfo[ Response['data']['symbol'] ] = Response['data']['balance']
+                        this.infoFormVisible = true
                     })
                     .catch(function (error){
                         console.log(error);
@@ -115,14 +119,18 @@
             }
         });
 
-        // 图书管理系统
+        // 暗池交易系统
         var dp = new Vue({
             el: "#darkpool",
             delimiters: ["{[", "]}"],
             data: {
                 transfer_list : [],
+                deal_order_list : [],
+                match_order_list : [],
                 // 由于vue绑定的关系，这里重新获取当前用户信息
                 username: document.getElementById("cur_un").innerHTML,  // 用户名
+                currentPage: 1, // 查询结果当前页
+                pageSize: 10, // 查询结果每页多少条
             },
             methods: {
                 // 菜单选择
@@ -130,6 +138,9 @@
                     console.log(tab, event);
                     if(tab.name == 'transfer'){
                         this.get_transfer();
+                    }
+                    else if(tab.name == 'order'){
+                        this.get_order();
                     }
                 },
                 // 查询交易信息
@@ -144,7 +155,23 @@
                     .catch(function (error){
                         console.log(error);
                     })
-                }
+                },
+                // 查询订单信息
+                get_order(){
+                    axios.post('http://localhost:9000/getorder').then(Response => {
+                        console.log('data',Response['data'])
+                        console.log('deal',Response['data']['DealOrder'])
+                        console.log('match',Response['data']['MatchOrder'])
+                    })
+                },
+                // 每页多少条
+                handleSizeChange(val) {
+                    this.pageSize = val;
+                },
+                // 当前页
+                handleCurrentChange(val) {
+                    this.currentPage = val;
+                },
             }
         });
     </script>
