@@ -24,6 +24,7 @@ app.engine('.html', require('ejs').renderFile);
 var registerUser = require('./RegisterUser');
 var loginUser = require('./LoginUser');
 var QueryToken = require('./queryToken');
+var QueryOrder = require('./queryOrder');
  
 /* Route List */
 
@@ -89,6 +90,27 @@ app.post('/getinfo', async function (req, res){
         process.exit(-1);
     });
 })
+
+// Query Transfer Info
+app.post('/gettransfer', async function (req ,res){
+    res.json({
+        'transfer_list': transfer_list
+    });
+})
+
+// Query Order Info
+app.post('/getorder', async function (req, res){
+    await QueryOrder.queryOrder().then(result =>{
+        console.log('Queryapp program complete.');
+        res.json(result);
+    }).catch((e) => {
+        console.log('Queryapp program exception.');
+        console.log(e);
+        console.log(e.stack);
+        process.exit(-1);
+    });
+})
+
 
 // SERVER LISTENING
 var server = app.listen(9000, async function () {
