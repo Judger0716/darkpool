@@ -22,7 +22,7 @@ const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
-const username = "g"
+const username = "Test"
 
 // Main program function
 async function main() {
@@ -104,7 +104,7 @@ async function main() {
         console.log('\n  BalanceOf query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
-        queryResponse = await contract.submitTransaction('Transfer', 'x509::/OU=client/OU=org2/OU=department1/CN=g::/C=UK/ST=Hampshire/L=Hursley/O=org2.example.com/CN=ca.org2.example.com', '50');
+        queryResponse = await contract.submitTransaction('Transfer', 'x509::/OU=org2/OU=client/OU=department1/CN=' + userName + '::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server', '50');
         console.log(queryResponse.toString());
         console.log('\n  Mint query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
