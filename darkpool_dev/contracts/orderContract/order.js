@@ -64,7 +64,7 @@ class Order extends Contract {
     // order structure.
     const newOrder = {
       order_id: oid,
-      create_time: ctx.stub.getTxTimestamp(),
+      create_time: ctx.stub.getDateTimestamp(),
       creator: creator,
       type: type,
       amount: null,
