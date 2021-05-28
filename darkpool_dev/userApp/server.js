@@ -25,17 +25,18 @@ var registerUser = require('./RegisterUser');
 var loginUser = require('./LoginUser');
 var QueryToken = require('./queryToken');
 var QueryOrder = require('./queryOrder');
+var createOrder = require('./createOrder');
  
 /* Route List */
 
 // Default route
 app.get('/', function (req, res) {
-    res.sendFile( __dirname + "/" + "public/login.html" );
+    res.render( __dirname + "/" + "public/login.html",{msg: '请输入用户名登录'});
 })
 
 // login
 app.get('/login', function (req, res) {
-    res.sendFile( __dirname + "/" + "public/login.html" );
+    res.render( __dirname + "/" + "public/login.html",{msg: '请输入用户名登录'});
 })
 
 app.post('/login', async function(req, res){
@@ -48,13 +49,13 @@ app.post('/login', async function(req, res){
         res.render(__dirname + "/" + "public/main.html",{username: req.body.username});
     }
     else if(login_status=='LOG_ERR'){
-        res.send('LOGIN ERROR');
+        res.render( __dirname + "/" + "public/login.html",{msg: '登陆失败'});
     }
 })
 
 // register
 app.get('/register', function (req, res) {
-    res.sendFile( __dirname + "/" + "public/register.html" );
+    res.render( __dirname + "/" + "public/register.html",{msg: '请输入注册的用户名'});
 })
 
 app.post('/register', async function (req, res) {
@@ -65,14 +66,14 @@ app.post('/register', async function (req, res) {
     console.log(reg_status)
     // Register successfully
     if(reg_status == 'REG_SUC'){
-        res.end(JSON.stringify(response))
+        res.render( __dirname + "/" + "public/login.html",{msg: '注册成功'});
     }
     // Already registered
     else if(reg_status == 'REG_ARD'){
-        res.send('Already Enrolled')
+        res.render( __dirname + "/" + "public/register.html",{msg: '已经注册过此用户，可直接登录'});
     }
     // Register failed
-    else res.send('FAILED!')
+    else res.render( __dirname + "/" + "public/register.html",{msg: '注册失败'});
 })
 
 // Query Account Info
@@ -96,6 +97,15 @@ app.post('/gettransfer', async function (req ,res){
     res.json({
         'transfer_list': transfer_list
     });
+})
+
+// Create Order
+app.post('/createorder', async function (req, res){
+    await createOrder.createOrder(req.body.username).then(ret =>{
+        res.json({
+            'order_info': 'SUC',
+        })
+    })
 })
 
 // Query Order Info

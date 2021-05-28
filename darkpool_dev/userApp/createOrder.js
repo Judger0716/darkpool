@@ -8,7 +8,7 @@ const { exit } = require('process');
 
 
 // Main program function
-exports.queryOrder = async function (username) {
+exports.createOrder = async function (username) {
     username = 'Test'
 
     // A wallet stores a collection of identities for use
@@ -54,7 +54,6 @@ exports.queryOrder = async function (username) {
         console.log('-----------------------------------------------------------------------------------------');
         console.log('****** Submitting Order queries ****** \n\n ');
 
-        /*
         let queryResponse = await contract.submitTransaction('CreateOrder', 'buy', '[]');
         console.log(queryResponse.toString());  // NULL
         console.log('\n  CreateOrder query complete.');
@@ -64,46 +63,7 @@ exports.queryOrder = async function (username) {
         console.log(queryResponse.toString());
         console.log('\n  GetOrderID query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
-        */
-
-        let queryResponse = await contract.evaluateTransaction('GetDealOrder');
-        var DealOrder = JSON.parse(queryResponse)
-        console.log('\n  GetDealOrder query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
-
-        queryResponse = await contract.evaluateTransaction('GetMatchingOrder');
-        var MatchOrder = JSON.parse(queryResponse)
-        console.log('\n  GetMatchingOrder query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
-
-        // Extract Userful Infomation from raw JSON data
-        var index = 0;
-        while(DealOrder[index]!=undefined){
-            var user_start = DealOrder[index]['Record']['creator'].search('CN=')+3;
-            var user_end = DealOrder[index]['Record']['creator'].search('C=')-3;
-            DealOrder[index]['Record']['creator'] = DealOrder[index]['Record']['creator'].substring(user_start,user_end);
-            var date = new Date();
-            date.setTime(parseInt(MatchOrder[index]['Record']['create_time']['seconds'])*1000);
-            MatchOrder[index]['Record']['create_time'] = date.toDateString();
-            index += 1
-        }
-        index = 0;
-        while(MatchOrder[index]!=undefined){
-            var user_start = MatchOrder[index]['Record']['creator'].search('CN=')+3;
-            var user_end = MatchOrder[index]['Record']['creator'].search('C=')-3;
-            MatchOrder[index]['Record']['creator'] = MatchOrder[index]['Record']['creator'].substring(user_start,user_end);
-            var date = new Date();
-            date.setTime(parseInt(MatchOrder[index]['Record']['create_time']['seconds'])*1000);
-            MatchOrder[index]['Record']['create_time'] = date.toDateString();
-            index += 1
-        }
-        console.log(DealOrder);
-        console.log(MatchOrder);
-        return {
-            'DealOrder': DealOrder,
-            'MatchOrder': MatchOrder,
-        }
-
+        return;
         /*
         queryResponse = await contract.submitTransaction('Transfer', 'x509::/OU=client/OU=org2/OU=department1/CN=g::/C=UK/ST=Hampshire/L=Hursley/O=org2.example.com/CN=ca.org2.example.com', '50');
         console.log(queryResponse.toString());
