@@ -49,7 +49,6 @@
             <!-- 查看个人信息 -->
             <el-dialog title="账户信息" :visible.sync="infoFormVisible" width="50%">
                 <li v-for="(value,key) in userinfo">
-					<br />
 					<p><span>代币种类: {[key]}</span></p>
 					<p><span>代币余额: {[value]}</span></p>
 				</li>
@@ -69,7 +68,6 @@
                 <!-- 转账查询 -->
                 <el-tab-pane label="转账查询" name="transfer">
                     <li v-for="tf in transfer_list">
-                        <br />
                         <p><span>发起方:</span><span v-text="tf.from"></span></p>
                         <p><span>接收方:</span><span v-text="tf.to"></span></p>
                         <p><span>金额:</span><span v-text="tf.value"></span></p>
@@ -77,7 +75,40 @@
                 </el-tab-pane>
                 
                 <!-- 订单查询 -->
-                <el-tab-pane label="订单查询" name="order">
+                <el-tab-pane label="订单查询" name="query_order">
+                    <div>未匹配订单</div>
+                    <div v-for="mo in match_order_list">
+                        <div>金额：{[mo.Record.amount]}</div>
+                        <div>创建时间：{[mo.Record.create_time]}</div>
+                        <div>创建者：{[mo.Record.creator]}</div>
+                        <div>是否成交：{[mo.Record.deal]}</div>
+                        <div>成交价：{[mo.Record.deal_price]}</div>
+                        <div>成交时间：{[mo.Record.deal_time]}</div>
+                        <div>订单编号：{[mo.Record.order_id]}</div>
+                        <div>订单报价：{[mo.Record.price]}</div>
+                        <div>订单碎片：{[mo.Record.shares]}</div>
+                        <div>订单类型：{[mo.Record.type]}</div>
+                        </br>
+                    </div>
+                    </br>
+                    <div>匹配订单</div>
+                    <div v-for="deo in deal_order_list">
+                        <div>金额：{[deo.Record.amount]}</div>
+                        <div>创建时间：{[deo.Record.create_time]}</div>
+                        <div>创建者：{[deo.Record.creator]}</div>
+                        <div>是否成交：{[deo.Record.deal]}</div>
+                        <div>成交价：{[deo.Record.deal_price]}</div>
+                        <div>成交时间：{[deo.Record.deal_time]}</div>
+                        <div>订单编号：{[deo.Record.order_id]}</div>
+                        <div>订单报价：{[deo.Record.price]}</div>
+                        <div>订单碎片：{[deo.Record.shares]}</div>
+                        <div>订单类型：{[deo.Record.type]}</div>
+                        </br>
+                    </div>
+                </el-tab-pane>
+
+                <!-- 创建订单 -->
+                <el-tab-pane label="创建订单" name="create_order">
                     
                 </el-tab-pane>
                 
@@ -139,7 +170,10 @@
                     if(tab.name == 'transfer'){
                         this.get_transfer();
                     }
-                    else if(tab.name == 'order'){
+                    else if(tab.name == 'create_order'){
+                        this.create_order();
+                    }
+                    else if(tab.name == 'query_order'){
                         this.get_order();
                     }
                 },
@@ -156,12 +190,21 @@
                         console.log(error);
                     })
                 },
+                create_order(){
+                    axios.post('http://localhost:9000/createorder',{
+                        'username': document.getElementById("cur_un").innerHTML,
+                    }).then(Response =>{
+                        console.log(Response['data'])
+                    })
+                },
                 // 查询订单信息
                 get_order(){
                     axios.post('http://localhost:9000/getorder').then(Response => {
                         console.log('data',Response['data'])
                         console.log('deal',Response['data']['DealOrder'])
                         console.log('match',Response['data']['MatchOrder'])
+                        this.deal_order_list = Response['data']['DealOrder']
+                        this.match_order_list = Response['data']['MatchOrder']
                     })
                 },
                 // 每页多少条
