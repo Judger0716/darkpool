@@ -251,7 +251,9 @@
                 },
                 // 查询订单信息
                 get_order(){
-                    axios.post('http://localhost:9000/getorder').then(Response => {
+                    axios.post('http://localhost:9000/getorder',{
+                        'username': this.username,
+                    }).then(Response => {
                         console.log('data',Response['data'])
                         console.log('deal',Response['data']['DealOrder'])
                         console.log('match',Response['data']['MatchOrder'])

@@ -128,7 +128,7 @@ app.post('/createorder', async function (req, res){
 
 // Query Order Info
 app.post('/getorder', async function (req, res){
-    await QueryOrder.queryOrder().then(result =>{
+    await QueryOrder.queryOrder(req.body.username).then(result =>{
         console.log('Queryapp program complete.');
         res.json(result);
     }).catch((e) => {
