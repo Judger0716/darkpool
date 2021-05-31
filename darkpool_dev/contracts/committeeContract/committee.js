@@ -137,7 +137,7 @@ class Committee extends Contract {
   }
 
   async GetCreator(ctx) {
-    return await ctx.stub.getCreator().idBytes.toString();
+    return await await ctx.clientIdentity.getAttributeValue("pubKey");
   }
 
 }
