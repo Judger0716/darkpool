@@ -81,6 +81,7 @@
                         <div>金额：{[mo.Record.amount]}</div>
                         <div>创建时间：{[mo.Record.create_time]}</div>
                         <div>创建者：{[mo.Record.creator]}</div>
+                        <div>交易物品：{[mo.Record.item]}</div>
                         <div>是否成交：{[mo.Record.deal]}</div>
                         <div>成交价：{[mo.Record.deal_price]}</div>
                         <div>成交时间：{[mo.Record.deal_time]}</div>
@@ -96,6 +97,7 @@
                         <div>金额：{[deo.Record.amount]}</div>
                         <div>创建时间：{[deo.Record.create_time]}</div>
                         <div>创建者：{[deo.Record.creator]}</div>
+                        <div>交易物品：{[deo.Record.item]}</div>
                         <div>是否成交：{[deo.Record.deal]}</div>
                         <div>成交价：{[deo.Record.deal_price]}</div>
                         <div>成交时间：{[deo.Record.deal_time]}</div>
@@ -109,7 +111,31 @@
 
                 <!-- 创建订单 -->
                 <el-tab-pane label="创建订单" name="create_order">
-                    
+                    <el-form :model="order_form">
+                        <el-form-item label="订单类型">
+                            <el-radio v-model="order_form.type" label="buy">买单</el-radio>
+                            <el-radio v-model="order_form.type" label="sell">卖单</el-radio>
+                        </el-form-item>
+                        <el-form-item label="交易物品">
+                            <el-select v-model="order_form.item" placeholder="请选择">
+                                <el-option
+                                  v-for="item in itemoptions"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="交易数量">
+                            <el-input v-model="order_form.amount"></el-input>
+                        </el-form-item>
+                        <el-form-item label="交易价格">
+                            <el-input v-model="order_form.price"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div>
+                        <el-button type="primary" @click="create_order()">确 定</el-button>
+                    </div>
                 </el-tab-pane>
                 
             </el-tabs>
@@ -162,6 +188,23 @@
                 username: document.getElementById("cur_un").innerHTML,  // 用户名
                 currentPage: 1, // 查询结果当前页
                 pageSize: 10, // 查询结果每页多少条
+                order_form: {
+                    'username': document.getElementById("cur_un").innerHTML,
+                    'type': '',
+                    'item': '',
+                    'amount': null,
+                    'price': null,
+                },
+                itemoptions: [{
+                    'value': 'BTC',
+                    'label': 'BTC',
+                },{
+                    'value': 'ETH',
+                    'label': 'ETH',
+                },{
+                    'value': 'DOGE',
+                    'label': 'DOGE',
+                }],
             },
             methods: {
                 // 菜单选择
@@ -171,7 +214,7 @@
                         this.get_transfer();
                     }
                     else if(tab.name == 'create_order'){
-                        this.create_order();
+                        //this.create_order();
                     }
                     else if(tab.name == 'query_order'){
                         this.get_order();
@@ -192,9 +235,18 @@
                 },
                 create_order(){
                     axios.post('http://localhost:9000/createorder',{
-                        'username': document.getElementById("cur_un").innerHTML,
+                        'username': this.order_form.username,
+                        'type': this.order_form.type,
+                        'item': this.order_form.item,
+                        'amount': this.order_form.amount,
+                        'price': this.order_form.price,
                     }).then(Response =>{
                         console.log(Response['data'])
+                        this.$notify({
+                            title: '成功',
+                            message: '订单创建成功',
+                            type: 'success'
+                        });
                     })
                 },
                 // 查询订单信息
