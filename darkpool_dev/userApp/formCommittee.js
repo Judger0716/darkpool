@@ -77,7 +77,7 @@ async function main() {
                 console.log('-----------------------------------------------------------------------------------------\n\n');
         */
 
-        let queryResponse = await contract.evaluateTransaction('FormCommittee');
+        let queryResponse = await contract.submitTransaction('FormCommittee');
         console.log(queryResponse.toString());
         console.log('\n  FormCommittee query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');

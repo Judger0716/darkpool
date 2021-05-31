@@ -22,7 +22,9 @@ const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
-const username = "commiteeName"
+var argv = process.argv.splice(2);
+
+const username = argv[0];
 
 // Main program function
 async function main() {

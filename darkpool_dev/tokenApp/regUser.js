@@ -11,7 +11,9 @@ const FabricCAServices = require('fabric-ca-client');
 const fs = require('fs');
 const path = require('path');
 
-const username = "Test"
+var argv = process.argv.splice(2);
+
+const username = argv[0];
 
 async function main() {
   try {
