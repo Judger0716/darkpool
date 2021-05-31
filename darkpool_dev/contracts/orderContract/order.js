@@ -43,14 +43,16 @@ class Order extends Contract {
    * CreateTime
    * Creator
    * Type (`buy` or `sell`)
+   * Item
    * Amount (encrypted)
    * Price (encrypted)
    * Shares
    * Deal
    * DealPrice
    * DealTime
+   * DealOrderID
   */
-  async CreateOrder(ctx, type, shares) {
+  async CreateOrder(ctx, type, amount, price, itemname, shares) {
     // TODO: check the shares.
     // Check type
     if (type !== 'buy' && type !== 'sell')
@@ -67,12 +69,14 @@ class Order extends Contract {
       create_time: ctx.stub.getTxTimestamp(),
       creator: creator,
       type: type,
-      amount: null,
-      price: null,
+      item: itemname,
+      amount: amount,
+      price: price,
       shares: json_shares,
       deal: false,
       deal_price: null,
-      deal_time: null
+      deal_time: null,
+      deal_order_id: null,
     }
     // PrePay for the deal???
 
