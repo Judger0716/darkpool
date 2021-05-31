@@ -10,9 +10,9 @@ const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
 // Express Framework
-var express = require('express');
+const express = require('express');
 var app = express();
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 // Load HTML resources
 app.use('/public', express.static('public'));
@@ -21,11 +21,14 @@ app.use(bodyParser.json())
 app.engine('.html', require('ejs').renderFile);
 
 // Load other nodejs files
-var registerUser = require('./RegisterUser');
-var loginUser = require('./LoginUser');
-var QueryToken = require('./queryToken');
-var QueryOrder = require('./queryOrder');
-var createOrder = require('./createOrder');
+const registerUser = require('./RegisterUser');
+const loginUser = require('./LoginUser');
+const QueryToken = require('./queryToken');
+const QueryOrder = require('./queryOrder');
+const createOrder = require('./createOrder');
+
+// Shamir Secret Sharing
+const sss = require('shamirs-secret-sharing')
  
 /* Route List */
 
@@ -101,7 +104,22 @@ app.post('/gettransfer', async function (req ,res){
 
 // Create Order
 app.post('/createorder', async function (req, res){
-    await createOrder.createOrder(req.body.username).then(ret =>{
+    var username = req.body.username;
+    var type = req.body.type;
+    var amount = req.body.amount;
+    var price = req.body.price;
+    var item = req.body.item;
+    // Shamir Secret Sharing
+    const secret = Buffer.from(toString(price))
+    const shares = sss.split(secret, { shares: 5, threshold: 3 })
+    var buf_len = shares.length
+    var json_shares = {}
+    for(var i=0;i<buf_len;i++){
+        var share_i;
+        share_i = shares[i].toJSON()['data'];
+        json_shares[i]=share_i;
+    }
+    await createOrder.createOrder(username, type, amount, price, item, JSON.stringify(json_shares)).then(ret =>{
         res.json({
             'order_info': 'SUC',
         })

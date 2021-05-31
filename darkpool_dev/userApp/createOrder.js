@@ -6,9 +6,8 @@ const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
-
 // Main program function
-exports.createOrder = async function (username) {
+exports.createOrder = async function (username, type, amount, price, itemname, shares) {
     username = 'Test'
 
     // A wallet stores a collection of identities for use
@@ -54,7 +53,12 @@ exports.createOrder = async function (username) {
         console.log('-----------------------------------------------------------------------------------------');
         console.log('****** Submitting Order queries ****** \n\n ');
 
-        let queryResponse = await contract.submitTransaction('CreateOrder', 'buy', '[]');
+        console.log(type)
+        console.log(amount)
+        console.log(price)
+        console.log(shares,typeof(shares))
+
+        let queryResponse = await contract.submitTransaction('CreateOrder', type, amount, price, itemname, shares);
         console.log(queryResponse.toString());  // NULL
         console.log('\n  CreateOrder query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');

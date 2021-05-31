@@ -94,11 +94,11 @@ exports.queryOrder = async function (username) {
             MatchOrder[index]['Record']['creator'] = MatchOrder[index]['Record']['creator'].substring(user_start,user_end);
             var date = new Date();
             date.setTime(parseInt(MatchOrder[index]['Record']['create_time']['seconds'])*1000);
-            MatchOrder[index]['Record']['create_time'] = date.toDateString();
+            MatchOrder[index]['Record']['create_time'] = date.toUTCString();
             index += 1
         }
-        console.log(DealOrder);
-        console.log(MatchOrder);
+        //console.log(DealOrder);
+        //console.log(MatchOrder);
         return {
             'DealOrder': DealOrder,
             'MatchOrder': MatchOrder,
