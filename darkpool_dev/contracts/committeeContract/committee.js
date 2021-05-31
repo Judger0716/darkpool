@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 const { Contract } = require('fabric-contract-api');
 
-const memberPayThreshold = 50;
+const memberPayThreshold = 0;
 const minCommitteeMembers = 3;
 const committeeKey = 'Committee';
 const versionKey = 'CurrentVersion';
@@ -24,7 +24,7 @@ class Committee extends Contract {
 
   async GetCurrentVersion(ctx) {
     let version = await ctx.stub.getState(versionKey);
-    if (!version || oid.version === 0) {
+    if (!version || version.length === 0) {
       return "0";
     }
     return version.toString();
@@ -67,17 +67,9 @@ class Committee extends Contract {
           break;
         }
       }
-      /*
-      for (var candidate in candidates) {
-        if (candidate.name === _applicant) {
-          candidate.amount = candidate.amount + _amount;
-          exist = true;
-          break;
-        }
-      }*/
       // If not, add him to the candidates.
       if (!exist)
-        candidates = [...candidates, { name: _applicant, amount: _amount, cert: this.GetCreator(ctx) }];
+        candidates = [...candidates, { name: _applicant, amount: _amount, cert: await this.GetCreator(ctx) }];
       await ctx.stub.putState(candidateKey, JSON.stringify(candidates));
 
       return true;
@@ -97,7 +89,7 @@ class Committee extends Contract {
   }
 
   async GetCommittee(ctx) {
-    const version = this.GetCurrentVersion(ctx);
+    const version = await this.GetCurrentVersion(ctx);
     const committeeCompositeKey = await ctx.stub.createCompositeKey(committeeKey, [version]);
 
     const committee = await ctx.stub.getState(committeeCompositeKey);
@@ -109,8 +101,9 @@ class Committee extends Contract {
   }
   //
   async FormCommittee(ctx) {
+    const version = await this.GetCurrentVersion(ctx);
     // Check if there is enough candidates.
-    const candidates = await ctx.stub.getState(candidateKey);
+    let candidates = await ctx.stub.getState(candidateKey);
     if (!candidates || candidates.length === 0) {
       candidates = [];
     } else {
@@ -121,25 +114,19 @@ class Committee extends Contract {
     } else {
       candidates.sort(function (a, b) { return parseInt(b.amount) - parseInt(a.amount); });
     }
-    committeeMembers = candidates.slice(0, minCommitteeMembers);
+    let committeeMembers = candidates.slice(0, minCommitteeMembers);
 
-    //
-    const committeeCompositeKey = ctx.stub.createCompositeKey(committeeKey, [version]);
+    // 
+    const committeeCompositeKey = await ctx.stub.createCompositeKey(committeeKey, [version]);
     await ctx.stub.putState(committeeCompositeKey, JSON.stringify(committeeMembers));
 
     // Tell Committee Members
-    ctx.stub.setEvent('NewCommitteeMembers', Buffer.from(JSON.stringify(committees)));
-  }
-
-
-  async ConfirmOnline(ctx) {
-
+    ctx.stub.setEvent('NewCommitteeMembers', Buffer.from(JSON.stringify(committeeMembers)));
   }
 
   async GetCreator(ctx) {
     return await await ctx.clientIdentity.getAttributeValue("pubKey");
   }
-
 }
 
 module.exports = Committee;
