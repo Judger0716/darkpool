@@ -34,3 +34,7 @@ cp "${DIR}/../test-network/organizations/peerOrganizations/org2.example.com/user
 
 echo Suggest that you monitor the docker containers by running
 echo "./organization/token/configuration/cli/monitordocker.sh fabric_test"
+
+bash ${DIR}/contracts/tokenContract/install_chaincode.sh
+bash ${DIR}/contracts/orderContract/install_chaincode.sh
+bash ${DIR}/contracts/committeeContract/install_chaincode.sh

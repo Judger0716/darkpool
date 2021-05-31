@@ -22,7 +22,7 @@ const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
-const username = "commiteeName"
+const username = "admin"
 
 // Main program function
 async function main() {
@@ -62,7 +62,7 @@ async function main() {
         const network = await gateway.getNetwork('mychannel');
 
         // Get addressability to commercial paper contract
-        console.log('Use Token smart contract.');
+        console.log('Use Committee smart contract.');
 
         const contract = await network.getContract('committeeContract', 'Committee');
 
@@ -77,19 +77,19 @@ async function main() {
                 console.log('-----------------------------------------------------------------------------------------\n\n');
         */
 
-        let queryResponse = await contract.evaluateTransaction('GetCandidates');
+        let queryResponse = await contract.evaluateTransaction('FormCommittee');
         console.log(queryResponse.toString());
-        console.log('\n  GetCandidates query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
-
-        queryResponse = await contract.submitTransaction('Apply', '50');
-        console.log(queryResponse.toString());
-        console.log('\n  apply query complete.');
+        console.log('\n  FormCommittee query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
         queryResponse = await contract.evaluateTransaction('GetCandidates');
         console.log(queryResponse.toString());
         console.log('\n  GetCandidates query complete.');
+        console.log('-----------------------------------------------------------------------------------------\n\n');
+
+        queryResponse = await contract.evaluateTransaction('GetCommittee');
+        console.log(queryResponse.toString());
+        console.log('\n  GetCommittee query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
 
