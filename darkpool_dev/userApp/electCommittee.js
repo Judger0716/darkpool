@@ -21,10 +21,13 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
-const { json } = require('body-parser');
+
+var argv = process.argv.splice(2);
+
+const username = argv[0];
 
 // Main program function
-exports.queryCommittee = async function (username) {
+async function main() {
 
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet(process.cwd() + '/wallet');
@@ -76,11 +79,21 @@ exports.queryCommittee = async function (username) {
                 console.log('-----------------------------------------------------------------------------------------\n\n');
         */
 
-        let queryResponse = await contract.evaluateTransaction('GetCommittee');
+        let queryResponse = await contract.evaluateTransaction('GetCandidates');
         console.log(queryResponse.toString());
-        console.log('\n  GetCommittee query complete.');
+        console.log('\n  GetCandidates query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
-        return JSON.parse(queryResponse);
+
+        queryResponse = await contract.submitTransaction('Apply', '50');
+        console.log(queryResponse.toString());
+        console.log('\n  apply query complete.');
+        console.log('-----------------------------------------------------------------------------------------\n\n');
+
+        queryResponse = await contract.evaluateTransaction('GetCandidates');
+        console.log(queryResponse.toString());
+        console.log('\n  GetCandidates query complete.');
+        console.log('-----------------------------------------------------------------------------------------\n\n');
+
 
         /*
            let queryResponse3 = await contract.evaluateTransaction('ClientAccountID');
@@ -164,3 +177,15 @@ exports.queryCommittee = async function (username) {
 
     }
 }
+main().then(() => {
+
+    console.log('Queryapp program complete.');
+
+}).catch((e) => {
+
+    console.log('Queryapp program exception.');
+    console.log(e);
+    console.log(e.stack);
+    process.exit(-1);
+
+});

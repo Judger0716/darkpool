@@ -21,14 +21,18 @@ app.use(bodyParser.json())
 app.engine('.html', require('ejs').renderFile);
 
 // Load other nodejs files
-const registerUser = require('./RegisterUser');
-const loginUser = require('./LoginUser');
+const RegisterUser = require('./RegisterUser');
+const LoginUser = require('./LoginUser');
 const QueryToken = require('./queryToken');
 const QueryOrder = require('./queryOrder');
-const createOrder = require('./createOrder');
+const CreateOrder = require('./createOrder');
+const QueryCommittee = require('./queryCommittee');
 
 // Shamir Secret Sharing
 const sss = require('shamirs-secret-sharing')
+
+// RSA
+const jsrsasign = require('jsrsasign');
  
 /* Route List */
 
@@ -43,7 +47,7 @@ app.get('/login', function (req, res) {
 })
 
 app.post('/login', async function(req, res){
-    var login_status = await loginUser.LoginUser(req.body.username)
+    var login_status = await LoginUser.LoginUser(req.body.username)
     var response = {
         "status": login_status,
     }
@@ -62,7 +66,7 @@ app.get('/register', function (req, res) {
 })
 
 app.post('/register', async function (req, res) {
-    var reg_status = await registerUser.RegUser(req.body.username);
+    var reg_status = await RegisterUser.RegUser(req.body.username);
     var response = {
         "status": reg_status,
     }
@@ -109,21 +113,38 @@ app.post('/createorder', async function (req, res){
     var amount = req.body.amount;
     var price = req.body.price;
     var item = req.body.item;
-    // Shamir Secret Sharing
-    const secret = Buffer.from(toString(price))
-    const shares = sss.split(secret, { shares: 5, threshold: 3 })
-    var buf_len = shares.length
-    var json_shares = {}
-    for(var i=0;i<buf_len;i++){
-        var share_i;
-        share_i = shares[i].toJSON()['data'];
-        json_shares[i]=share_i;
-    }
-    await createOrder.createOrder(username, type, amount, price, item, JSON.stringify(json_shares)).then(ret =>{
+    var json_shares = {};
+    // Get committees' PubKey
+    await QueryCommittee.queryCommittee(username).then(PubKeys =>{
+        console.log('PubKey:',PubKeys);
+        var n = PubKeys.length;
+        var t = 3;
+        // Shamir Secret Sharing
+        const secret = Buffer.from(price.toString());
+        console.log(secret)
+        const shares = sss.split(secret, { shares: n, threshold: t })
+        for(var i=0;i<n;i++){
+            var share_i = shares[i].toJSON()['data'].toString();
+            var blocknum = Math.ceil(share_i.length/32);
+            // Encrypt with committees' public keys
+            var start = PubKeys[i]['name'].search('CN=')+3;
+            var end = PubKeys[i]['name'].search('C=')-3;
+            var cmt_name = PubKeys[i]['name'].substring(start,end);
+            var pub_i = PubKeys[i]['cert'];
+            var enc_i = {};
+            for(var j=0;j<blocknum-1;j++){
+                enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j*32,(j+1)*32), jsrsasign.KEYUTIL.getKey(pub_i));
+                jsrsasign.hextob64(enc_i[j]);
+            }
+            enc_i[blocknum-1] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring((blocknum-1)*32,share_i.length), jsrsasign.KEYUTIL.getKey(pub_i));
+            json_shares[cmt_name]=enc_i;
+        }
+    });
+    await CreateOrder.createOrder(username, type, amount, price, item, JSON.stringify(json_shares)).then(ret =>{
         res.json({
             'order_info': 'SUC',
         })
-    })
+    })     
 })
 
 // Query Order Info
@@ -162,6 +183,7 @@ var server = app.listen(9000, async function () {
     await tokenContract.addContractListener((event)=>{
         // convert into JSON
         var evt = JSON.parse(event.payload);
+        //console.log(evt);
         /*
         // Event Name
         var event_name = event.eventName;
