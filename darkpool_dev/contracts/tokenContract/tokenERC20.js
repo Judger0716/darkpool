@@ -107,9 +107,9 @@ class TokenERC20Contract extends Contract {
         if (!transferResp) {
             throw new Error('Failed to transfer');
         }
-
+        const tokenName = await this.TokenName(ctx);
         // Emit the Transfer event
-        const transferEvent = { from, to, value: parseInt(value) };
+        const transferEvent = { from, to, value: parseInt(value), name: tokenName};
         ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
 
         return true;
@@ -335,7 +335,7 @@ class TokenERC20Contract extends Contract {
 
         console.log(`minter account ${minter} balance updated from ${currentBalance} to ${updatedBalance}`);
         return true;
-}
+    }
 
     /**
      * Burn redeem tokens from minter's account balance

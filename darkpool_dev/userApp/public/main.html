@@ -48,10 +48,10 @@
             
             <!-- 查看个人信息 -->
             <el-dialog title="账户信息" :visible.sync="infoFormVisible" width="50%">
-                <li v-for="(value,key) in userinfo">
-					<p><span>代币种类: {[key]}</span></p>
-					<p><span>代币余额: {[value]}</span></p>
-				</li>
+                <div v-for="(value,key) in userinfo">
+                    <el-tag style="width: 200px;"><i class="el-icon-menu"></i>代币种类：{[key]}</el-tag><br />
+                    <el-tag type="success" style="width: 200px;"><i class="el-icon-wallet"></i>代币余额：{[value]}</el-tag>
+				</div>
                 <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
                     <el-button type="primary" @click="infoFormVisible = false">确 定</el-button>
                 </div>   
@@ -67,46 +67,75 @@
 
                 <!-- 转账查询 -->
                 <el-tab-pane label="转账查询" name="transfer">
-                    <li v-for="tf in transfer_list">
-                        <p><span>发起方:</span><span v-text="tf.from"></span></p>
-                        <p><span>接收方:</span><span v-text="tf.to"></span></p>
-                        <p><span>金额:</span><span v-text="tf.value"></span></p>
-                    </li>
+
+                    <el-table :data="transfer_list" stripe style="width: 100%">
+                        <el-table-column prop="from" label="发起方" width="180"></el-table-column>
+                        <el-table-column prop="to" label="接收方" width="180"></el-table-column>
+                        <el-table-column prop="name" label="代币类型" width="180"></el-table-column>
+                        <el-table-column prop="value" label="金额"></el-table-column>
+                    </el-table>
+                    
                 </el-tab-pane>
                 
                 <!-- 订单查询 -->
                 <el-tab-pane label="订单查询" name="query_order">
-                    <div>未匹配订单</div>
-                    <div v-for="mo in match_order_list">
-                        <div>金额：{[mo.Record.amount]}</div>
-                        <div>创建时间：{[mo.Record.create_time]}</div>
-                        <div>创建者：{[mo.Record.creator]}</div>
-                        <div>交易物品：{[mo.Record.item]}</div>
-                        <div>是否成交：{[mo.Record.deal]}</div>
-                        <div>成交价：{[mo.Record.deal_price]}</div>
-                        <div>成交时间：{[mo.Record.deal_time]}</div>
-                        <div>订单编号：{[mo.Record.order_id]}</div>
-                        <div>订单报价：{[mo.Record.price]}</div>
-                        <div>订单碎片：{[mo.Record.shares]}</div>
-                        <div>订单类型：{[mo.Record.type]}</div>
-                        </br>
-                    </div>
-                    </br>
-                    <div>匹配订单</div>
-                    <div v-for="deo in deal_order_list">
-                        <div>金额：{[deo.Record.amount]}</div>
-                        <div>创建时间：{[deo.Record.create_time]}</div>
-                        <div>创建者：{[deo.Record.creator]}</div>
-                        <div>交易物品：{[deo.Record.item]}</div>
-                        <div>是否成交：{[deo.Record.deal]}</div>
-                        <div>成交价：{[deo.Record.deal_price]}</div>
-                        <div>成交时间：{[deo.Record.deal_time]}</div>
-                        <div>订单编号：{[deo.Record.order_id]}</div>
-                        <div>订单报价：{[deo.Record.price]}</div>
-                        <div>订单碎片：{[deo.Record.shares]}</div>
-                        <div>订单类型：{[deo.Record.type]}</div>
-                        </br>
-                    </div>
+
+                    <el-table :data="match_order_list" style="width: 100%">
+                        <el-table-column prop="order_id" label="订单编号" width="100"></el-table-column>
+                        <el-table-column prop="creator" label="创建者" width="100"></el-table-column>
+                        <el-table-column prop="create_time" label="创建时间" width="100"></el-table-column>
+                        <el-table-column prop="type" label="订单类型" width="100"></el-table-column>
+                        <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
+                        <el-table-column prop="amount" label="交易数量" width="100"></el-table-column>
+                        <el-table-column label="订单碎片" width="100">
+                            <template slot-scope="scope">
+                                <el-button icon="el-icon-document" type="text" @click="share_info_visiable = true;">查看订单碎片</el-button>
+                                <el-dialog
+                                    title="订单碎片信息"
+                                    :append-to-body="true"
+                                    :visible.sync="share_info_visiable"
+                                    width="50%"
+                                    center>
+                                    <div>{[match_order_list[scope.$index].shares]}</div>
+                                    <span slot="footer" class="dialog-footer" center>
+                                        <el-button type="primary" @click="share_info_visiable = false">确 定</el-button>
+                                    </span>
+                                </el-dialog>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="deal" label="是否成交" width="100"></el-table-column>
+                        <el-table-column prop="deal_price" label="成交价" width="100"></el-table-column>
+                        <el-table-column prop="deal_time" label="成交时间" width="100"></el-table-column>
+                    </el-table>
+
+                    <el-table :data="deal_order_list" style="width: 100%">
+                        <el-table-column prop="order_id" label="订单编号" width="100"></el-table-column>
+                        <el-table-column prop="creator" label="创建者" width="100"></el-table-column>
+                        <el-table-column prop="create_time" label="创建时间" width="100"></el-table-column>
+                        <el-table-column prop="type" label="订单类型" width="100"></el-table-column>
+                        <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
+                        <el-table-column prop="amount" label="交易数量" width="100"></el-table-column>
+                        <el-table-column label="订单碎片" width="100">
+                            <template slot-scope="scope">
+                                <el-button icon="el-icon-document" type="text" @click="share_info_visiable = true;">查看订单碎片</el-button>
+                                <el-dialog
+                                    title="订单碎片信息"
+                                    :append-to-body="true"
+                                    :visible.sync="share_info_visiable"
+                                    width="50%"
+                                    center>
+                                    <div>{[deal_order_list[scope.$index].shares]}</div>
+                                    <span slot="footer" class="dialog-footer" center>
+                                        <el-button type="primary" @click="share_info_visiable = false">确 定</el-button>
+                                    </span>
+                                </el-dialog>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="deal" label="是否成交" width="100"></el-table-column>
+                        <el-table-column prop="deal_price" label="成交价" width="100"></el-table-column>
+                        <el-table-column prop="deal_time" label="成交时间" width="100"></el-table-column>
+                    </el-table>
+
                 </el-tab-pane>
 
                 <!-- 创建订单 -->
@@ -205,6 +234,8 @@
                     'value': 'DOGE',
                     'label': 'DOGE',
                 }],
+
+                share_info_visiable: false,
             },
             methods: {
                 // 菜单选择
@@ -254,7 +285,6 @@
                     axios.post('http://localhost:9000/getorder',{
                         'username': this.username,
                     }).then(Response => {
-                        console.log('data',Response['data'])
                         console.log('deal',Response['data']['DealOrder'])
                         console.log('match',Response['data']['MatchOrder'])
                         this.deal_order_list = Response['data']['DealOrder']

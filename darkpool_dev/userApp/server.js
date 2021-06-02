@@ -130,7 +130,7 @@ app.post('/createorder', async function (req, res){
             var start = PubKeys[i]['name'].search('CN=')+3;
             var end = PubKeys[i]['name'].search('C=')-3;
             var cmt_name = PubKeys[i]['name'].substring(start,end);
-            var pub_i = PubKeys[i]['cert'];
+            var pub_i = PubKeys[i]['pub'];
             var enc_i = {};
             for(var j=0;j<blocknum-1;j++){
                 enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j*32,(j+1)*32), jsrsasign.KEYUTIL.getKey(pub_i));

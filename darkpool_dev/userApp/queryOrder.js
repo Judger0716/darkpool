@@ -76,6 +76,9 @@ exports.queryOrder = async function (username) {
         console.log('\n  GetMatchingOrder query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
+        var DealOrderList = [];
+        var MatchOrderList = [];
+
         // Extract Userful Infomation from raw JSON data
         var index = 0;
         while(DealOrder[index]!=undefined){
@@ -83,8 +86,9 @@ exports.queryOrder = async function (username) {
             var user_end = DealOrder[index]['Record']['creator'].search('C=')-3;
             DealOrder[index]['Record']['creator'] = DealOrder[index]['Record']['creator'].substring(user_start,user_end);
             var date = new Date();
-            date.setTime(parseInt(MatchOrder[index]['Record']['create_time']['seconds'])*1000);
-            MatchOrder[index]['Record']['create_time'] = date.toDateString();
+            date.setTime(parseInt(DealOrder[index]['Record']['create_time']['seconds'])*1000);
+            DealOrder[index]['Record']['create_time'] = date.toDateString();
+            DealOrderList.push(DealOrder[index]['Record']);
             index += 1
         }
         index = 0;
@@ -95,13 +99,12 @@ exports.queryOrder = async function (username) {
             var date = new Date();
             date.setTime(parseInt(MatchOrder[index]['Record']['create_time']['seconds'])*1000);
             MatchOrder[index]['Record']['create_time'] = date.toUTCString();
+            MatchOrderList.push(MatchOrder[index]['Record']);
             index += 1
         }
-        //console.log(DealOrder);
-        //console.log(MatchOrder);
         return {
-            'DealOrder': DealOrder,
-            'MatchOrder': MatchOrder,
+            'DealOrder': DealOrderList,
+            'MatchOrder': MatchOrderList,
         }
 
         /*
