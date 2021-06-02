@@ -69,7 +69,7 @@ class Committee extends Contract {
       }
       // If not, add him to the candidates.
       if (!exist)
-        candidates = [...candidates, { name: _applicant, amount: _amount, cert: await this.GetCreator(ctx) }];
+        candidates = [...candidates, { name: _applicant, amount: _amount, cert: await this.GetCert(ctx), pub: await this.GetCreator(ctx) }];
       await ctx.stub.putState(candidateKey, JSON.stringify(candidates));
 
       return true;
@@ -126,6 +126,10 @@ class Committee extends Contract {
 
   async GetCreator(ctx) {
     return await await ctx.clientIdentity.getAttributeValue("pubKey");
+  }
+
+  async GetCert(ctx) {
+    return await ctx.stub.getCreator().idBytes.toString();
   }
 }
 
