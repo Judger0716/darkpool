@@ -74,14 +74,22 @@ node queryCommittee.js
 
 就会自动安装新版本的链码。
 
-## 前端测试
+## 作品测试相关命令
 
-### 用户的注册与登录
-
-执行完开发流程命令后，进入`darkpool_dev/UserApp`目录，执行：
+`darkpool_dev/tokenApp`目录：
 
 ```shell
-node server.js
+node enrollAdmin.js  # 注册管理员
+node regUser.js username  # 注册一个名为[username]的用户
+node queryToken.js username  # 为用户[username]发行50个Doge币
 ```
 
-随后打开浏览器，输入`http://localhost:9000`地址进入主界面，即可完成用户的登录与注册。
+`darkpool_dev/userApp`目录：
+
+```shell
+node enrollAdmin.js  # 注册管理员
+node server.js  # 运行服务端程序
+node formCommittee.js  # 尝试形成委员会
+```
+
+其余操作均在Web前端执行即可
