@@ -102,7 +102,7 @@ app.post('/getinfo', async function (req, res){
 })
 
 // Query Transfer Info
-app.get('/gettransfer', async function (req ,res){
+app.get('/transfer', async function (req ,res){
     res.json({
         'transfer_list': transfer_list
     });
@@ -215,7 +215,7 @@ var server = app.listen(9000, async function () {
     await tokenContract.addContractListener((event)=>{
         // convert into JSON
         var evt = JSON.parse(event.payload);
-        //console.log(evt);
+        console.log(evt);
         /*
         // Event Name
         var event_name = event.eventName;
