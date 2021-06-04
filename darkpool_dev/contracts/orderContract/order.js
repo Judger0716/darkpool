@@ -99,8 +99,8 @@ class Order extends Contract {
     const order1OrignKey = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order1_id]);
     const order2OrignKey = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order2_id]);
 
-    const order1Content = await ctx.stub.getState(order1OrignKey).toString();
-    const order2Content = await ctx.stub.getState(order2OrignKey).toString();
+    let order1Content = JSON.parse(await ctx.stub.getState(order1OrignKey).toString());
+    let order2Content = JSON.parse(await ctx.stub.getState(order2OrignKey).toString());
 
     order1Content.price = order2Content.price = price;
 
@@ -110,8 +110,8 @@ class Order extends Contract {
     const order1NewKey = await ctx.stub.createCompositeKey(orderKey, [dealOrderKey, order1_id]);
     const order2NewKey = await ctx.stub.createCompositeKey(orderKey, [dealOrderKey, order2_id]);
 
-    await ctx.stub.putState(order1NewKey, order1Content);
-    await ctx.stub.putState(order2NewKey, order2Content);
+    await ctx.stub.putState(order1NewKey, JSON.stringify(order1Content));
+    await ctx.stub.putState(order2NewKey, JSON.stringify(order2Content));
 
     ctx.stub.setEvent('OrderDeal', Buffer.from([order1Content, order2Content]));
   }
