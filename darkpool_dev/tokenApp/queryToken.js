@@ -24,10 +24,10 @@ const { exit } = require('process');
 
 var argv = process.argv.splice(2);
 
+const username = argv[0];
+
 // Main program function
 async function main() {
-    
-    const to = argv[0];
 
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet(process.cwd() + '/wallet');
@@ -40,17 +40,16 @@ async function main() {
     try {
 
         // Specify userName for network access
-        const userName = 'admin';
+        const userName = username;
 
         // Load connection profile; will be used to locate a gateway
         let connectionProfile = yaml.safeLoad(fs.readFileSync('../organization/token/gateway/connection-org1.yaml', 'utf8'));
 
         // Set connection options; identity and wallet
         let connectionOptions = {
-            identity: userName,
+            identity: "admin",
             wallet: wallet,
             discovery: { enabled: true, asLocalhost: true }
-
         };
 
         // Connect to gateway using application specified parameters
@@ -106,7 +105,7 @@ async function main() {
         console.log('\n  BalanceOf query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
-        queryResponse = await contract.submitTransaction('Transfer', 'x509::/OU=org2/OU=client/OU=department1/CN=' + to + '::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server', '50');
+        queryResponse = await contract.submitTransaction('Transfer', 'x509::/OU=client/OU=org2/OU=department1/CN=' + userName + '::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server', '50');
         console.log(queryResponse.toString());
         console.log('\n  Mint query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
