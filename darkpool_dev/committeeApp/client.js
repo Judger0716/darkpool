@@ -22,6 +22,7 @@ var node1;
 var prvKey, cert;
 var network, gateway;
 var prvKeyForDecryption;
+var masterName;
 var username = process.argv[2];
 var committeeContract, tokenContract, orderContract;
 
@@ -29,6 +30,7 @@ var committeeMembers = new Map();
 var matchingOrders = new Map();
 var lastSet = new Set();
 var peerList = new Map();
+var stop = false;
 
 /*
  * Store decrypted orders
@@ -40,9 +42,11 @@ var peerList = new Map();
  * time: create_time.seconds (timestamp).
  */
 var matchingPool = new Map();
-matchingPool.set('buy', []);
-matchingPool.set('sell', []);
+matchingPool.set('buy', new Map());
+matchingPool.set('sell', new Map());
+// var dealPool = new Map();
 
+var resultPool = new Map();
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -176,19 +180,20 @@ async function combineOrders() {
           recover_shares.push(share);
         }
       }
+      // console.log(recover_shares.length);
       if (recover_shares.length >= 3) {
         order_body.price = sss.combine(recover_shares.slice(0, 3)).toString();
         console.log(`Order ${order_id} has been decrypted, decrypted price: ${order_body.price}`);
 
         // Add the decrypted order to the matching pool.
-        matchingPool.get(order_body.type).push({
+        matchingPool.get(order_body.type).set(order_body.order_id, {
           id: order_body.order_id,
           type: order_body.type,
           price: parseInt(order_body.price),
           amount: parseInt(order_body.amount),
           time: order_body.create_time.seconds
         });
-        console.log(matchingPool.get(order_body.type));
+        // console.log(matchingPool.get(order_body.type));
       }
     }
   }
@@ -196,13 +201,56 @@ async function combineOrders() {
 }
 
 async function matchOrders() {
-  let buyOrders = matchingPool.get("buy");
-  let sellOrders = matchingPool.get("sell");
+  let buyOrders = Array.from(matchingPool.get("buy").values());
+  let sellOrders = Array.from(matchingPool.get("sell").values());
+  // console.log(buyOrders, sellOrders);
 
-  if (buyOrders.length > 0 &&  sellOrders.length > 0) {
-    
-    // console.log("buyOrders: ", buyOrders);
-    // console.log("sellOrders: ", sellOrders);
+  if (!stop && buyOrders.length > 0 && sellOrders.length > 0) {
+    let _result = buyOrders[0].id + ":" + sellOrders[0].id;
+    let context = {
+      buy: Array.from(buyOrders, x => { return { id: x.order_id }; }),
+      sell: Array.from(sellOrders, x => { return { id: x.order_id }; })
+    }
+    let msg = {
+      type: "matchResult", content: {
+        result: _result,
+        price: sellOrders[0].price,
+        context: context
+      }
+    }
+
+    if (masterName && masterName === username) {
+      if (resultPool.get(msg.content.result)) {
+        resultPool.get(msg.content.result).num += 1;
+      } else {
+        resultPool.set(msg.content.result, { num: 1, content: msg.content });
+      }
+    } else {
+      /*
+       * Broadcast my result.
+       */
+      console.log('Sending result...', msg);
+      for (let [peerString, peerId] of peerList) {
+        nodeSendAndClose(peerId, JSON.stringify(msg));
+      }
+    }
+    // Wait for result.
+    stop = true;
+  }
+  // Wait for enough result.
+  if (stop && masterName && masterName === username) {
+    console.log('Master counting....');
+    let count = 0;
+    for (let [result, body] of resultPool) {
+      count += body.num;
+    }
+    let result_body = Array.from(resultPool.values()).sort(function (a, b) { return parseInt(b.num) - parseInt(a.num); })[0];
+    // Result got, send to Fabric
+    if (count >= 3) {
+      console.log("Sending match result: ", result_body.content.result.split(":")[0], result_body.content.result.split(":")[1], result_body.content.price);
+      await orderContract.submitTransaction('OrderDeal', result_body.content.result.split(":")[0], result_body.content.result.split(":")[1], result_body.content.price);
+      // console.log(queryResponse);
+    }
   }
   setTimeout(matchOrders, 1000);
 }
@@ -216,7 +264,9 @@ async function orderEventHandler(event) {
   // If new order arrived.
   if (event.eventName === "NewOrder") {
     if (!matchingOrders.get(eventJson.order_id)) {
-      eventJson.shares[username] = decryptShare(eventJson);
+      eventJson.price = null;
+      eventJson.shares[username] = decryptShare(eventJson.shares[username]);
+      console.log("Decrypt my share: ", eventJson.shares[username]);
       /*
        * Share with peers.
        */
@@ -228,8 +278,22 @@ async function orderEventHandler(event) {
       matchingOrders.set(eventJson.order_id, eventJson);
       // [eventJson.order_id] = eventJson;
     }
-  } else if (event.eventName === "MatchOrder") {
+  } else if (event.eventName === "OrderDeal") {
+    let buy_id = eventJson[0].order_id;
+    let sell_id = eventJson[1].order_id;
+    matchingPool.get("buy").delete(buy_id);
+    matchingPool.get("sell").delete(sell_id);
+    matchingOrders.delete(buy_id);
+    matchingOrders.delete(sell_id);
 
+    if (stop == true) {
+      // Restart matching...
+      resultPool.clear();
+      stop = false;
+      console.log("OrderDeal: ", eventJson);
+    } else {
+      // console.log(matchingPool);
+    }
   }
 }
 
@@ -251,8 +315,10 @@ async function nodeEventHandler(stream) {
   } else if (message.type === 'shares') {
     // console.log(message);
     for (let order of message.content) {
-      matchingOrders.get(order.order_id).shares[order.name] = Buffer.from(order.share);
-      console.log(`Receive share from ${order.name} for order ${order.order_id}, content: `, Buffer.from(order.share));
+      if (matchingOrders.get(order.order_id)) {
+        matchingOrders.get(order.order_id).shares[order.name] = Buffer.from(order.share);
+        console.log(`Receive share from ${order.name} for order ${order.order_id}, content: `, Buffer.from(order.share));
+      }
     }
     /*
     for (var i = 0; i < message.content.length; i++) {
@@ -263,6 +329,22 @@ async function nodeEventHandler(stream) {
     peerList.delete(message.content.id);
     console.log(`Peer ${message.content.id} quit...`);
     await pipe([JSON.stringify({ msg: "Quit acknowledged." })], stream);
+  } else if (message.type === "matchResult") {
+    // If I'm master, I'll collect others matching result.
+    if (masterName && masterName === username) {
+      /*
+      type: "matchResult", content: {
+        result: result,
+        context: context
+      }
+      */
+      if (resultPool.get(message.content.result)) {
+        resultPool.get(message.content.result).num += 1;
+      } else {
+        resultPool.set(message.content.result, { num: 1, content: message.content });
+        // resultPool.set(message.content.result, { num: 1, content: message.content });
+      }
+    }
   }
 }
 
@@ -365,6 +447,11 @@ async function fetchCommittee() {
   for (let i = 0; i < members.length; i++) {
     members[i].name = adjustUsername(members[i].name);
     committeeMembers.set(members[i].name, members[i]);
+  }
+  if (members.length > 0) {
+    masterName = members[0].name;
+  } else {
+    masterName = null;
   }
 }
 

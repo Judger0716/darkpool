@@ -52,7 +52,7 @@ class Order extends Contract {
    * DealTime
    * DealOrderID
   */
-  async CreateOrder(ctx, type, amount, price, itemname, shares) {
+  async CreateOrder(ctx, type, amount, itemname, shares) {
     // TODO: check the shares.
     // Check type
     if (type !== 'buy' && type !== 'sell')
@@ -71,7 +71,7 @@ class Order extends Contract {
       type: type,
       item: itemname,
       amount: amount,
-      price: price,
+      price: null,
       shares: json_shares,
       deal: false,
       deal_price: null,
@@ -92,15 +92,19 @@ class Order extends Contract {
   async OrderDeal(ctx, order1_id, order2_id, price) {
     // Restrict privilege
     const clientMSPID = await ctx.clientIdentity.getMSPID();
+    /*
     if (clientMSPID !== 'Org1MSP') {
       throw new Error('client is not authorized to deal order');
-    }
+    }*/
 
     const order1OrignKey = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order1_id]);
     const order2OrignKey = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order2_id]);
 
-    let order1Content = JSON.parse(await ctx.stub.getState(order1OrignKey).toString());
-    let order2Content = JSON.parse(await ctx.stub.getState(order2OrignKey).toString());
+    let order1Content = JSON.parse(await ctx.stub.getState(order1OrignKey));
+    let order2Content = JSON.parse(await ctx.stub.getState(order2OrignKey));
+    order1Content.deal = order2Content.deal = true;
+    order1Content.deal_time = order2Content.deal_time = ctx.stub.getTxTimestamp();
+    
 
     order1Content.price = order2Content.price = price;
 
@@ -113,7 +117,7 @@ class Order extends Contract {
     await ctx.stub.putState(order1NewKey, JSON.stringify(order1Content));
     await ctx.stub.putState(order2NewKey, JSON.stringify(order2Content));
 
-    ctx.stub.setEvent('OrderDeal', Buffer.from([order1Content, order2Content]));
+    ctx.stub.setEvent('OrderDeal', Buffer.from(JSON.stringify([order1Content, order2Content])));
   }
 
   async GetDealOrder(ctx) {
