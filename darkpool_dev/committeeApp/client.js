@@ -200,8 +200,9 @@ async function matchOrders() {
   let sellOrders = matchingPool.get("sell");
 
   if (buyOrders.length > 0 &&  sellOrders.length > 0) {
-    console.log("buyOrders: ", buyOrders);
-    console.log("sellOrders: ", sellOrders);
+    
+    // console.log("buyOrders: ", buyOrders);
+    // console.log("sellOrders: ", sellOrders);
   }
   setTimeout(matchOrders, 1000);
 }

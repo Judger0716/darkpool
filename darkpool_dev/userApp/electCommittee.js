@@ -75,15 +75,4 @@ exports.electCommittee = async function (username, amount){
 
     }
 }
-main().then(() => {
 
-    console.log('Queryapp program complete.');
-    process.exit(0);
-}).catch((e) => {
-
-    console.log('Queryapp program exception.');
-    console.log(e);
-    console.log(e.stack);
-    process.exit(-1);
-
-});
