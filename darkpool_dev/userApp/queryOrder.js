@@ -88,6 +88,7 @@ exports.queryOrder = async function (username) {
             var date = new Date();
             date.setTime(parseInt(DealOrder[index]['Record']['create_time']['seconds'])*1000);
             DealOrder[index]['Record']['create_time'] = date.toDateString();
+            DealOrder[index]['Record']['share_info_visible'] = false;
             DealOrderList.push(DealOrder[index]['Record']);
             index += 1
         }
@@ -99,6 +100,7 @@ exports.queryOrder = async function (username) {
             var date = new Date();
             date.setTime(parseInt(MatchOrder[index]['Record']['create_time']['seconds'])*1000);
             MatchOrder[index]['Record']['create_time'] = date.toUTCString();
+            MatchOrder[index]['Record']['share_info_visible'] = false;
             MatchOrderList.push(MatchOrder[index]['Record']);
             index += 1
         }

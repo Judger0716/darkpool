@@ -110,16 +110,16 @@
                         <el-table-column prop="amount" label="交易数量" width="200"></el-table-column>
                         <el-table-column label="订单碎片" width="200">
                             <template slot-scope="scope">
-                                <el-button icon="el-icon-document" type="text" @click="share_info_visible = true;">查看订单碎片</el-button>
+                                <el-button icon="el-icon-document" type="text" @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
                                 <el-dialog
                                     title="订单碎片信息"
                                     :append-to-body="true"
-                                    :visible.sync="share_info_visible"
+                                    :visible.sync="scope.row.share_info_visible"
                                     width="50%"
                                     center>
                                     <div>{[match_order_list[scope.$index].shares]}</div>
                                     <span slot="footer" class="dialog-footer" center>
-                                        <el-button type="primary" @click="share_info_visible = false">确 定</el-button>
+                                        <el-button type="primary" @click="scope.row.share_info_visible = false">确 定</el-button>
                                     </span>
                                 </el-dialog>
                             </template>
@@ -139,16 +139,16 @@
                         <el-table-column prop="amount" label="交易数量" width="200"></el-table-column>
                         <el-table-column label="订单碎片" width="200">
                             <template slot-scope="scope">
-                                <el-button icon="el-icon-document" type="text" @click="share_info_visible = true;">查看订单碎片</el-button>
+                                <el-button icon="el-icon-document" type="text" @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
                                 <el-dialog
                                     title="订单碎片信息"
                                     :append-to-body="true"
-                                    :visible.sync="share_info_visible"
+                                    :visible.sync="scope.row.share_info_visible"
                                     width="50%"
                                     center>
                                     <div>{[deal_order_list[scope.$index].shares]}</div>
                                     <span slot="footer" class="dialog-footer" center>
-                                        <el-button type="primary" @click="share_info_visible = false">确 定</el-button>
+                                        <el-button type="primary" @click="scope.row.share_info_visible = false">确 定</el-button>
                                     </span>
                                 </el-dialog>
                             </template>
@@ -317,7 +317,6 @@
                 // 控制参数
                 currentPage: 1, // 查询结果当前页
                 pageSize: 10, // 查询结果每页多少条
-                share_info_visible: false,
                 elect_visible: false,
             },
             methods: {
