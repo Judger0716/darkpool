@@ -102,11 +102,7 @@ app.post('/getinfo', async function (req, res) {
 })
 
 // Query Transfer Info
-<<<<<<< Updated upstream
 app.get('/transfer', async function (req ,res){
-=======
-app.post('/gettransfer', async function (req, res) {
->>>>>>> Stashed changes
     res.json({
         'transfer_list': transfer_list
     });
@@ -128,7 +124,6 @@ app.post('/createorder', async function (req, res) {
     var item = req.body.item;
     var json_shares = {};
     // Get committees' PubKey
-<<<<<<< Updated upstream
     await QueryCommittee.queryCommittee(username).then(PubKeys =>{
         console.log('PubKey:',PubKeys);
         var n = PubKeys['committee'].length;
@@ -137,11 +132,6 @@ app.post('/createorder', async function (req, res) {
                 'status': false,
             })
         }
-=======
-    await QueryCommittee.queryCommittee(username).then(PubKeys => {
-        console.log('PubKey:', PubKeys);
-        var n = PubKeys.length;
->>>>>>> Stashed changes
         var t = 3;
         // Shamir Secret Sharing
         const secret = Buffer.from(price.toString());
@@ -151,17 +141,10 @@ app.post('/createorder', async function (req, res) {
             var share_i = shares[i].toJSON()['data'].toString();
             var blocknum = Math.ceil(share_i.length / 32);
             // Encrypt with committees' public keys
-<<<<<<< Updated upstream
             var start = PubKeys['committee'][i]['name'].search('CN=')+3;
             var end = PubKeys['committee'][i]['name'].search('C=')-3;
             var cmt_name = PubKeys['committee'][i]['name'].substring(start,end);
             var pub_i = PubKeys['committee'][i]['pub'];
-=======
-            var start = PubKeys[i]['name'].search('CN=') + 3;
-            var end = PubKeys[i]['name'].search('C=') - 3;
-            var cmt_name = PubKeys[i]['name'].substring(start, end);
-            var pub_i = PubKeys[i]['pub'];
->>>>>>> Stashed changes
             var enc_i = {};
             for (var j = 0; j < blocknum - 1; j++) {
                 enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j * 32, (j + 1) * 32), jsrsasign.KEYUTIL.getKey(pub_i));
