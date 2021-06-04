@@ -7,7 +7,7 @@ const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
 // Main program function
-exports.createOrder = async function (username, type, amount, price, itemname, shares) {
+exports.createOrder = async function (username, type, amount, itemname, shares) {
 
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet(process.cwd() + '/wallet');
@@ -52,12 +52,7 @@ exports.createOrder = async function (username, type, amount, price, itemname, s
         console.log('-----------------------------------------------------------------------------------------');
         console.log('****** Submitting Order queries ****** \n\n ');
 
-        console.log(type)
-        console.log(amount)
-        console.log(price)
-        console.log(shares,typeof(shares))
-
-        let queryResponse = await contract.submitTransaction('CreateOrder', type, amount, price, itemname, shares);
+        let queryResponse = await contract.submitTransaction('CreateOrder', type, amount, itemname, shares);
         console.log(queryResponse.toString());  // NULL
         console.log('\n  CreateOrder query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
