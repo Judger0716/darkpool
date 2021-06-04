@@ -16,7 +16,7 @@ const bodyParser = require('body-parser');
 
 // Load HTML resources
 app.use('/public', express.static('public'));
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 app.engine('.html', require('ejs').renderFile);
 
@@ -34,37 +34,37 @@ const ElectCommittee = require('./electCommittee');
 const sss = require('shamirs-secret-sharing')
 
 // RSA
-const jsrsasign = require('jsrsasign');
- 
+const jsrsasign = require('jsrsasign');
+
 /* Route List */
 
 // Default route
 app.get('/', function (req, res) {
-    res.render( __dirname + "/" + "public/login.html",{msg: '请输入用户名登录'});
+    res.render(__dirname + "/" + "public/login.html", { msg: '请输入用户名登录' });
 })
 
 // login
 app.get('/login', function (req, res) {
-    res.render( __dirname + "/" + "public/login.html",{msg: '请输入用户名登录'});
+    res.render(__dirname + "/" + "public/login.html", { msg: '请输入用户名登录' });
 })
 
-app.post('/login', async function(req, res){
+app.post('/login', async function (req, res) {
     var login_status = await LoginUser.LoginUser(req.body.username)
     var response = {
         "status": login_status,
     }
     console.log(login_status)
-    if(login_status=='LOG_SUC'){
-        res.render(__dirname + "/" + "public/main.html",{username: req.body.username});
+    if (login_status == 'LOG_SUC') {
+        res.render(__dirname + "/" + "public/main.html", { username: req.body.username });
     }
-    else if(login_status=='LOG_ERR'){
-        res.render( __dirname + "/" + "public/login.html",{msg: '登陆失败'});
+    else if (login_status == 'LOG_ERR') {
+        res.render(__dirname + "/" + "public/login.html", { msg: '登陆失败' });
     }
 })
 
 // register
 app.get('/register', function (req, res) {
-    res.render( __dirname + "/" + "public/register.html",{msg: '请输入注册的用户名'});
+    res.render(__dirname + "/" + "public/register.html", { msg: '请输入注册的用户名' });
 })
 
 app.post('/register', async function (req, res) {
@@ -74,19 +74,19 @@ app.post('/register', async function (req, res) {
     }
     console.log(reg_status)
     // Register successfully
-    if(reg_status == 'REG_SUC'){
-        res.render( __dirname + "/" + "public/login.html",{msg: '注册成功'});
+    if (reg_status == 'REG_SUC') {
+        res.render(__dirname + "/" + "public/login.html", { msg: '注册成功' });
     }
     // Already registered
-    else if(reg_status == 'REG_ARD'){
-        res.render( __dirname + "/" + "public/register.html",{msg: '已经注册过此用户，可直接登录'});
+    else if (reg_status == 'REG_ARD') {
+        res.render(__dirname + "/" + "public/register.html", { msg: '已经注册过此用户，可直接登录' });
     }
     // Register failed
-    else res.render( __dirname + "/" + "public/register.html",{msg: '注册失败'});
+    else res.render(__dirname + "/" + "public/register.html", { msg: '注册失败' });
 })
 
 // Query Account Info
-app.post('/getinfo', async function (req, res){
+app.post('/getinfo', async function (req, res) {
     await QueryToken.QueryBalance(req.body.username).then(result => {
         console.log('Queryapp program complete.');
         res.json({
@@ -102,7 +102,11 @@ app.post('/getinfo', async function (req, res){
 })
 
 // Query Transfer Info
+<<<<<<< Updated upstream
 app.get('/transfer', async function (req ,res){
+=======
+app.post('/gettransfer', async function (req, res) {
+>>>>>>> Stashed changes
     res.json({
         'transfer_list': transfer_list
     });
@@ -116,7 +120,7 @@ app.post('/transfer', async function (req, res){
 })
 
 // Create Order
-app.post('/createorder', async function (req, res){
+app.post('/createorder', async function (req, res) {
     var username = req.body.username;
     var type = req.body.type;
     var amount = req.body.amount;
@@ -124,6 +128,7 @@ app.post('/createorder', async function (req, res){
     var item = req.body.item;
     var json_shares = {};
     // Get committees' PubKey
+<<<<<<< Updated upstream
     await QueryCommittee.queryCommittee(username).then(PubKeys =>{
         console.log('PubKey:',PubKeys);
         var n = PubKeys['committee'].length;
@@ -132,38 +137,50 @@ app.post('/createorder', async function (req, res){
                 'status': false,
             })
         }
+=======
+    await QueryCommittee.queryCommittee(username).then(PubKeys => {
+        console.log('PubKey:', PubKeys);
+        var n = PubKeys.length;
+>>>>>>> Stashed changes
         var t = 3;
         // Shamir Secret Sharing
         const secret = Buffer.from(price.toString());
         console.log(secret)
         const shares = sss.split(secret, { shares: n, threshold: t })
-        for(var i=0;i<n;i++){
+        for (var i = 0; i < n; i++) {
             var share_i = shares[i].toJSON()['data'].toString();
-            var blocknum = Math.ceil(share_i.length/32);
+            var blocknum = Math.ceil(share_i.length / 32);
             // Encrypt with committees' public keys
+<<<<<<< Updated upstream
             var start = PubKeys['committee'][i]['name'].search('CN=')+3;
             var end = PubKeys['committee'][i]['name'].search('C=')-3;
             var cmt_name = PubKeys['committee'][i]['name'].substring(start,end);
             var pub_i = PubKeys['committee'][i]['pub'];
+=======
+            var start = PubKeys[i]['name'].search('CN=') + 3;
+            var end = PubKeys[i]['name'].search('C=') - 3;
+            var cmt_name = PubKeys[i]['name'].substring(start, end);
+            var pub_i = PubKeys[i]['pub'];
+>>>>>>> Stashed changes
             var enc_i = {};
-            for(var j=0;j<blocknum-1;j++){
-                enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j*32,(j+1)*32), jsrsasign.KEYUTIL.getKey(pub_i));
+            for (var j = 0; j < blocknum - 1; j++) {
+                enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j * 32, (j + 1) * 32), jsrsasign.KEYUTIL.getKey(pub_i));
                 jsrsasign.hextob64(enc_i[j]);
             }
-            enc_i[blocknum-1] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring((blocknum-1)*32,share_i.length), jsrsasign.KEYUTIL.getKey(pub_i));
-            json_shares[cmt_name]=enc_i;
+            enc_i[blocknum - 1] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring((blocknum - 1) * 32, share_i.length), jsrsasign.KEYUTIL.getKey(pub_i));
+            json_shares[cmt_name] = enc_i;
         }
     });
-    await CreateOrder.createOrder(username, type, amount, price, item, JSON.stringify(json_shares)).then(ret =>{
+    await CreateOrder.createOrder(username, type, amount, price, item, JSON.stringify(json_shares)).then(ret => {
         res.json({
             'status': ret,
         })
-    })     
+    })
 })
 
 // Query Order Info
-app.post('/getorder', async function (req, res){
-    await QueryOrder.queryOrder(req.body.username).then(result =>{
+app.post('/getorder', async function (req, res) {
+    await QueryOrder.queryOrder(req.body.username).then(result => {
         console.log('Queryapp program complete.');
         res.json(result);
     }).catch((e) => {
@@ -211,8 +228,8 @@ var server = app.listen(9000, async function () {
     await gateway.connect(connectionProfile, connectionOptions);
     console.log('Use network channel: mychannel.');
     const network = await gateway.getNetwork('mychannel');
-    const tokenContract = await network.getContract('tokenContract', 'Token');
-    await tokenContract.addContractListener((event)=>{
+    const tokenContract = await network.getContract('tokenContract', 'Token');
+    await tokenContract.addContractListener((event) => {
         // convert into JSON
         var evt = JSON.parse(event.payload);
         console.log(evt);
@@ -222,18 +239,18 @@ var server = app.listen(9000, async function () {
         evt['event_name'] = event_name;
         */
         // From, neglect mint
-        if(evt['from']!='0x0'){
-            var fromuser_start = evt['from'].search('CN=')+3;
-            var fromuser_end = evt['from'].search('C=')-3;
-            evt['from'] = evt['from'].substring(fromuser_start,fromuser_end);
+        if (evt['from'] != '0x0') {
+            var fromuser_start = evt['from'].search('CN=') + 3;
+            var fromuser_end = evt['from'].search('C=') - 3;
+            evt['from'] = evt['from'].substring(fromuser_start, fromuser_end);
         }
         // To
-        var touser_start = evt['to'].search('CN=')+3;
-        var touser_end = evt['to'].search('C=')-3;
-        evt['to'] = evt['to'].substring(touser_start,touser_end);
+        var touser_start = evt['to'].search('CN=') + 3;
+        var touser_end = evt['to'].search('C=') - 3;
+        evt['to'] = evt['to'].substring(touser_start, touser_end);
         // Value
         transfer_list.push(evt);  // Add to global variable
-    }, {startBlock : 0});  // From genesis block
+    }, { startBlock: 0 });  // From genesis block
 
     //var host = server.address().address
     var port = server.address().port

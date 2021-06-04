@@ -18,7 +18,9 @@
     "libp2p-mdns": "^0.16.0",
     "libp2p-mplex": "^0.10.3",
     "libp2p-noise": "^3.0.0",
-    "libp2p-tcp": "^0.15.4"
+    "libp2p-tcp": "^0.15.4",
+    "libp2p-websockets": "^0.15.7",
+    "shamirs-secret-sharing": "file:../userApp/shamirs-secret-sharing"
   },
   "devDependencies": {
     "eslint": "^5.6.0"
