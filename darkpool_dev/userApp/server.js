@@ -24,9 +24,11 @@ app.engine('.html', require('ejs').renderFile);
 const RegisterUser = require('./RegisterUser');
 const LoginUser = require('./LoginUser');
 const QueryToken = require('./queryToken');
+const Transfer = require('./transfer');
 const QueryOrder = require('./queryOrder');
 const CreateOrder = require('./createOrder');
 const QueryCommittee = require('./queryCommittee');
+const ElectCommittee = require('./electCommittee');
 
 // Shamir Secret Sharing
 const sss = require('shamirs-secret-sharing')
@@ -100,10 +102,17 @@ app.post('/getinfo', async function (req, res){
 })
 
 // Query Transfer Info
-app.post('/gettransfer', async function (req ,res){
+app.get('/transfer', async function (req ,res){
     res.json({
         'transfer_list': transfer_list
     });
+})
+
+// Transfer to Others
+app.post('/transfer', async function (req, res){
+    await Transfer.transfer(req.body.from,req.body.to,req.body.amount).then(ret =>{
+        res.json({'status': ret});
+    })
 })
 
 // Create Order
@@ -117,7 +126,12 @@ app.post('/createorder', async function (req, res){
     // Get committees' PubKey
     await QueryCommittee.queryCommittee(username).then(PubKeys =>{
         console.log('PubKey:',PubKeys);
-        var n = PubKeys.length;
+        var n = PubKeys['committee'].length;
+        if(n==0){
+            res.json({
+                'status': false,
+            })
+        }
         var t = 3;
         // Shamir Secret Sharing
         const secret = Buffer.from(price.toString());
@@ -127,10 +141,10 @@ app.post('/createorder', async function (req, res){
             var share_i = shares[i].toJSON()['data'].toString();
             var blocknum = Math.ceil(share_i.length/32);
             // Encrypt with committees' public keys
-            var start = PubKeys[i]['name'].search('CN=')+3;
-            var end = PubKeys[i]['name'].search('C=')-3;
-            var cmt_name = PubKeys[i]['name'].substring(start,end);
-            var pub_i = PubKeys[i]['pub'];
+            var start = PubKeys['committee'][i]['name'].search('CN=')+3;
+            var end = PubKeys['committee'][i]['name'].search('C=')-3;
+            var cmt_name = PubKeys['committee'][i]['name'].substring(start,end);
+            var pub_i = PubKeys['committee'][i]['pub'];
             var enc_i = {};
             for(var j=0;j<blocknum-1;j++){
                 enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j*32,(j+1)*32), jsrsasign.KEYUTIL.getKey(pub_i));
@@ -142,7 +156,7 @@ app.post('/createorder', async function (req, res){
     });
     await CreateOrder.createOrder(username, type, amount, price, item, JSON.stringify(json_shares)).then(ret =>{
         res.json({
-            'order_info': 'SUC',
+            'status': ret,
         })
     })     
 })
@@ -160,6 +174,24 @@ app.post('/getorder', async function (req, res){
     });
 })
 
+// Query Committee
+app.post('/queryCommittee', async function (req, res){
+    await QueryCommittee.queryCommittee(req.body.username).then(ret =>{
+        res.json({
+            'candidates': ret.candidates,
+            'committee': ret.committee,
+        })
+    })
+})
+
+// Elect Committee
+app.post('/electCommittee', async function (req, res){
+    await ElectCommittee.electCommittee(req.body.username, req.body.amount).then(ret =>{
+        res.json({
+            'status': ret,
+        })
+    })
+})
 
 // SERVER LISTENING
 var server = app.listen(9000, async function () {
@@ -183,7 +215,7 @@ var server = app.listen(9000, async function () {
     await tokenContract.addContractListener((event)=>{
         // convert into JSON
         var evt = JSON.parse(event.payload);
-        //console.log(evt);
+        console.log(evt);
         /*
         // Event Name
         var event_name = event.eventName;
