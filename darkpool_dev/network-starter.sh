@@ -32,8 +32,8 @@ cp "${DIR}/../test-network/organizations/peerOrganizations/org1.example.com/user
 cp "${DIR}/../test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/signcerts/"* "${DIR}/../test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/signcerts/User1@org2.example.com-cert.pem"
 cp "${DIR}/../test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/"* "${DIR}/../test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/priv_sk"
 
-echo Suggest that you monitor the docker containers by running
-echo "./organization/token/configuration/cli/monitordocker.sh fabric_test"
+# echo Suggest that you monitor the docker containers by running
+# echo "./organization/token/configuration/cli/monitordocker.sh fabric_test"
 
 bash ${DIR}/contracts/tokenContract/install_chaincode.sh
 bash ${DIR}/contracts/orderContract/install_chaincode.sh
