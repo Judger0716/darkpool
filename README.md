@@ -24,7 +24,7 @@ curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.3.1 1.4.9
 bash network-starter.sh # 自动启动系统并安装链码
 ```
 
-`darkpool_dev/tokenApp`目录：
+进入 `darkpool_dev/tokenApp` 目录执行：
 
 ```shell
 node enrollAdmin.js  # 注册管理员
@@ -32,14 +32,14 @@ node regUser.js username  # 注册一个名为[username]的用户
 node queryToken.js username  # 为用户[username]发行50个Doge币
 ```
 
-`darkpool_dev/userApp`目录：
+进入 `darkpool_dev/userApp`目录执行：
 
 ```shell
 node enrollAdmin.js  # 注册管理员
 node server.js  # 运行服务端程序
 ```
 
-打开一个新的终端：
+打开一个新的终端，进入 `darkpool_dev/userApp`目录执行：
 
 ```shell
 node formCommittee.js  # 尝试形成委员会
