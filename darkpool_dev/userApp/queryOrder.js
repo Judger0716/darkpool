@@ -88,6 +88,9 @@ exports.queryOrder = async function (username) {
             var date = new Date();
             date.setTime(parseInt(DealOrder[index]['Record']['create_time']['seconds'])*1000);
             DealOrder[index]['Record']['create_time'] = date.toDateString();
+            date.setTime(parseInt(DealOrder[index]['Record']['deal_time']['seconds'])*1000);
+            DealOrder[index]['Record']['deal_time'] = date.toUTCString();
+            DealOrder[index]['Record']['deal'] = DealOrder[index]['Record']['deal'].toString();
             DealOrder[index]['Record']['share_info_visible'] = false;
             DealOrderList.push(DealOrder[index]['Record']);
             index += 1

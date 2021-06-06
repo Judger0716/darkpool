@@ -178,6 +178,7 @@ async function main() {
 main().then(() => {
 
     console.log('Queryapp program complete.');
+    process.exit(0);
 
 }).catch((e) => {
 

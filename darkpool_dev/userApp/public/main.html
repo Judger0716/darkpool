@@ -102,20 +102,20 @@
                 <el-tab-pane label="订单查询" name="query_order">
                     <div>未匹配订单</div>
                     <el-table :data="match_order_list" style="width: 100%">
-                        <el-table-column prop="order_id" label="订单编号" width="100"></el-table-column>
-                        <el-table-column prop="creator" label="创建者" width="100"></el-table-column>
-                        <el-table-column prop="create_time" label="创建时间" width="300"></el-table-column>
-                        <el-table-column prop="type" label="订单类型" width="50"></el-table-column>
-                        <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
-                        <el-table-column prop="amount" label="交易数量" width="200"></el-table-column>
-                        <el-table-column label="订单碎片" width="200">
+                        <el-table-column prop="order_id" label="订单编号"></el-table-column>
+                        <el-table-column prop="creator" label="创建者"></el-table-column>
+                        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+                        <el-table-column prop="type" label="订单类型"></el-table-column>
+                        <el-table-column prop="item" label="交易物品"></el-table-column>
+                        <el-table-column prop="amount" label="交易数量"></el-table-column>
+                        <el-table-column label="订单碎片" width="150">
                             <template slot-scope="scope">
                                 <el-button icon="el-icon-document" type="text" @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
                                 <el-dialog
                                     title="订单碎片信息"
                                     :append-to-body="true"
                                     :visible.sync="scope.row.share_info_visible"
-                                    width="50%"
+                                    
                                     center>
                                     <div>{[match_order_list[scope.$index].shares]}</div>
                                     <span slot="footer" class="dialog-footer" center>
@@ -124,27 +124,27 @@
                                 </el-dialog>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="deal" label="是否成交" width="100"></el-table-column>
-                        <el-table-column prop="deal_price" label="成交价" width="100"></el-table-column>
-                        <el-table-column prop="deal_time" label="成交时间" width="300"></el-table-column>
+                        <el-table-column prop="deal" label="是否成交"></el-table-column>
+                        <el-table-column prop="deal_price" label="成交价"></el-table-column>
+                        <el-table-column prop="deal_time" label="成交时间"></el-table-column>
                     </el-table>
                     </br>
                     <div>匹配订单</div>
                     <el-table :data="deal_order_list" style="width: 100%">
-                        <el-table-column prop="order_id" label="订单编号" width="100"></el-table-column>
-                        <el-table-column prop="creator" label="创建者" width="100"></el-table-column>
-                        <el-table-column prop="create_time" label="创建时间" width="300"></el-table-column>
-                        <el-table-column prop="type" label="订单类型" width="50"></el-table-column>
-                        <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
-                        <el-table-column prop="amount" label="交易数量" width="200"></el-table-column>
-                        <el-table-column label="订单碎片" width="200">
+                        <el-table-column prop="order_id" label="订单编号"></el-table-column>
+                        <el-table-column prop="creator" label="创建者" ></el-table-column>
+                        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+                        <el-table-column prop="type" label="订单类型"></el-table-column>
+                        <el-table-column prop="item" label="交易物品"></el-table-column>
+                        <el-table-column prop="amount" label="交易数量"></el-table-column>
+                        <el-table-column label="订单碎片">
                             <template slot-scope="scope">
                                 <el-button icon="el-icon-document" type="text" @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
                                 <el-dialog
                                     title="订单碎片信息"
                                     :append-to-body="true"
                                     :visible.sync="scope.row.share_info_visible"
-                                    width="50%"
+                                    
                                     center>
                                     <div>{[deal_order_list[scope.$index].shares]}</div>
                                     <span slot="footer" class="dialog-footer" center>
@@ -153,9 +153,9 @@
                                 </el-dialog>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="deal" label="是否成交" width="100"></el-table-column>
-                        <el-table-column prop="deal_price" label="成交价" width="100"></el-table-column>
-                        <el-table-column prop="deal_time" label="成交时间" width="300"></el-table-column>
+                        <el-table-column prop="deal" label="是否成交"></el-table-column>
+                        <el-table-column prop="deal_price" label="成交价"></el-table-column>
+                        <el-table-column prop="deal_time" label="成交时间"></el-table-column>
                         <el-table-column label="举报">
                             <el-button icon="el-icon-warning" type="text" @click="">举报</el-button>
                         </el-table-column>

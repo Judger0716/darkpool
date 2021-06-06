@@ -10,6 +10,7 @@ const orderKey = 'Order'
 const dealOrderKey = 'Dealed'
 const matchingOrderKey = 'Matching'
 const orderIDKey = 'OrderID'
+const contextKey = 'OrderContextKey'
 
 
 
@@ -89,7 +90,7 @@ class Order extends Contract {
   /*
    * Let creator pay for the order.
    */
-  async OrderDeal(ctx, order1_id, order2_id, price) {
+  async OrderDeal(ctx, order1_id, order2_id, price, context) {
     // Restrict privilege
     const clientMSPID = await ctx.clientIdentity.getMSPID();
     /*
@@ -99,14 +100,20 @@ class Order extends Contract {
 
     const order1OrignKey = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order1_id]);
     const order2OrignKey = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order2_id]);
+    const contextCompositeKey = await ctx.stub.createCompositeKey(contextKey, [order1_id, order2_id]);
 
     let order1Content = JSON.parse(await ctx.stub.getState(order1OrignKey));
     let order2Content = JSON.parse(await ctx.stub.getState(order2OrignKey));
+
+    if (order1Content.deal === true || order2Content.deal === true) {
+      throw new Error('The order already deal.');
+    }
+
     order1Content.deal = order2Content.deal = true;
     order1Content.deal_time = order2Content.deal_time = ctx.stub.getTxTimestamp();
-    
-
-    order1Content.price = order2Content.price = price;
+    order1Content.deal_order_id = order2Content.order_id;
+    order2Content.deal_order_id = order1Content.order_id;
+    order1Content.deal_price = order2Content.deal_price = price;
 
     await ctx.stub.deleteState(order1OrignKey);
     await ctx.stub.deleteState(order2OrignKey);
@@ -116,8 +123,10 @@ class Order extends Contract {
 
     await ctx.stub.putState(order1NewKey, JSON.stringify(order1Content));
     await ctx.stub.putState(order2NewKey, JSON.stringify(order2Content));
+    await ctx.stub.putState(contextCompositeKey, JSON.stringify(context));
 
-    ctx.stub.setEvent('OrderDeal', Buffer.from(JSON.stringify([order1Content, order2Content])));
+    ctx.stub.setEvent('OrderDeal', Buffer.from(JSON.stringify({ order: [order1Content, order2Content], context: context })));
+    // ctx.stub.setEvent('OrderDealContext', Buffer.from(context));
   }
 
   async GetDealOrder(ctx) {
@@ -156,6 +165,11 @@ class Order extends Contract {
         return allResults;
       }
     }  // while true
+  }
+
+  async GetContext(ctx, order1_id, order2_id) {
+    const contextCompositeKey = await ctx.stub.createCompositeKey(contextKey, [order1_id, order2_id]);
+    return await ctx.stub.getState(contextCompositeKey);
   }
 }
 
