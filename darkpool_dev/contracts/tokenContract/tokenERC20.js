@@ -520,10 +520,6 @@ class TokenERC20Contract extends Contract {
         const clientAccountID = ctx.clientIdentity.getID();
         return `${clientAccountID}`;
     }
-
-    async GetTokenFunc(ctx) {
-        return await ctx.stub.getFunctionAndParameters().fcn;
-    }
 }
 
 module.exports = TokenERC20Contract;
