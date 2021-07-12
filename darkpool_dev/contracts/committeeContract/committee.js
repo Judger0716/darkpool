@@ -5,6 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 'use strict';
 
 const { Contract } = require('fabric-contract-api');
+// const tokenERC20Contract = require('./tokenERC20.js');
 
 const memberPayThreshold = 0;
 const minCommitteeMembers = 3;
@@ -52,8 +53,11 @@ class Committee extends Contract {
     if (balance < _amount || _amount < memberPayThreshold)
       throw new Error(`Balance: ${balance} is not enough or amount: ${amount} is less than ${memberPayThreshold}.`);
 
+    // let tokenObject = new tokenERC20Contract()
+
     // Try to pay for application.
-    const pay_result = await ctx.stub.invokeChaincode("tokenContract", ["Transfer", "committeeContract", amount]);
+    const pay_result = await ctx.stub.invokeChaincode("tokenContract", ["Freeze", amount]);
+    // let pay_result = tokenObject._freeze(ctx, _applicant, amount);
 
     // Pay success, add to candidates.
     if (pay_result.payload.toString() === "true") {

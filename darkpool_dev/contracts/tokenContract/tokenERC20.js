@@ -7,6 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 const { Contract } = require('fabric-contract-api');
 
 // Define objectType names for prefix
+const freezedBalancePrefix = 'freeze'
 const balancePrefix = 'balance';
 const allowancePrefix = 'allowance';
 
@@ -109,7 +110,7 @@ class TokenERC20Contract extends Contract {
         }
         const tokenName = await this.TokenName(ctx);
         // Emit the Transfer event
-        const transferEvent = { from, to, value: parseInt(value), name: tokenName};
+        const transferEvent = { from, to, value: parseInt(value), name: tokenName };
         ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
 
         return true;
@@ -175,6 +176,15 @@ class TokenERC20Contract extends Contract {
         if (valueInt < 0) { // transfer of 0 is allowed in ERC20, so just validate against negative amounts
             throw new Error('transfer amount cannot be negative');
         }
+        // Get freezed amount
+        const fromFreezedBalanceKey = ctx.stub.createCompositeKey(freezedBalancePrefix, [from]);
+        const fromFreezedBalanceBytes = await ctx.stub.getState(fromFreezedBalanceKey);
+        let fromFreezedBalance;
+        if (!fromFreezedBalanceBytes || fromFreezedBalanceBytes.length === 0) {
+            fromFreezedBalance = 0
+        } else {
+            fromFreezedBalance = parseInt(fromFreezedBalanceBytes.toString());
+        }
 
         // Retrieve the current balance of the sender
         const fromBalanceKey = ctx.stub.createCompositeKey(balancePrefix, [from]);
@@ -187,7 +197,7 @@ class TokenERC20Contract extends Contract {
         const fromCurrentBalance = parseInt(fromCurrentBalanceBytes.toString());
 
         // Check if the sender has enough tokens to spend.
-        if (fromCurrentBalance < valueInt) {
+        if ((fromCurrentBalance - fromFreezedBalance) < valueInt) {
             throw new Error(`client account ${from} has insufficient funds.`);
         }
 
@@ -338,6 +348,104 @@ class TokenERC20Contract extends Contract {
     }
 
     /**
+     * Freeze spender's balance.
+     *
+     * @param {Context} ctx the transaction context
+     * @param {String} spender The spender who's balance will be freezed.
+     * @param {Integer} amount amount of tokens to be minted
+     * @returns {Object} The balance
+     */
+    async Freeze(ctx, amount) {
+        const _spender = await ctx.clientIdentity.getID();
+        const spender = _spender.toString();
+
+        // Parse amount.
+        const amountInt = parseInt(amount);
+        if (amountInt < 0) {
+            throw new Error('spender amount must be a positive integer');
+        }
+
+        // Get spender's freezed balance.
+        const spenderFreezedBalanceKey = ctx.stub.createCompositeKey(freezedBalancePrefix, [spender]);
+        const spenderFreezedBalanceBytes = await ctx.stub.getState(spenderFreezedBalanceKey);
+        let spenderFreezedBalance;
+        if (!spenderFreezedBalanceBytes || spenderFreezedBalanceBytes.length === 0) {
+            spenderFreezedBalance = 0
+        } else {
+            spenderFreezedBalance = parseInt(spenderFreezedBalanceBytes.toString());
+        }
+
+        const updatedFreezedBalance = spenderFreezedBalance + amountInt;
+
+        const balanceKey = ctx.stub.createCompositeKey(balancePrefix, [spender]);
+        const currentBalanceBytes = await ctx.stub.getState(balanceKey);
+        // If spender's current balance doesn't yet exist, we'll create it with a current balance of 0
+        let currentBalance;
+        if (!currentBalanceBytes || currentBalanceBytes.length === 0) {
+            currentBalance = 0;
+        } else {
+            currentBalance = parseInt(currentBalanceBytes.toString());
+        }
+
+        // No enough balance to freeze.
+        if (updatedFreezedBalance > currentBalance) {
+            return false;
+            // throw new Error('spender has no enough balance to freeze');
+        }
+
+        await ctx.stub.putState(spenderFreezedBalanceKey, Buffer.from(updatedFreezedBalance.toString()));
+
+        // Emit the Freeze event
+        const freezeEvent = { spender: spender, value: amountInt };
+        ctx.stub.setEvent('Freeze', Buffer.from(JSON.stringify(freezeEvent)));
+
+        // console.log(`minter account ${minter} balance updated from ${currentBalance} to ${updatedBalance}`);
+        return true;
+    }
+
+    async GetFreezedBalance(ctx, spender) {
+        // Get spender's freezed balance.
+        const spenderFreezedBalanceKey = ctx.stub.createCompositeKey(freezedBalancePrefix, [spender]);
+        const spenderFreezedBalanceBytes = await ctx.stub.getState(spenderFreezedBalanceKey);
+        let spenderFreezedBalance;
+        if (!spenderFreezedBalanceBytes || spenderFreezedBalanceBytes.length === 0) {
+            spenderFreezedBalance = 0
+        } else {
+            spenderFreezedBalance = parseInt(spenderFreezedBalanceBytes.toString());
+        }
+        return spenderFreezedBalance;
+    }
+
+    async Unfreeze(ctx, amount) {
+        const _spender = await ctx.clientIdentity.getID();
+        const spender = _spender.toString();
+
+        // Parse amount.
+        const amountInt = parseInt(amount);
+        if (amountInt < 0) {
+            throw new Error('spender amount must be a positive integer');
+        }
+
+        // Get spender's freezed balance.
+        const spenderFreezedBalanceKey = ctx.stub.createCompositeKey(freezedBalancePrefix, [spender]);
+        const spenderFreezedBalanceBytes = await ctx.stub.getState(spenderFreezedBalanceKey);
+        let spenderFreezedBalance;
+        if (!spenderFreezedBalanceBytes || spenderFreezedBalanceBytes.length === 0) {
+            spenderFreezedBalance = 0
+        } else {
+            spenderFreezedBalance = parseInt(spenderFreezedBalanceBytes.toString());
+        }
+
+        const updatedFreezedBalance = spenderFreezedBalance - amountInt;
+
+        if (updatedFreezedBalance < 0) {
+            throw new Error('updated freezed balance must be a positive integer');
+        }
+
+        await ctx.stub.putState(spenderFreezedBalanceKey, Buffer.from(updatedFreezedBalance.toString()));
+    }
+
+    /**
      * Burn redeem tokens from minter's account balance
      *
      * @param {Context} ctx the transaction context
@@ -413,6 +521,9 @@ class TokenERC20Contract extends Contract {
         return `${clientAccountID}`;
     }
 
+    async GetTokenFunc(ctx) {
+        return await ctx.stub.getFunctionAndParameters().fcn;
+    }
 }
 
 module.exports = TokenERC20Contract;
