@@ -18,6 +18,15 @@
   const contract = await network.getContract('tokenContract', 'Dogecoin');
   ```
   由于保留了名为 `Token` 的代币作为默认，所以之前的代码仍能正常执行（之前只有 `Token` 这一个合约）。
++ 对于成交的订单，会赋予一个已完成订单的编号，用户凭借这个编号来举报订单，新的订单成交事件会发送下面的信息（新增了 `deal_id` 字段）
+  ```json
+  {
+    deal_id: doid,
+    order: [order1Content, order2Content],
+    context: context
+  }
+  ```
+  并且新增了 `GetDealedOrders` 获取所有的成交订单（格式如上），老的接口 `GetDealOrder` 也保留了，他输出的是所有已成交的买单和卖单。
 
 ## 作品测试相关命令
 
