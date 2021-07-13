@@ -19,7 +19,7 @@
   ```
   由于保留了名为 `Token` 的代币作为默认，所以之前的代码仍能正常执行（之前只有 `Token` 这一个合约）。
 + 对于成交的订单，会赋予一个已完成订单的编号，用户凭借这个编号来举报订单，新的订单成交事件会发送下面的信息（新增了 `deal_id` 字段）
-  ```json
+  ```javascript
   {
     deal_id: doid,
     order: [order1Content, order2Content],
@@ -27,6 +27,13 @@
   }
   ```
   并且新增了 `GetDealedOrders` 获取所有的成交订单（格式如上），老的接口 `GetDealOrder` 也保留了，他输出的是所有已成交的买单和卖单。
+  还规定的了举报的接口如下，但是还未实现（思路是发送一个事件，然后根据成交的订单获取当时交易的上下文，让所有的委员会成员去检测上下文以及结果是否符合）：
+  ```javascript
+  async Report(ctx, dealed_order_id) {
+    // TODO
+    ctx.stub.setEvent('Report', Buffer.from(dealed_order_id));
+  }
+  ```
 
 ## 作品测试相关命令
 
