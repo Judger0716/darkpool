@@ -10,6 +10,15 @@
 + Fabric v2.3.1
 + Fabric CA v1.4.9
 
+## Update
+
+##### Updated 2021.7.13
++ 可以根据不同币种进行操作了，目前有三种货币（`Bitcoin`，`Dogecoin`，`Token`），通过调用代币链码中的不同合约来实现，例如调用 Dogecoin：
+  ```javascript
+  const contract = await network.getContract('tokenContract', 'Dogecoin');
+  ```
+  由于保留了名为 `Token` 的代币作为默认，所以之前的代码仍能正常执行（之前只有 `Token` 这一个合约）。
+
 ## 作品测试相关命令
 
 首先安装 Fabric 环境（推荐在临时目录下完成，安装完以后删除临时目录）：

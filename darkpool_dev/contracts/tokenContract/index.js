@@ -6,6 +6,8 @@
 
 'use strict';
 
-const tokenERC20Contract = require('./tokenERC20.js');
+const Token = require('./token.js');
+const Dogecoin = require('./doge.js');
+const Bitcoin = require('./btc.js');
 
-module.exports.contracts = [tokenERC20Contract];
+module.exports.contracts = [Token, Dogecoin, Bitcoin];

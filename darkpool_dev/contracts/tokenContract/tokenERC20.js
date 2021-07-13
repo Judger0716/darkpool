@@ -7,20 +7,33 @@ SPDX-License-Identifier: Apache-2.0
 const { Contract } = require('fabric-contract-api');
 
 // Define objectType names for prefix
-const freezedBalancePrefix = 'freeze'
-const balancePrefix = 'balance';
-const allowancePrefix = 'allowance';
+// const freezedBalancePrefix = 'freeze';
+// const balancePrefix = 'balance';
+// const allowancePrefix = 'allowance';
 
 // Define key names for options
-const nameKey = 'name';
-const symbolKey = 'symbol';
-const decimalsKey = 'decimals';
-const totalSupplyKey = 'totalSupply';
+// const nameKey = 'name';
+// const symbolKey = 'symbol';
+// const decimalsKey = 'decimals';
+// const totalSupplyKey = 'totalSupply';
 
 class TokenERC20Contract extends Contract {
-    constructor() {
+    constructor(name, symbol, decimals) {
         // Unique namespace when multiple contracts per chaincode file
-        super('Token');
+        super(name);
+
+        this.tokenName = name
+        this.symbol = symbol;
+        this.decimals = decimals;
+
+        this.freezedBalancePrefix = name + 'freeze';
+        this.balancePrefix = name + 'balance';
+        this.allowancePrefix = name + 'allowance';
+
+        this.nameKey = name + 'name';
+        this.symbolKey = name + 'symbol';
+        this.decimalsKey = name + 'decimals';
+        this.totalSupplyKey = name + 'totalSupply';
     }
     /**
      * Return the name of the token - e.g. "MyToken".
@@ -32,8 +45,11 @@ class TokenERC20Contract extends Contract {
      * @returns {String} Returns the name of the token
     */
     async TokenName(ctx) {
+        return this.tokenName;
+        /*
         const nameBytes = await ctx.stub.getState(nameKey);
         return nameBytes.toString();
+        */
     }
 
     /**
@@ -43,8 +59,11 @@ class TokenERC20Contract extends Contract {
      * @returns {String} Returns the symbol of the token
     */
     async Symbol(ctx) {
+        return this.symbol;
+        /*
         const symbolBytes = await ctx.stub.getState(symbolKey);
         return symbolBytes.toString();
+        */
     }
 
     /**
@@ -55,8 +74,9 @@ class TokenERC20Contract extends Contract {
      * @returns {Number} Returns the number of decimals
     */
     async Decimals(ctx) {
-        const decimalsBytes = await ctx.stub.getState(decimalsKey);
-        const decimals = parseInt(decimalsBytes.toString());
+        // const decimalsBytes = await ctx.stub.getState(decimalsKey);
+        // const decimals = parseInt(decimalsBytes.toString());
+        const decimals = parseInt(this.decimals);
         return decimals;
     }
 
@@ -67,7 +87,7 @@ class TokenERC20Contract extends Contract {
      * @returns {Number} Returns the total token supply
     */
     async TotalSupply(ctx) {
-        const totalSupplyBytes = await ctx.stub.getState(totalSupplyKey);
+        const totalSupplyBytes = await ctx.stub.getState(this.totalSupplyKey);
         const totalSupply = parseInt(totalSupplyBytes.toString());
         return totalSupply;
     }
@@ -80,7 +100,7 @@ class TokenERC20Contract extends Contract {
      * @returns {Number} Returns the account balance
      */
     async BalanceOf(ctx, owner) {
-        const balanceKey = ctx.stub.createCompositeKey(balancePrefix, [owner]);
+        const balanceKey = ctx.stub.createCompositeKey(this.balancePrefix, [owner]);
 
         const balanceBytes = await ctx.stub.getState(balanceKey);
         if (!balanceBytes || balanceBytes.length === 0) {
@@ -108,7 +128,7 @@ class TokenERC20Contract extends Contract {
         if (!transferResp) {
             throw new Error('Failed to transfer');
         }
-        const tokenName = await this.TokenName(ctx);
+        const tokenName = this.TokenName(ctx);
         // Emit the Transfer event
         const transferEvent = { from, to, value: parseInt(value), name: tokenName };
         ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
@@ -129,7 +149,7 @@ class TokenERC20Contract extends Contract {
         const spender = ctx.clientIdentity.getID();
 
         // Retrieve the allowance of the spender
-        const allowanceKey = ctx.stub.createCompositeKey(allowancePrefix, [from, spender]);
+        const allowanceKey = ctx.stub.createCompositeKey(this.allowancePrefix, [from, spender]);
         const currentAllowanceBytes = await ctx.stub.getState(allowanceKey);
 
         if (!currentAllowanceBytes || currentAllowanceBytes.length === 0) {
@@ -177,7 +197,7 @@ class TokenERC20Contract extends Contract {
             throw new Error('transfer amount cannot be negative');
         }
         // Get freezed amount
-        const fromFreezedBalanceKey = ctx.stub.createCompositeKey(freezedBalancePrefix, [from]);
+        const fromFreezedBalanceKey = ctx.stub.createCompositeKey(this.freezedBalancePrefix, [from]);
         const fromFreezedBalanceBytes = await ctx.stub.getState(fromFreezedBalanceKey);
         let fromFreezedBalance;
         if (!fromFreezedBalanceBytes || fromFreezedBalanceBytes.length === 0) {
@@ -187,14 +207,14 @@ class TokenERC20Contract extends Contract {
         }
 
         // Retrieve the current balance of the sender
-        const fromBalanceKey = ctx.stub.createCompositeKey(balancePrefix, [from]);
+        const fromBalanceKey = ctx.stub.createCompositeKey(this.balancePrefix, [from]);
         const fromCurrentBalanceBytes = await ctx.stub.getState(fromBalanceKey);
 
         if (!fromCurrentBalanceBytes || fromCurrentBalanceBytes.length === 0) {
             throw new Error(`client account ${from} has no balance`);
         }
 
-        const fromCurrentBalance = parseInt(fromCurrentBalanceBytes.toString());
+        let fromCurrentBalance = parseInt(fromCurrentBalanceBytes.toString());
 
         // Check if the sender has enough tokens to spend.
         if ((fromCurrentBalance - fromFreezedBalance) < valueInt) {
@@ -202,7 +222,7 @@ class TokenERC20Contract extends Contract {
         }
 
         // Retrieve the current balance of the recepient
-        const toBalanceKey = ctx.stub.createCompositeKey(balancePrefix, [to]);
+        const toBalanceKey = ctx.stub.createCompositeKey(this.balancePrefix, [to]);
         const toCurrentBalanceBytes = await ctx.stub.getState(toBalanceKey);
 
         let toCurrentBalance;
@@ -237,7 +257,7 @@ class TokenERC20Contract extends Contract {
     async Approve(ctx, spender, value) {
         const owner = ctx.clientIdentity.getID();
 
-        const allowanceKey = ctx.stub.createCompositeKey(allowancePrefix, [owner, spender]);
+        const allowanceKey = ctx.stub.createCompositeKey(this.allowancePrefix, [owner, spender]);
 
         let valueInt = parseInt(value);
         await ctx.stub.putState(allowanceKey, Buffer.from(valueInt.toString()));
@@ -259,7 +279,7 @@ class TokenERC20Contract extends Contract {
      * @returns {Number} Return the amount of remaining tokens allowed to spent
      */
     async Allowance(ctx, owner, spender) {
-        const allowanceKey = ctx.stub.createCompositeKey(allowancePrefix, [owner, spender]);
+        const allowanceKey = ctx.stub.createCompositeKey(this.allowancePrefix, [owner, spender]);
 
         const allowanceBytes = await ctx.stub.getState(allowanceKey);
         if (!allowanceBytes || allowanceBytes.length === 0) {
@@ -282,9 +302,9 @@ class TokenERC20Contract extends Contract {
      * @param {String} totalSupply The totalSupply of the token
      */
     async SetOption(ctx, name, symbol, decimals) {
-        await ctx.stub.putState(nameKey, Buffer.from(name));
-        await ctx.stub.putState(symbolKey, Buffer.from(symbol));
-        await ctx.stub.putState(decimalsKey, Buffer.from(decimals));
+        await ctx.stub.putState(this.nameKey, Buffer.from(name));
+        await ctx.stub.putState(this.symbolKey, Buffer.from(symbol));
+        await ctx.stub.putState(this.decimalsKey, Buffer.from(decimals));
 
         console.log(`name: ${name}, symbol: ${symbol}, decimals: ${decimals}`);
         return true;
@@ -313,7 +333,7 @@ class TokenERC20Contract extends Contract {
             throw new Error('mint amount must be a positive integer');
         }
 
-        const balanceKey = ctx.stub.createCompositeKey(balancePrefix, [minter]);
+        const balanceKey = ctx.stub.createCompositeKey(this.balancePrefix, [minter]);
 
         const currentBalanceBytes = await ctx.stub.getState(balanceKey);
         // If minter current balance doesn't yet exist, we'll create it with a current balance of 0
@@ -328,7 +348,7 @@ class TokenERC20Contract extends Contract {
         await ctx.stub.putState(balanceKey, Buffer.from(updatedBalance.toString()));
 
         // Increase totalSupply
-        const totalSupplyBytes = await ctx.stub.getState(totalSupplyKey);
+        const totalSupplyBytes = await ctx.stub.getState(this.totalSupplyKey);
         let totalSupply;
         if (!totalSupplyBytes || totalSupplyBytes.length === 0) {
             console.log('Initialize the tokenSupply');
@@ -337,7 +357,7 @@ class TokenERC20Contract extends Contract {
             totalSupply = parseInt(totalSupplyBytes.toString());
         }
         totalSupply = totalSupply + amountInt;
-        await ctx.stub.putState(totalSupplyKey, Buffer.from(totalSupply.toString()));
+        await ctx.stub.putState(this.totalSupplyKey, Buffer.from(totalSupply.toString()));
 
         // Emit the Transfer event
         const transferEvent = { from: '0x0', to: minter, value: amountInt };
@@ -366,7 +386,7 @@ class TokenERC20Contract extends Contract {
         }
 
         // Get spender's freezed balance.
-        const spenderFreezedBalanceKey = ctx.stub.createCompositeKey(freezedBalancePrefix, [spender]);
+        const spenderFreezedBalanceKey = ctx.stub.createCompositeKey(this.freezedBalancePrefix, [spender]);
         const spenderFreezedBalanceBytes = await ctx.stub.getState(spenderFreezedBalanceKey);
         let spenderFreezedBalance;
         if (!spenderFreezedBalanceBytes || spenderFreezedBalanceBytes.length === 0) {
@@ -377,7 +397,7 @@ class TokenERC20Contract extends Contract {
 
         const updatedFreezedBalance = spenderFreezedBalance + amountInt;
 
-        const balanceKey = ctx.stub.createCompositeKey(balancePrefix, [spender]);
+        const balanceKey = ctx.stub.createCompositeKey(this.balancePrefix, [spender]);
         const currentBalanceBytes = await ctx.stub.getState(balanceKey);
         // If spender's current balance doesn't yet exist, we'll create it with a current balance of 0
         let currentBalance;
@@ -405,7 +425,7 @@ class TokenERC20Contract extends Contract {
 
     async GetFreezedBalance(ctx, spender) {
         // Get spender's freezed balance.
-        const spenderFreezedBalanceKey = ctx.stub.createCompositeKey(freezedBalancePrefix, [spender]);
+        const spenderFreezedBalanceKey = ctx.stub.createCompositeKey(this.freezedBalancePrefix, [spender]);
         const spenderFreezedBalanceBytes = await ctx.stub.getState(spenderFreezedBalanceKey);
         let spenderFreezedBalance;
         if (!spenderFreezedBalanceBytes || spenderFreezedBalanceBytes.length === 0) {
@@ -427,7 +447,7 @@ class TokenERC20Contract extends Contract {
         }
 
         // Get spender's freezed balance.
-        const spenderFreezedBalanceKey = ctx.stub.createCompositeKey(freezedBalancePrefix, [spender]);
+        const spenderFreezedBalanceKey = ctx.stub.createCompositeKey(this.freezedBalancePrefix, [spender]);
         const spenderFreezedBalanceBytes = await ctx.stub.getState(spenderFreezedBalanceKey);
         let spenderFreezedBalance;
         if (!spenderFreezedBalanceBytes || spenderFreezedBalanceBytes.length === 0) {
@@ -464,7 +484,7 @@ class TokenERC20Contract extends Contract {
 
         const amountInt = parseInt(amount);
 
-        const balanceKey = ctx.stub.createCompositeKey(balancePrefix, [minter]);
+        const balanceKey = ctx.stub.createCompositeKey(this.balancePrefix, [minter]);
 
         const currentBalanceBytes = await ctx.stub.getState(balanceKey);
         if (!currentBalanceBytes || currentBalanceBytes.length === 0) {
@@ -476,12 +496,12 @@ class TokenERC20Contract extends Contract {
         await ctx.stub.putState(balanceKey, Buffer.from(updatedBalance.toString()));
 
         // Decrease totalSupply
-        const totalSupplyBytes = await ctx.stub.getState(totalSupplyKey);
+        const totalSupplyBytes = await ctx.stub.getState(this.totalSupplyKey);
         if (!totalSupplyBytes || totalSupplyBytes.length === 0) {
             throw new Error('totalSupply does not exist.');
         }
         const totalSupply = parseInt(totalSupplyBytes.toString()) - amountInt;
-        await ctx.stub.putState(totalSupplyKey, Buffer.from(totalSupply.toString()));
+        await ctx.stub.putState(this.totalSupplyKey, Buffer.from(totalSupply.toString()));
 
         // Emit the Transfer event
         const transferEvent = { from: minter, to: '0x0', value: amountInt };
@@ -501,7 +521,7 @@ class TokenERC20Contract extends Contract {
         // Get ID of submitting client identity
         const clientAccountID = ctx.clientIdentity.getID();
 
-        const balanceKey = ctx.stub.createCompositeKey(balancePrefix, [clientAccountID]);
+        const balanceKey = ctx.stub.createCompositeKey(this.balancePrefix, [clientAccountID]);
         const balanceBytes = await ctx.stub.getState(balanceKey);
         if (!balanceBytes || balanceBytes.length === 0) {
             // throw new Error(`the account ${clientAccountID} does not exist`);
