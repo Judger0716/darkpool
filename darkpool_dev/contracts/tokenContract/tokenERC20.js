@@ -128,9 +128,9 @@ class TokenERC20Contract extends Contract {
         if (!transferResp) {
             throw new Error('Failed to transfer');
         }
-        const tokenName = this.TokenName(ctx);
+        // let _tokenName = this.TokenName(ctx);
         // Emit the Transfer event
-        const transferEvent = { from, to, value: parseInt(value), name: tokenName };
+        const transferEvent = { from, to, value: parseInt(value), name: this.tokenName };
         ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
 
         return true;
@@ -177,7 +177,7 @@ class TokenERC20Contract extends Contract {
         console.log(`spender ${spender} allowance updated from ${currentAllowance} to ${updatedAllowance}`);
 
         // Emit the Transfer event
-        const transferEvent = { from, to, value: valueInt };
+        const transferEvent = { from, to, value: valueInt, name: this.tokenName };
         ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
 
         console.log('transferFrom ended successfully');
@@ -263,7 +263,7 @@ class TokenERC20Contract extends Contract {
         await ctx.stub.putState(allowanceKey, Buffer.from(valueInt.toString()));
 
         // Emit the Approval event
-        const approvalEvent = { owner, spender, value: valueInt };
+        const approvalEvent = { owner, spender, value: valueInt, name: this.tokenName };
         ctx.stub.setEvent('Approval', Buffer.from(JSON.stringify(approvalEvent)));
 
         console.log('approve ended successfully');
@@ -360,7 +360,7 @@ class TokenERC20Contract extends Contract {
         await ctx.stub.putState(this.totalSupplyKey, Buffer.from(totalSupply.toString()));
 
         // Emit the Transfer event
-        const transferEvent = { from: '0x0', to: minter, value: amountInt };
+        const transferEvent = { from: '0x0', to: minter, value: amountInt, name: this.tokenName };
         ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
 
         console.log(`minter account ${minter} balance updated from ${currentBalance} to ${updatedBalance}`);
@@ -416,7 +416,7 @@ class TokenERC20Contract extends Contract {
         await ctx.stub.putState(spenderFreezedBalanceKey, Buffer.from(updatedFreezedBalance.toString()));
 
         // Emit the Freeze event
-        const freezeEvent = { spender: spender, value: amountInt };
+        const freezeEvent = { spender: spender, value: amountInt, name: this.tokenName };
         ctx.stub.setEvent('Freeze', Buffer.from(JSON.stringify(freezeEvent)));
 
         // console.log(`minter account ${minter} balance updated from ${currentBalance} to ${updatedBalance}`);
@@ -463,6 +463,10 @@ class TokenERC20Contract extends Contract {
         }
 
         await ctx.stub.putState(spenderFreezedBalanceKey, Buffer.from(updatedFreezedBalance.toString()));
+
+        // Emit the Unfreeze event
+        const unfreezeEvent = { spender: spender, value: amountInt, name: this.tokenName };
+        ctx.stub.setEvent('Unfreeze', Buffer.from(JSON.stringify(unfreezeEvent)));
     }
 
     /**
@@ -504,7 +508,7 @@ class TokenERC20Contract extends Contract {
         await ctx.stub.putState(this.totalSupplyKey, Buffer.from(totalSupply.toString()));
 
         // Emit the Transfer event
-        const transferEvent = { from: minter, to: '0x0', value: amountInt };
+        const transferEvent = { from: minter, to: '0x0', value: amountInt, name: this.tokenName };
         ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
 
         console.log(`minter account ${minter} balance updated from ${currentBalance} to ${updatedBalance}`);
