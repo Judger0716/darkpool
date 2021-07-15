@@ -7,7 +7,7 @@ const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
 // Main program function
-exports.transfer = async function (from, to, amount) {
+exports.transfer = async function (from, to, item, amount) {
 
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet(process.cwd() + '/wallet');
@@ -45,13 +45,13 @@ exports.transfer = async function (from, to, amount) {
         // Get addressability to commercial paper contract
         console.log('Use Token smart contract.');
 
-        const contract = await network.getContract('tokenContract', 'Token');
+        const contract = await network.getContract('tokenContract', item);
 
         // queries - commercial paper
         console.log('-----------------------------------------------------------------------------------------');
         console.log('****** Submitting Token queries ****** \n\n ');
 
-        let queryResponse = await contract.submitTransaction('Transfer', 'x509::/OU=org2/OU=client/OU=department1/CN=' + to + '::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server', amount.toString());
+        let queryResponse = await contract.submitTransaction('Transfer', 'x509::/OU=client/OU=org2/OU=department1/CN=' + to + '::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server', amount.toString());
         console.log(queryResponse.toString());
         console.log('\n  Transfer complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');

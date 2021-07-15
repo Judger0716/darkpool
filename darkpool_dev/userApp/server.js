@@ -89,8 +89,7 @@ app.post('/getinfo', async function (req, res){
     await QueryToken.QueryBalance(req.body.username).then(result => {
         console.log('Queryapp program complete.');
         res.json({
-            'symbol': result.symbol,
-            'balance': result.balance
+            'userinfo': result,
         });
     }).catch((e) => {
         console.log('Queryapp program exception.');
@@ -109,7 +108,7 @@ app.get('/transfer', async function (req ,res){
 
 // Transfer to Others
 app.post('/transfer', async function (req, res){
-    await Transfer.transfer(req.body.from,req.body.to,req.body.amount).then(ret =>{
+    await Transfer.transfer(req.body.from, req.body.to, req.body.item, req.body.amount).then(ret =>{
         res.json({'status': ret});
     })
 })

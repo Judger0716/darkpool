@@ -48,10 +48,15 @@
             
             <!-- 查看个人信息 -->
             <el-dialog title="账户信息" :visible.sync="infoFormVisible" width="50%">
+                <el-table :data="userinfo" stripe style="width: 100%">
+                    <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column>
+                    <el-table-column prop="balance" label="代币数量"></el-table-column>
+                </el-table>
+                <!-- 
                 <div v-for="(value,key) in userinfo">
                     <el-tag style="width: 200px;"><i class="el-icon-menu"></i>代币种类：{[key]}</el-tag><br />
                     <el-tag type="success" style="width: 200px;"><i class="el-icon-wallet"></i>代币余额：{[value]}</el-tag>
-				</div>
+				</div>-->
                 <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
                     <el-button type="primary" @click="infoFormVisible = false">确 定</el-button>
                 </div>   
@@ -240,7 +245,7 @@
             el: "#account",
             delimiters: ["{[", "]}"],
             data: {
-                userinfo: {}, // 当前用户信息
+                userinfo: [], // 当前用户信息
                 infoFormVisible: false,  // 查看用户信息对话框
                 formLabelWidth: '150px',
             },
@@ -255,9 +260,8 @@
                         'username': document.getElementById("cur_un").innerHTML,
                     })
                     .then(Response => {
-                        console.log('Symbol',Response['data']['symbol'])
-                        console.log('Balance',Response['data']['balance'])
-                        this.userinfo[ Response['data']['symbol'] ] = Response['data']['balance']
+                        console.log(Response['data']['userinfo'])
+                        this.userinfo = Response['data']['userinfo']
                         this.infoFormVisible = true
                     })
                     .catch(function (error){
@@ -304,13 +308,10 @@
 
                 // 币种选择
                 itemoptions: [{
-                    'value': 'BTC',
+                    'value': 'Bitcoin',
                     'label': 'BTC',
                 },{
-                    'value': 'ETH',
-                    'label': 'ETH',
-                },{
-                    'value': 'DOGE',
+                    'value': 'Dogecoin',
                     'label': 'DOGE',
                 }],
                 

@@ -54,13 +54,14 @@ bash network-starter.sh # 自动启动系统并安装链码
 ```shell
 node enrollAdmin.js  # 注册管理员
 node regUser.js username  # 注册一个名为[username]的用户
-node queryToken.js username  # 为用户[username]发行50个Doge币
+node queryToken.js username tokenname amount # 为用户[username]发行[amount]个[tokenname]币
 ```
 
 进入 `darkpool_dev/userApp`目录执行：
 
 ```shell
 node enrollAdmin.js  # 注册管理员
+node regUser.js username # 通过控制台注册名为[username]的用户
 node server.js  # 运行服务端程序
 ```
 
