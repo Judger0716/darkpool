@@ -18,6 +18,15 @@
   const contract = await network.getContract('tokenContract', 'Dogecoin');
   ```
   由于保留了名为 `Token` 的代币作为默认，所以之前的代码仍能正常执行（之前只有 `Token` 这一个合约）。
+
++ 增加了冻结和解冻的操作：
+  ```javascript
+  async Freeze(ctx, amount);
+  async GetFreezedBalance(ctx, spender);
+  async Unfreeze(ctx, amount);
+  ```
+  只要通过不同币种的链码进行调用即可。
+
 + 对于成交的订单，会赋予一个已完成订单的编号，用户凭借这个编号来举报订单，新的订单成交事件会发送下面的信息（新增了 `deal_id` 字段）
   ```javascript
   {
