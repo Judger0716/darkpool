@@ -9,7 +9,7 @@ const tokenERC20Contract = require('./tokenERC20.js');
 class Token extends tokenERC20Contract {
   constructor() {
     // Unique namespace when multiple contracts per chaincode file
-    super('Token', 'TOKEN', '6');
+    super('Tether', 'USDT', '6');
   }
   /**
    * Return the name of the token - e.g. "MyToken".
