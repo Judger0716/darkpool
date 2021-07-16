@@ -61,12 +61,6 @@ exports.createOrder = async function (username, type, amount, itemname, shares) 
         console.log(queryResponse.toString());  // NULL
         console.log('\n  CreateOrder query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
-
-        queryResponse = await contract.evaluateTransaction('GetOrderID');
-        console.log(queryResponse.toString());
-        console.log('\n  GetOrderID query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
-        return true;
         
     } catch (error) {
 
