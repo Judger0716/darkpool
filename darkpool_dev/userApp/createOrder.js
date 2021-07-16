@@ -19,11 +19,6 @@ exports.createOrder = async function (username, type, amount, itemname, shares) 
     // Main try/catch block
     try {
 
-        // Tether is an universal token
-        if(itemname=='Tether'){
-            return false;
-        }
-
         // Specify userName for network access
         const userName = username;
 

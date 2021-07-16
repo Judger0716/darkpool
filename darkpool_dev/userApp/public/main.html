@@ -300,7 +300,7 @@
                 // 竞选委员抵押信息
                 elect_form : {
                     'username': document.getElementById("cur_un").innerHTML,
-                    'item': 'DOGE',
+                    'item': 'BTC',
                     'amount': null,
                 },
                 candidates : [],  // 候选人列表
@@ -410,7 +410,22 @@
                     'username': this.elect_form.username,
                     'item': this.elect_form.item,
                     'amount': this.elect_form.amount,
-                  })  
+                  }).then(Response =>{
+                        if(Response['data']['status']){
+                            this.$notify({
+                                title: '成功',
+                                message: '竞选委员成功',
+                                type: 'success'
+                            });
+                        }
+                        else{
+                            this.$notify({
+                                title: '失败',
+                                message: '竞选委员失败',
+                                type: 'warning'
+                            });
+                        }
+                    })
                 },
                 // 每页多少条
                 handleSizeChange(val) {
