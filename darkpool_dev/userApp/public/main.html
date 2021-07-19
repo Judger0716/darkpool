@@ -105,8 +105,7 @@
 
             <!-- 订单查询 -->
             <el-tab-pane label="订单查询" name="query_order">
-                <div>未匹配订单</div>
-                <el-table :data="match_order_list" style="width: 100%">
+                <el-table :data="order_list" style="width: 100%">
                     <el-table-column prop="order_id" label="订单编号"></el-table-column>
                     <el-table-column prop="creator" label="创建者"></el-table-column>
                     <el-table-column prop="create_time" label="创建时间"></el-table-column>
@@ -119,7 +118,7 @@
                                 @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
                             <el-dialog title="订单碎片信息" :append-to-body="true"
                                 :visible.sync="scope.row.share_info_visible" center>
-                                <div>{[match_order_list[scope.$index].shares]}</div>
+                                <div>{[order_list[scope.$index].shares]}</div>
                                 <span slot="footer" class="dialog-footer" center>
                                     <el-button type="primary" @click="scope.row.share_info_visible = false">确 定
                                     </el-button>
@@ -131,37 +130,12 @@
                     <el-table-column prop="deal_price" label="成交价"></el-table-column>
                     <el-table-column prop="deal_time" label="成交时间"></el-table-column>
                 </el-table>
-                </br>
-                <div>匹配订单</div>
-                <el-table :data="deal_order_list" style="width: 100%">
-                    <el-table-column prop="order_id" label="订单编号"></el-table-column>
-                    <el-table-column prop="creator" label="创建者"></el-table-column>
-                    <el-table-column prop="create_time" label="创建时间"></el-table-column>
-                    <el-table-column prop="type" label="订单类型"></el-table-column>
-                    <el-table-column prop="item" label="交易物品"></el-table-column>
-                    <el-table-column prop="amount" label="交易数量"></el-table-column>
-                    <el-table-column label="订单碎片">
-                        <template slot-scope="scope">
-                            <el-button icon="el-icon-document" type="text"
-                                @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
-                            <el-dialog title="订单碎片信息" :append-to-body="true"
-                                :visible.sync="scope.row.share_info_visible" center>
-                                <div>{[deal_order_list[scope.$index].shares]}</div>
-                                <span slot="footer" class="dialog-footer" center>
-                                    <el-button type="primary" @click="scope.row.share_info_visible = false">确 定
-                                    </el-button>
-                                </span>
-                            </el-dialog>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="deal" label="是否成交"></el-table-column>
-                    <el-table-column prop="deal_price" label="成交价"></el-table-column>
-                    <el-table-column prop="deal_time" label="成交时间"></el-table-column>
-                    <el-table-column label="举报">
-                        <el-button icon="el-icon-warning" type="text" @click="">举报</el-button>
-                    </el-table-column>
-                </el-table>
+            </el-tab-pane>
 
+            <!-- 查询匹配订单 -->
+            <el-tab-pane label="查询匹配交易" name="query_dealed_order">
+                <el-table :data="dealed_order_list" style="width: 100%">
+                </el-table>
             </el-tab-pane>
 
             <!-- 创建订单 -->
@@ -297,8 +271,9 @@
                 'amount': null,
             },  // 发起转账的转账信息
 
-            deal_order_list: [],  // 匹配订单信息
-            match_order_list: [],  // 未匹配订单信息
+            dealed_order_list: [],  // 匹配订单信息
+            order_list: [],  // 订单信息
+
             // 创建的订单信息
             order_form: {
                 'username': document.getElementById("cur_un").innerText,
@@ -343,6 +318,9 @@
                 }
                 else if (tab.name == 'query_order') {
                     this.get_order();
+                }
+                else if (tab.name == 'query_dealed_order'){
+                    this.get_dealed_order();
                 }
                 else if (tab.name == 'committee') {
                     this.query_committee();
@@ -401,10 +379,16 @@
                 axios.post('http://localhost:9000/getorder', {
                     'username': this.username,
                 }).then(Response => {
-                    console.log('deal', Response['data']['DealOrder'])
-                    console.log('match', Response['data']['MatchOrder'])
-                    this.deal_order_list = Response['data']['DealOrder']
-                    this.match_order_list = Response['data']['MatchOrder']
+                    this.order_list = Response['data']['OrderList']
+                })
+            },
+            // 查询匹配交易信息
+            get_dealed_order(){
+                axios.post('http://localhost:9000/getdealedorder', {
+                    'username': this.username,
+                }).then(Response => {
+                    console.log(Response['data']['DealedOrderList'])
+                    this.dealed_order_list = Response['data']['DealedOrderList']
                 })
             },
             // 查询委员会情况
@@ -412,6 +396,7 @@
                 axios.post('http://localhost:9000/queryCommittee', {
                     'username': this.username,
                 }).then(Response => {
+                    console.log(Response['data'])
                     this.candidates = Response['data']['candidates']
                     this.committee = Response['data']['committee']
                 })

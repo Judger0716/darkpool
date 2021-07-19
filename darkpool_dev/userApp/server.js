@@ -30,6 +30,7 @@ const CreateOrder = require('./createOrder');
 const QueryCommittee = require('./queryCommittee');
 const ElectCommittee = require('./electCommittee');
 const FormCommittee = require('./formCommittee');
+const QueryDealedOrder = require('./queryDealedOrders');
 
 // Shamir Secret Sharing
 const sss = require('shamirs-secret-sharing')
@@ -178,6 +179,18 @@ app.post('/createorder', async function (req, res) {
 app.post('/getorder', async function (req, res) {
     await QueryOrder.queryOrder(req.body.username).then(result => {
         console.log('Queryapp program complete.');
+        res.json(result);
+    }).catch((e) => {
+        console.log('Queryapp program exception.');
+        console.log(e);
+        console.log(e.stack);
+        process.exit(-1);
+    });
+})
+
+// Query Dealed Order Info
+app.post('/getdealedorder', async function (req, res) {
+    await QueryDealedOrder.queryDealedOrder(req.body.username).then(result =>{
         res.json(result);
     }).catch((e) => {
         console.log('Queryapp program exception.');
