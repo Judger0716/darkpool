@@ -132,40 +132,41 @@ app.post('/createorder', async function (req, res) {
     var item = req.body.item;
     var json_shares = {};
     // Get committees' PubKey
-    await QueryCommittee.queryCommittee(username).then(PubKeys => {
-        // console.log('PubKey:',PubKeys);
-        var n = PubKeys['committee'].length;
-        if (n == 0 || item == 'Tether') {
-            console.log('WRONG');
-            res.json({
-                'status': false,
-            });
-            return;
-        }
-        else {
-            var t = 3;
-            // Shamir Secret Sharing
-            const secret = Buffer.from(price.toString());
-            //console.log(secret)
-            const shares = sss.split(secret, { shares: n, threshold: t })
-            for (var i = 0; i < n; i++) {
-                var share_i = shares[i].toJSON()['data'].toString();
-                var blocknum = Math.ceil(share_i.length / 32);
-                // Encrypt with committees' public keys
-                var start = PubKeys['committee'][i]['name'].search('CN=') + 3;
-                var end = PubKeys['committee'][i]['name'].search('C=') - 3;
-                var cmt_name = PubKeys['committee'][i]['name'].substring(start, end);
-                var pub_i = PubKeys['committee'][i]['pub'];
-                var enc_i = {};
-                for (var j = 0; j < blocknum - 1; j++) {
-                    enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j * 32, (j + 1) * 32), jsrsasign.KEYUTIL.getKey(pub_i));
-                    jsrsasign.hextob64(enc_i[j]);
-                }
-                enc_i[blocknum - 1] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring((blocknum - 1) * 32, share_i.length), jsrsasign.KEYUTIL.getKey(pub_i));
-                json_shares[cmt_name] = enc_i;
+    var PubKeys = await QueryCommittee.queryCommittee(username);
+    // console.log('PubKey:',PubKeys);
+    var n = PubKeys['committee'].length;
+    if (n == 0 || item == 'Tether') {
+        console.log('WRONG');
+        res.json({
+            'status': false,
+        });
+        return;
+    }
+    else {
+        var t = 3;
+        // Shamir Secret Sharing
+        const secret = Buffer.from(price.toString());
+        //console.log(secret)
+        const shares = sss.split(secret, { shares: n, threshold: t })
+        for (var i = 0; i < n; i++) {
+            var share_i = shares[i].toJSON()['data'].toString();
+            var blocknum = Math.ceil(share_i.length / 32);
+            // Encrypt with committees' public keys
+            var start = PubKeys['committee'][i]['name'].search('CN=') + 3;
+            var end = PubKeys['committee'][i]['name'].search('C=') - 3;
+            var cmt_name = PubKeys['committee'][i]['name'].substring(start, end);
+            var pub_i = PubKeys['committee'][i]['pub'];
+            var enc_i = {};
+            for (var j = 0; j < blocknum - 1; j++) {
+                enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j * 32, (j + 1) * 32), jsrsasign.KEYUTIL.getKey(pub_i));
+                jsrsasign.hextob64(enc_i[j]);
             }
+            enc_i[blocknum - 1] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring((blocknum - 1) * 32, share_i.length), jsrsasign.KEYUTIL.getKey(pub_i));
+            json_shares[cmt_name] = enc_i;
         }
-    });
+    }
+
+
     await CreateOrder.createOrder(username, type, amount, item, JSON.stringify(json_shares)).then(ret => {
         res.json({
             'status': ret,
