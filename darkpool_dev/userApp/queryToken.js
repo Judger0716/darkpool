@@ -72,9 +72,13 @@ exports.QueryBalance = async function (username) {
             console.log('\n  BalanceOf query complete.');
             console.log('-----------------------------------------------------------------------------------------\n\n');
 
+            queryResponse = await contract.evaluateTransaction('GetFreezedBalance', ID);
+            var freezedtoken = queryResponse.toString();
+
             res.push({
                 'symbol': symbol,
-                'balance': balance
+                'balance': balance,
+                'freeze': freezedtoken
             });
         }
 

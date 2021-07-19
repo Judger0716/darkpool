@@ -12,7 +12,6 @@ exports.createOrder = async function (username, type, amount, itemname, shares) 
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet(process.cwd() + '/wallet');
 
-
     // A gateway defines the peers used to access Fabric networks
     const gateway = new Gateway();
 
@@ -56,6 +55,7 @@ exports.createOrder = async function (username, type, amount, itemname, shares) 
         console.log(queryResponse.toString());  // NULL
         console.log('\n  CreateOrder query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
+        return true;
         
     } catch (error) {
 

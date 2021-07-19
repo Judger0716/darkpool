@@ -29,6 +29,7 @@ const QueryOrder = require('./queryOrder');
 const CreateOrder = require('./createOrder');
 const QueryCommittee = require('./queryCommittee');
 const ElectCommittee = require('./electCommittee');
+const FormCommittee = require('./formCommittee');
 
 // Shamir Secret Sharing
 const sss = require('shamirs-secret-sharing')
@@ -99,6 +100,15 @@ app.post('/getinfo', async function (req, res){
     });
 })
 
+// Form Committee
+app.post('/formcommittee', async function (req, res){
+    await FormCommittee.FormCommittee().then(result =>{
+        res.json({
+            'status': result,
+        })
+    })
+})
+
 // Query Transfer Info
 app.get('/transfer', async function (req ,res){
     res.json({
@@ -123,19 +133,16 @@ app.post('/createorder', async function (req, res){
     var json_shares = {};
     // Get committees' PubKey
     await QueryCommittee.queryCommittee(username).then(PubKeys =>{
-        console.log('PubKey:',PubKeys);
+        // console.log('PubKey:',PubKeys);
         var n = PubKeys['committee'].length;
         if(n==0 || item=='Tether'){
             console.log('WRONG')
-            res.json({
-                'status': false,
-            })
         }
         else{
             var t = 3;
             // Shamir Secret Sharing
             const secret = Buffer.from(price.toString());
-            console.log(secret)
+            //console.log(secret)
             const shares = sss.split(secret, { shares: n, threshold: t })
             for(var i=0;i<n;i++){
                 var share_i = shares[i].toJSON()['data'].toString();
