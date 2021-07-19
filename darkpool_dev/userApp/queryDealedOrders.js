@@ -8,7 +8,6 @@ const { exit } = require('process');
 
 // Main program function
 exports.queryDealedOrder = async function (username) {
-    console.log(username)
 
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet(process.cwd() + '/wallet');
