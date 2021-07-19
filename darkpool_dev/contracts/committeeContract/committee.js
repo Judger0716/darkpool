@@ -126,6 +126,8 @@ class Committee extends Contract {
 
     // Tell Committee Members
     ctx.stub.setEvent('NewCommitteeMembers', Buffer.from(JSON.stringify(committeeMembers)));
+
+    return true;
   }
 
   async GetCreator(ctx) {

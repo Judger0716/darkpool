@@ -135,7 +135,7 @@ app.post('/createorder', async function (req, res) {
     var PubKeys = await QueryCommittee.queryCommittee(username);
     // console.log('PubKey:',PubKeys);
     var n = PubKeys['committee'].length;
-    if (n == 0 || item == 'Tether') {
+    if (n === 0 || item === 'Tether') {
         console.log('WRONG');
         res.json({
             'status': false,
