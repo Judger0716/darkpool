@@ -255,9 +255,9 @@ async function matchOrders() {
     let result_body = sorted_result[0];
     // Result got, send to Fabric
     if (count >= 3) {
-      console.log("Context: ", JSON.stringify(sorted_result));
+      console.log("Context: ", JSON.stringify(result_body));
       console.log("Sending match result: ", result_body.result.split(":")[0], result_body.result.split(":")[1], result_body.price);
-      await orderContract.submitTransaction('OrderDeal', result_body.result.split(":")[0], result_body.result.split(":")[1], result_body.price, JSON.stringify(sorted_result));
+      await orderContract.submitTransaction('OrderDeal', result_body.result.split(":")[0], result_body.result.split(":")[1], result_body.price, JSON.stringify(result_body));
     }
   }
   setTimeout(matchOrders, 1000);
