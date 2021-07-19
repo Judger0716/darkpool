@@ -65,16 +65,7 @@ exports.FormCommittee = async function () {
         console.log('\n  FormCommittee query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
-        queryResponse = await contract.evaluateTransaction('GetCandidates');
-        console.log(queryResponse.toString());
-        console.log('\n  GetCandidates query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
-
-        queryResponse = await contract.evaluateTransaction('GetCommittee');
-        console.log(queryResponse.toString());
-        console.log('\n  GetCommittee query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
-        return true;
+        return JSON.parse(queryResponse.toString());
 
     } catch (error) {
 
