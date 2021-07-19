@@ -38,3 +38,8 @@ cp "${DIR}/../test-network/organizations/peerOrganizations/org2.example.com/user
 bash ${DIR}/contracts/tokenContract/install_chaincode.sh
 bash ${DIR}/contracts/orderContract/install_chaincode.sh
 bash ${DIR}/contracts/committeeContract/install_chaincode.sh
+
+# Register
+cd ${DIR}/userApp ; node enrollAdmin.js ; node regUser.js 1 ; node regUser.js 2 ; node regUser.js 3
+# Transfer
+cd ${DIR}/tokenApp ; node enrollAdmin.js ; node queryToken.js 1 Tether 100 ; node queryToken.js 2 Tether 100 ; node queryToken.js 3 Tether 100
