@@ -13,6 +13,7 @@ const orderIDKey = 'OrderID'
 const dealOrderIDKey = 'DealOrderID'
 const contextKey = 'OrderContextKey'
 
+
 class Order extends Contract {
   constructor() {
     super('Order');
@@ -140,7 +141,7 @@ class Order extends Contract {
     let dealOrder = {
       deal_id: doid,
       order: [order1Content, order2Content],
-      context: context
+      context: JSON.parse(context)
     }
     await ctx.stub.putState(dealKey, JSON.stringify(dealOrder));
 
