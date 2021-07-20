@@ -39,30 +39,20 @@
             .input{
                 border-radius: 40px;
             }
-            #goback{
-                color: aliceblue;
-                font-size: 24px;
-                margin-top: 250px;
-                margin-left: auto;
-                margin-right: auto;
-                margin-bottom: auto;
-                text-align: center;
-            }
         </style>
     </head>
 
     <body>
         <div class="login">
-            <div id="goback">
-                <button type="button" onclick="window.location.href='login'">返回登录</button>
-            </div>
-            <br>
             <div class='form'>
                 <h1 id="title">注 册</h1>
-                <div><%=msg%></div>
+                <div style="font-size: small; color: red;">提示：<%=msg%></div><br>
                 <form action="/register" method="POST">
                     <div class="input"><input type="text" name="username" placeholder="用户名"></div>
-                    <div style="margin-top: 15px"><button type="submit">注册</button></div>
+                    <div style="margin-top: 15px">
+                        <button type="submit" style="margin-right: 30px;">注册</button>
+                        <button type="button" onclick="window.location.href='login'">返回登录</button>
+                    </div>
                 </form>
             </div>
         </div>
