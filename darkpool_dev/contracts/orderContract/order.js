@@ -62,7 +62,9 @@ class Order extends Contract {
       throw new Error(`Invalid type ${type} of order.`)
 
     // Try to freeze first if it's a buy order.
-    // ....
+    //if (type === 'buy') {
+    //  let pay_result = await ctx.stub.invokeChaincode("tokenContract", ["Freeze", amount]);
+    //}
 
     const oid = await this.IncreaseAndGetOrderID(ctx, orderIDKey);
     const creator = await ctx.clientIdentity.getID().toString();
@@ -118,9 +120,35 @@ class Order extends Contract {
     let order1Content = JSON.parse(await ctx.stub.getState(order1Key));
     let order2Content = JSON.parse(await ctx.stub.getState(order2Key));
 
-    if (order1Content.deal === true || order2Content.deal === true) {
+    if (order1Content.deal === true || order2Content.deal === true || order1Content.item !== order2Content.item) {
       throw new Error('The order already deal.');
     }
+    // Now let's transfer first.
+    // order1 -> to buy -> transfer USDT to the seller
+    // order2 -> to sell -> transfer item to the buyer
+    // 2 transfer + 2 unfreeze
+    let tasks = [
+      {
+        type: 'transfer',
+        item: 'Tether',
+        from: order1Content.creator,
+        to: order2Content.creator,
+        value: parseInt(price) * parseInt(order1Content.amount)
+      },
+      {
+        type: 'transfer',
+        item: order1Content.item,
+        from: order2Content.creator,
+        to: order1Content.creator,
+        value: parseInt(order1Content.amount)
+      }
+    ]
+    let binding = await ctx.stub.getBinding();
+    let taskString = JSON.stringify(tasks);
+    console.log(tasks, binding);
+    // await this.SetTask(ctx, tasks);
+    await ctx.stub.invokeChaincode("tokenContract", ["Tether:OrderTransfer", taskString, binding]);
+    await ctx.stub.invokeChaincode("tokenContract", [order1Content.item + ":OrderTransfer", taskString, binding]);
 
     // Get a dealed order ID.
     let doid = await this.IncreaseAndGetOrderID(ctx, dealOrderIDKey);

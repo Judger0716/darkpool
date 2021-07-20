@@ -246,6 +246,23 @@ class TokenERC20Contract extends Contract {
         return true;
     }
 
+    async OrderTransfer(ctx, taskString, binding) {
+        if (await ctx.stub.getBinding() !== binding) {
+            return false;
+        }
+
+        console.log("------------------------------", binding, taskString, await ctx.stub.getBinding());
+
+        let tasks = JSON.parse(taskString);
+        for (let task of tasks) {
+            if (task.item === this.tokenName) {
+                if (task.type === 'transfer') {
+                    await this._transfer(ctx, task.from, task.to, task.value);
+                }
+            }
+        }
+    }
+
     /**
      * Allows `spender` to spend `value` amount of tokens from the owner.
      *

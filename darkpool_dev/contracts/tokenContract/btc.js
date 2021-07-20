@@ -92,6 +92,10 @@ class Bitcoin extends tokenERC20Contract {
     return super.TransferFrom(ctx, from, to, value);
   }
 
+  async OrderTransfer(ctx, task, binding) {
+    return super.OrderTransfer(ctx, task, binding);
+  }
+
   /**
    * Allows `spender` to spend `value` amount of tokens from the owner.
    *
