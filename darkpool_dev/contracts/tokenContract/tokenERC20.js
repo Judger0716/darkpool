@@ -129,9 +129,6 @@ class TokenERC20Contract extends Contract {
             throw new Error('Failed to transfer');
         }
         // let _tokenName = this.TokenName(ctx);
-        // Emit the Transfer event
-        const transferEvent = { from, to, value: parseInt(value), name: this.tokenName };
-        ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
 
         return true;
     }
@@ -242,6 +239,10 @@ class TokenERC20Contract extends Contract {
 
         console.log(`client ${from} balance updated from ${fromCurrentBalance} to ${fromUpdatedBalance}`);
         console.log(`recipient ${to} balance updated from ${toCurrentBalance} to ${toUpdatedBalance}`);
+
+        // Emit the Transfer event
+        const transferEvent = { from, to, value: parseInt(value), name: this.tokenName };
+        ctx.stub.setEvent('Transfer', Buffer.from(JSON.stringify(transferEvent)));
 
         return true;
     }
