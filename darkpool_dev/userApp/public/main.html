@@ -163,6 +163,12 @@
                                 <el-form-item label="卖单交易物品">
                                     <span>{[ props.row.sell_order.item ]}</span>
                                 </el-form-item>
+                                <el-form-item label="买单交易数量">
+                                    <span>{[ props.row.buy_order.amount ]}</span>
+                                </el-form-item>
+                                <el-form-item label="卖单交易数量">
+                                    <span>{[ props.row.sell_order.amount ]}</span>
+                                </el-form-item>
                                 <el-form-item label="买单创建时间">
                                     <span>{[ props.row.buy_order.create_time ]}</span>
                                 </el-form-item>
@@ -254,8 +260,7 @@
             <!-- 竞选委员 -->
             <el-tab-pane label="竞选委员" name="committee">
                 <!-- 抵押代币竞选委员 -->
-                <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">我要竞选
-                </el-button>
+                <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">我要竞选</el-button>
                 <el-dialog title="抵押代币" :append-to-body="true" :visible.sync="elect_visible" width="50%">
                     <el-form :model="elect_form">
                         <el-form-item label="代币种类">
@@ -266,7 +271,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="抵押数量">
-                            <el-input v-model="elect_form.amount"></el-input>
+                            <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>
                         </el-form-item>
                     </el-form>
                     <el-button @click="elect_visible = false">取 消</el-button>
