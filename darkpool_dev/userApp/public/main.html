@@ -70,7 +70,8 @@
             <el-table :data="userinfo" stripe style="width: 100%">
                 <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column>
                 <el-table-column prop="balance" label="代币数量" width="180"></el-table-column>
-                <el-table-column prop="freeze" label="已冻结数量"></el-table-column>
+                <el-table-column prop="freeze" label="已冻结数量" width="180"></el-table-column>
+                <el-table-column prop="available" label="可用数量"></el-table-column>
             </el-table>
             <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
                 <el-button type="primary" @click="infoFormVisible = false">确 定</el-button>
@@ -87,12 +88,21 @@
 
             <!-- 转账查询 -->
             <el-tab-pane label="转账查询" name="query_transfer">
-                <el-table :data="transfer_list" stripe style="width: 100%">
+                <el-table :data="transfer_list.slice((currentPage-1)*pageSize,currentPage*pageSize)" stripe style="width: 100%">
                     <el-table-column prop="from" label="发起方" width="180"></el-table-column>
                     <el-table-column prop="to" label="接收方" width="180"></el-table-column>
                     <el-table-column prop="name" label="代币类型" width="180"></el-table-column>
                     <el-table-column prop="value" label="金额"></el-table-column>
                 </el-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[10, 20, 30, 50, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="transfer_list.length">
+                </el-pagination>
             </el-tab-pane>
 
             <!-- 发起转账 -->
@@ -117,7 +127,7 @@
 
             <!-- 订单查询 -->
             <el-tab-pane label="订单查询" name="query_order">
-                <el-table :data="order_list" style="width: 100%">
+                <el-table :data="order_list.slice((currentOrderPage-1)*pageSize,currentOrderPage*pageSize)" style="width: 100%">
                     <el-table-column prop="order_id" label="订单编号"></el-table-column>
                     <el-table-column prop="creator" label="创建者"></el-table-column>
                     <el-table-column prop="create_time" label="创建时间"></el-table-column>
@@ -138,15 +148,24 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="deal" label="是否成交"></el-table-column>
-                    <el-table-column prop="deal_price" label="成交价"></el-table-column>
+                    <el-table-column prop="deal_price" label="成交价(Tether)"></el-table-column>
                     <el-table-column prop="deal_time" label="成交时间"></el-table-column>
                 </el-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentOrderPage"
+                    :page-sizes="[10, 20, 30, 50, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="order_list.length">
+                </el-pagination>
             </el-tab-pane>
 
             <!-- 查询匹配订单 -->
             <el-tab-pane label="查询匹配交易" name="query_dealed_order">
                 <el-table
-                    :data="dealed_order_list"
+                    :data="dealed_order_list.slice((currentDealedOrderPage-1)*pageSize,currentDealedOrderPage*pageSize)"
                     style="width: 100%">
                     <el-table-column type="expand">
                         <template slot-scope="props">
@@ -229,6 +248,15 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentDealedOrderPage"
+                    :page-sizes="[10, 20, 30, 50, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="dealed_order_list.length">
+                </el-pagination>
             </el-tab-pane>
 
             <!-- 创建订单 -->
@@ -248,7 +276,7 @@
                     <el-form-item label="交易数量">
                         <el-input v-model="order_form.amount" style="width: 20%;"></el-input>
                     </el-form-item>
-                    <el-form-item label="交易价格">
+                    <el-form-item label="交易价格(Tether)">
                         <el-input v-model="order_form.price" style="width: 20%;"></el-input>
                     </el-form-item>
                 </el-form>
@@ -411,6 +439,8 @@
 
             // 控制参数
             currentPage: 1, // 查询结果当前页
+            currentOrderPage: 1,
+            currentDealedOrderPage: 1,
             pageSize: 10, // 查询结果每页多少条
             elect_visible: false,
         },

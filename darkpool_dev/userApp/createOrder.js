@@ -5,6 +5,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
+const tokenlist = ['Bitcoin','Dogecoin','Tether'];
 
 // Main program function
 exports.createOrder = async function (username, type, amount, itemname, shares) {
@@ -41,6 +42,40 @@ exports.createOrder = async function (username, type, amount, itemname, shares) 
         console.log('Use network channel: mychannel.');
 
         const network = await gateway.getNetwork('mychannel');
+
+        // Check the available
+        var res = {};  // Account Info
+        for(var t=0;t<tokenlist.length;t++){
+            // Get addressability to commercial paper contract
+            console.log('Use Token smart contract.');
+            const contract = await network.getContract('tokenContract', tokenlist[t]);
+            // queries - commercial paper
+            console.log('-----------------------------------------------------------------------------------------');
+            console.log('****** Submitting Token queries ****** \n\n ');
+            let queryResponse = await contract.evaluateTransaction('Symbol');
+            var symbol = queryResponse.toString();
+            console.log(symbol);
+            console.log('\n  Symbol query complete.');
+            console.log('-----------------------------------------------------------------------------------------\n\n');
+            queryResponse = await contract.evaluateTransaction('ClientAccountID');
+            console.log(queryResponse.toString());
+            console.log('\n  ClientAccountID query complete.');
+            console.log('-----------------------------------------------------------------------------------------\n\n');
+            let ID = queryResponse.toString();
+            queryResponse = await contract.evaluateTransaction('BalanceOf', ID);
+            var balance = queryResponse.toString();
+            console.log(balance);
+            console.log('\n  BalanceOf query complete.');
+            console.log('-----------------------------------------------------------------------------------------\n\n');
+            queryResponse = await contract.evaluateTransaction('GetFreezedBalance', ID);
+            var freezedtoken = queryResponse.toString();
+            res[tokenlist[t]]=balance-freezedtoken;
+        }
+
+        // If not available, error
+        if(res[itemname]<amount){
+            return;
+        }
 
         // Get addressability to commercial paper contract
         console.log('Use Order smart contract.');

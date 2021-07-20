@@ -78,7 +78,8 @@ exports.QueryBalance = async function (username) {
             res.push({
                 'symbol': symbol,
                 'balance': balance,
-                'freeze': freezedtoken
+                'freeze': freezedtoken,
+                'available': balance-freezedtoken,
             });
         }
 
