@@ -40,6 +40,8 @@ bash ${DIR}/contracts/orderContract/install_chaincode.sh
 bash ${DIR}/contracts/committeeContract/install_chaincode.sh
 
 # Register
-cd ${DIR}/userApp ; node enrollAdmin.js ; for i in {1..5} ; do node regUser.js $i ; done
+cd ${DIR}/userApp ; node enrollAdmin.js ; for i in {1..5} ; do node regUser.js usr$i ; done
 # Transfer
-cd ${DIR}/tokenApp ; node enrollAdmin.js ; for i in {1..5} ; do node queryToken.js $i Tether 100 ; done 
+cd ${DIR}/tokenApp ; node enrollAdmin.js ; for i in {1..5} ; do node queryToken.js usr$i Tether 100 ; done ;
+for i in {1..5} ; do node queryToken.js usr$i Dogecoin 100 ; done 
+for i in {1..5} ; do node queryToken.js usr$i Bitcoin 100 ; done 
