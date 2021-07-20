@@ -74,7 +74,7 @@ exports.createOrder = async function (username, type, amount, itemname, shares) 
 
         // If not available, error
         if(res[itemname]<amount){
-            return;
+            return 'NotAvailable';
         }
 
         // Get addressability to commercial paper contract

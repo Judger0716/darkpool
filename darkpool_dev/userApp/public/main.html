@@ -493,18 +493,25 @@
                     'price': this.order_form.price,
                 }).then(Response => {
                     console.log(Response['data'])
-                    if (Response['data']['status']) {
+                    if (Response['data']['status']=='NoCommittee') {
                         this.$notify({
-                            title: '成功',
-                            message: '订单创建成功',
-                            type: 'success'
+                            title: '失败',
+                            message: '委员会未创建',
+                            type: 'warning'
+                        });
+                    }
+                    else if (Response['data']['status']=='NotAvailable') {
+                        this.$notify({
+                            title: '失败',
+                            message: '账户余额不足',
+                            type: 'warning'
                         });
                     }
                     else {
                         this.$notify({
-                            title: '失败',
-                            message: '订单创建失败',
-                            type: 'warning'
+                            title: '成功',
+                            message: '订单创建成功',
+                            type: 'success'
                         });
                     }
                 })

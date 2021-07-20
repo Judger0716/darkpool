@@ -137,9 +137,8 @@ app.post('/createorder', async function (req, res) {
     // console.log('PubKey:',PubKeys);
     var n = PubKeys['committee'].length;
     if (n === 0 || item === 'Tether') {
-        console.log('WRONG');
         res.json({
-            'status': false,
+            'status': 'NoCommittee',
         });
         return;
     }
@@ -166,7 +165,6 @@ app.post('/createorder', async function (req, res) {
             json_shares[cmt_name] = enc_i;
         }
     }
-
 
     await CreateOrder.createOrder(username, type, amount, item, JSON.stringify(json_shares)).then(ret => {
         res.json({
