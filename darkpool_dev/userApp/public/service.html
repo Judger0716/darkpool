@@ -1,24 +1,18 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <!-- 新 Bootstrap 核心 CSS 文件 -->
-    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Login&Register</title>
+    <title>Cryptod</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="enroutedigitallab">
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Google Font -->
+
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i%7CRoboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+
     <!-- Bootstrap css-->
     <link rel="stylesheet" href="../public/css/bootstrap.min.css">
     <!-- Font Awesome css-->
@@ -35,47 +29,40 @@
     <link rel="stylesheet" href="../public/css/owl.theme.default.min.css">
     <!-- custom menu css-->
     <link rel="stylesheet" href="../public/css/custom-menu.css">
+    <!-- c3 min css-->
+    <link rel="stylesheet" href="../public/css/c3.min.css">
     <!-- Style css-->
     <link rel="stylesheet" href="../public/css/style.css">
     <!-- Responsive css-->
     <link rel="stylesheet" href="../public/css/responsive.css">
     <!-- Modernizr js-->
     <script src="../public/js/modernizr-2.8.3.min.js"></script>
-    <!-- CDN INSTALL Vue&ElementUI-->
-    <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
-    <script src="https://unpkg.com/element-ui@2.14.1/lib/index.js"></script>
-    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
-    <!-- LOCAL INSTALL
-        <script src="../static/vue.js"></script>
-        <link rel="stylesheet" href="../static/index.css">
-        <script src="../static/index.js"></script>
-        <script src="../static/axios.min.js"></script>
-    -->
-
-    <!-- Style -->
-    <style>
-        #login_area {
-            margin-left: 25%;
-            margin-right: 25%;
-            text-align: center; 
-        }
-        .input-group {
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-    </style>
 </head>
-
 <body>
 
     <!--Preloader-->
     <div class="preloader">
         <div class="loading"></div>
     </div><!--/.preloader-->
-
     <!--header-->
     <header class="stricky">
+        <div class="input-search-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="contact-2" action="#">
+                            <div class="search-input pr">
+                                <input type="text" name="name" placeholder="Search Here....." class="form-control" required="">
+                                <button type="submit" class="submit-btn"><i class="ion-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="close-button">
+                    <i class="ion-ios-close-outline"></i>
+                </div>
+            </div>
+        </div>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -86,7 +73,21 @@
                         <div id="head-mobile"></div>
                         <div class="button"></div>
                         <ul class="pull-right header-list">
-                            <li><a href="../public/index.html"><span class="glyphicon glyphicon-home">返回首页</span></a></li>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about-us.html">About</a></li>
+                            <li><a href="service.html">Service</a></li>
+                            <li><a href="#">Pages</a>
+                                <ul class="dropdown">
+                                    <li><a href="blog.html">Blog</a></li>
+                                    <li><a href="blog-details.html">Blog Details</a></li>
+                                    <li><a href="blog-left-sidebar.html">Blog Left Sidebar</a></li>
+                                    <li><a href="blog-full-width.html">Blog Fullwidth</a></li>
+                                    <li><a href="blog-grid-two.html">Blog Grid Two</a></li>
+                                    <li><a href="blog-grid-three.html">Blog Grid Three</a></li>
+                                </ul><!--/.dropdown-->
+                            </li>
+                            <li><a href="contact.html">Contact</a></li>
+                            <li class="search-option"><a href="#"><i class="ion-search"></i></a></li>
                         </ul><!--/.pull-right-->
                     </nav><!--/#cssmenu-->
                 </div>
@@ -94,46 +95,114 @@
         </div>
     </header><!--/header-->
 
-    <div class="banner-section" 
-        style="
-        background: url(../public/static/login_bg.png);
-        background-size: cover;
-        background-position: center;
-        padding-top: 135px;
-        padding-bottom: 133px;
-        position: relative;
-        ">
+    <div class="banner-section">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="banner-title text-center" >
-                        <h2 style="text-shadow: 2px 3px 1px grey;">欢迎进入暗池交易系统</h2>
-                        <h2 style="text-shadow: 2px 3px 1px grey; font-size: 24px;">Welcome to the Darkpool Trading System</h2>
-                        <br>
-                        <h2 style="text-shadow: 2px 3px 1px grey; font-size: 24px;">登录 / Login</h2>
+                    <div class="banner-title text-center">
+                        <h2>Services</h2>
                     </div>
-                    <div id='login_area'>
-                        <form action="/login" method="post">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1">用户名</span>
-                                <input name="username" type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
-                            </div>
-                            <div class="input-group">
-                                <span class="input-group-addon" id="basic-addon1">密码</span>
-                                <input name="password" type="password" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
-                            </div>
-                            <div><a href="../public/index.html" style="color: white; margin-left: 85%;"><u>忘记密码？</u></a></div>
-                            <div class="btn-group" role="group" aria-label="..." style="margin-top: 50px;">
-                                <button type="submit" class="btn btn-warning">点击登录</button>
-                                <button type="button" class="btn btn-default" onclick="location.href='register.html'">还没有账户？先去注册</button>
-                            </div>
-                        </form>
-                    </div>   
                 </div>
             </div><!--/.row-->
         </div><!--/.container-->
     </div><!--/.banner-section-->
 
+    <section class="bg-deep section-padding">
+        <div class="container">
+            <div class="row row-eq-height">
+                <div class="col-md-4 col-sm-6">
+                    <div class="service-text">
+                        <div>
+                            <h2>We are <span>Cryptod</span> Inspires to Help Business. Our Goal is always client Satisfiction</h2>
+                        </div>
+                    </div><!--/.about-inner-text-content-->
+                </div>
+                <div class="col-md-8 col-sm-6">
+                    <div class="about-inner">
+                        <p class="text">our power of choice is untrammelled and when nothing prevents our being able
+                            to do leasure to be welcomed and every pain avoided But in certan circumstances and own
+                            obligations of business it will frequently occur tha pleasures have to be repudiated a man
+                            therefore always holds in these matters to this principle of selection our power of choice is
+                            untrammelled and when nothing prevents our being able to do leasure to be welcomed and every</p>
+
+                        <p>man therefore always holds in these matters to this principle of selectionour power of choice is untrammelled
+                            a and every pain avoided But in certan circumstances and own obligations of business
+                            it will frequently occur tha pleasures have to be repudiated a man therefore always
+                            holds in these matters to this principle of selection our power of choice is untrammelled and when nothing prevents</p>
+                    </div>
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.about-section-->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-head text-center">
+                        <h2>Growth of Crypto Currency</h2>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                   <canvas id="mixed-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section><!--/.section-padding-->
+    <div id="counter" class="counter-section section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-sm-12">
+                    <div class="achivement">
+                        <h2>Our Achievement Always <span>Inspires</span> to help Other's Business.</h2>
+                    </div><!--/.achivement-->
+                </div>
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <div class="counter-up">
+                                <div class="counter-value" data-count="1000">
+                                </div>
+                                <h4><a href="">Projects Done</a></h4>
+                            </div><!--/.counter-up-->
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <div class="counter-up">
+                                <div class="counter-value" data-count="72">
+                                </div>
+                                <h4><a href="">Awards Won</a></h4>
+                            </div><!--/.counter-up-->
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <div class="counter-up">
+                                <div class="counter-value" data-count="100">
+                                </div>
+                                <h4><a href="">Satisfied Clients</a></h4>
+                            </div><!--/.counter-up-->
+                        </div>
+                    </div>
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </div><!--/#counter-->
+    <div class="quote-section section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <div class="text-quote">
+                        <h3>He system ands expound ta actual an happiness</h3>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="button-area text-right content-align">
+                        <a class="cryptod-button-success" href="">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--/.quote-section-->
 
     <section class="footer-area">
         <div class="container">
@@ -198,7 +267,7 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
                         <div class="copyright-info">
-                            <p>Copyright &copy; 2021.Company name All rights reserved.</p>
+                            <p>Copyright &copy; 2018.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a></p>
                         </div>
                     </div><!--/.copyright-info-->
                     <div class="col-md-6 col-sm-6">
@@ -217,7 +286,6 @@
         </div><!--/.contianer-->
     </section><!--/.footer area-->
 
-    <!--Preloader-->
     <!-- == jQuery Librery == -->
     <script src="../public/js/jquery-3.3.1.min.js"></script>
     <!-- == Bootsrap js File == -->
@@ -228,13 +296,16 @@
     <script src="../public/js/custom-menu.js"></script>
     <!-- == Custom Counter js == -->
     <script src="../public/js/custom-counter.js"></script>
+    <!-- == Prallex js == -->
     <script src="../public/js/prallex.js"></script>
+    <!-- == Chart min js == -->
+    <script src="../public/js/Chart.min.js"></script>
+    <!-- == chat Active js == -->
+    <script src="../public/js/active-chart.js"></script>
     <!-- == Owl Carousel  == -->
     <script src="../public/js/owl.carousel.min.js"></script>
-    <script src="../public/js/Chart.min.js"></script>
     <!-- == Custom js  == -->
-    <script src="../public/js/custom.js"></script>
-
+   <script src="../public/js/custom.js"></script>
 </body>
 </html>
 

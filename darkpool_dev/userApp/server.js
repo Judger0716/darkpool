@@ -41,25 +41,39 @@ const jsrsasign = require('jsrsasign');
 
 // Default route
 app.get('/', function (req, res) {
-    res.render(__dirname + "/" + "public/login.html", { msg: '请输入用户名登录' });
+    res.render(__dirname + "/" + "public/index.html");
+})
+
+// Update TokenPriceList
+app.post('/update_priceList', function (req, res){
+    var tokenList = ['Bitcoin', 'Ripple', 'Monerro', 'Ethereum', 'Litecoin', 'Tether'];
+    var priceList = req.body.priceList;
+    for(var index=0; index<tokenList.length; index++){
+        var random_price = Math.random()*10000;
+        priceList[tokenList[index]].price = random_price.toFixed(2);
+        var gap =  priceList[tokenList[index]].price - priceList[tokenList[index]].oldprice;
+        if(gap>=0) priceList[tokenList[index]].isup = true;
+        else priceList[tokenList[index]].isup = false;
+        priceList[tokenList[index]].rate = (Math.abs(gap)/priceList[tokenList[index]].oldprice).toFixed(2);
+    }
+    res.json({
+        'priceList': priceList,
+    })
 })
 
 // login
 app.get('/login', function (req, res) {
-    res.render(__dirname + "/" + "public/login.html", { msg: '请输入用户名登录' });
+    res.render(__dirname + "/" + "public/login.html");
 })
 
 app.post('/login', async function (req, res) {
+    console.log(req.body.username)
     var login_status = await LoginUser.LoginUser(req.body.username)
-    var response = {
-        "status": login_status,
-    }
-    console.log(login_status)
     if (login_status == 'LOG_SUC') {
         res.render(__dirname + "/" + "public/main.html", { username: req.body.username });
     }
     else if (login_status == 'LOG_ERR') {
-        res.render(__dirname + "/" + "public/login.html", { msg: '登陆失败' });
+        res.render(__dirname + "/" + "public/login.html");
     }
 })
 
@@ -70,10 +84,6 @@ app.get('/register', function (req, res) {
 
 app.post('/register', async function (req, res) {
     var reg_status = await RegisterUser.RegUser(req.body.username);
-    var response = {
-        "status": reg_status,
-    }
-    console.log(reg_status)
     // Register successfully
     if (reg_status == 'REG_SUC') {
         res.render(__dirname + "/" + "public/login.html", { msg: '注册成功' });
@@ -88,6 +98,7 @@ app.post('/register', async function (req, res) {
 
 // Query Account Info
 app.post('/getinfo', async function (req, res) {
+    console.log('req:',req.body.username);
     await QueryToken.QueryBalance(req.body.username).then(result => {
         console.log('Queryapp program complete.');
         res.json({

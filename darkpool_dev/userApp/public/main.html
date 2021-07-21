@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <!-- CDN INSTALL -->
+    <meta charset="utf-8">
+
+    <!-- CDN INSTALL Vue-->
     <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
     <script src="https://unpkg.com/element-ui@2.14.1/lib/index.js"></script>
@@ -14,156 +15,594 @@
         <script src="../static/index.js"></script>
         <script src="../static/axios.min.js"></script>
         -->
-    <!-- CSS -->
-    <style>
-        #welcome {
-            font-size: 20px;
-            color: white;
-            opacity: 0.8;
-        }
+    <title>Main</title>
 
-        .usrinfo {
-            font-size: 18px;
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        .mbutton {
-            display: inline;
-        }
-        .demo-table-expand {
-          font-size: 0;
-        }
-        .demo-table-expand label {
-          width: 100px;
-          color: #99a9bf;
-        }
-        .demo-table-expand .el-form-item {
-          margin-right: 0;
-          margin-bottom: 0;
-          width: 50%;
-        }
-      </style>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Home</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="enroutedigitallab">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i%7CRoboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <!-- Bootstrap css-->
+    <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+    <!-- Font Awesome css-->
+    <!--<link rel="stylesheet" href="../public/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="../public/css/ionicons.min.css">
+    <!-- animate css-->
+    <link rel="stylesheet" href="../public/css/animate.min.css">
+    <!-- REVOLUTION SLIDER STYLES -->
+    <link rel="stylesheet" type="text/css" href="../public/css/settings.css">
+    <link rel="stylesheet" type="text/css" href="../public/css/layers.css">
+    <link rel="stylesheet" type="text/css" href="../public/css/navigation.css">
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="../public/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../public/css/owl.theme.default.min.css">
+    <!-- custom menu css-->
+    <link rel="stylesheet" href="../public/css/custom-menu.css">
+    <!-- Style css-->
+    <link rel="stylesheet" href="../public/css/style.css">
+    <!-- Responsive css-->
+    <link rel="stylesheet" href="../public/css/responsive.css">
+    <!-- Modernizr js-->
+    <script src="../public/js/modernizr-2.8.3.min.js"></script>
 </head>
 
-<body style="background-image:url(../public/static/login_bg.jpg); background-size: cover;">
-    <!-- body部分添加背景图片 -->
+<!-- 首页主体 -->
+<body>
+<!-- 暗池交易 -->
+<div id="darkpool">
 
-    <!-- 抬头欢迎提示 -->
-    <div id="welcome" style="margin-left: 2%;">
-        <h1 style="display: inline;">欢迎：</h1>
-        <h1 style="display: inline;" id="cur_un">
-            <%=username%>
-        </h1>
-    </div>
+    <!--Preloader-->
+    <div class="preloader">
+        <div class="loading"></div>
+    </div><!--/.preloader-->
 
-    <!-- 账户相关，由vue变量account控制 -->
-    <div id="account" style="margin-left: 2%; margin-top: 20px; font-size: 30px; margin-bottom: 15px;">
-
-        <el-button class="mbutton" type="success" icon="el-icon-user-solid" @click="get_userinfo()">查看账户信息</el-button>
-        <el-button class="mbutton" type="primary" icon="el-icon-s-opportunity" @click="form_committee()">形成委员会
-        </el-button>
-        <el-button class="mbutton" type="warning" icon="el-icon-s-home" @click="exitlogin()">退出登录</el-button>
-
-        <!-- 查看个人信息 -->
-        <el-dialog title="账户信息" :visible.sync="infoFormVisible" width="50%">
-            <el-table :data="userinfo" stripe style="width: 100%">
-                <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column>
-                <el-table-column prop="balance" label="代币数量" width="180"></el-table-column>
-                <el-table-column prop="freeze" label="已冻结数量" width="180"></el-table-column>
-                <el-table-column prop="available" label="可用数量"></el-table-column>
-            </el-table>
-            <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
-                <el-button type="primary" @click="infoFormVisible = false">确 定</el-button>
+    <!-- 页面顶部 -->
+    <!--header-->
+    <header class="stricky">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav id="cssmenu">
+                        <!-- logo -->
+                        <div class="logo">
+                            <a href="index.html"><img src="../public/images/logo.png" alt=""></a>
+                        </div>
+                        <div id="head-mobile"></div>
+                        <div class="button"></div>
+                        <!-- 顶部跳转按钮 -->
+                        <ul class="pull-right header-list">
+                            <li><a href="../public/index.html"><span class="glyphicon glyphicon-home">退出登录</span></a></li>
+                            <li><a href="../public/kline/basic.html"><span class="glyphicon glyphicon glyphicon-stats">查看行情</span></a></li>
+                            <li><a href="../public/service.html"><span class="glyphicon glyphicon-info-sign">更多服务</span></a></li>
+                            <li><a href="../public/main_old.html"><span class="glyphicon glyphicon-th-list">个人中心</span></a>
+                                <ul class="dropdown">
+                                    <li>
+                                        <a href="#" @click="get_userinfo()">查看资产信息</a>
+                                         <!-- 查看个人信息 -->
+                                        <el-dialog title="账户信息" :visible.sync="infoFormVisible" width="50%" :append-to-body="true">
+                                            <el-table :data="userinfo" stripe style="width: 100%">
+                                                <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column>
+                                                <el-table-column prop="balance" label="代币数量" width="180"></el-table-column>
+                                                <el-table-column prop="freeze" label="已冻结数量" width="180"></el-table-column>
+                                                <el-table-column prop="available" label="可用数量"></el-table-column>
+                                            </el-table>
+                                            <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
+                                                <el-button type="primary" @click="infoFormVisible = false">确 定</el-button>
+                                            </div>
+                                        </el-dialog>
+                                    </li>
+                                    <li><a href="#transfer_query">转账查询</a></li>
+                                    <li><a href="#transfer">发起转账</a></li>
+                                    <li><a href="#order_query">订单查询</a></li>
+                                    <li><a href="#dealed_order_query">查询匹配交易</a></li>
+                                    <li><a href="#create_order">创建订单</a></li>
+                                    <li><a href="#elect_committee">竞选委员</a></li>
+                                </ul><!--/.dropdown-->
+                            </li>
+                            <li><a herf="#"><span class="glyphicon glyphicon-user">欢迎：</span><div id="cur_un" style="display: inline;"><%=username%></div></a></li>
+                        </ul><!--/.pull-right-->
+                    </nav><!--/#cssmenu-->
+                </div>
             </div>
-        </el-dialog>
+        </div>
+    </header><!--/header-->
+    
+    <!-- 滑动显示区域 -->
+    <div class="slider-section">
+        <div id="rev_slider_1052_1_wrapper" class="rev_slider_wrapper fullscreen-container" data-alias="web-product-dark122" data-source="gallery">
+            <!-- START REVOLUTION SLIDER 5.3.0.2 fullscreen mode -->
+            <div id="rev_slider_1052_1" class="rev_slider fullscreenbanner" style="display:none;" data-version="5.3.0.2">
+                <ul>	<!-- SLIDE  -->
+                    <!-- 滑动插件参数教程：https://www.jb51.net/article/67281.htm -->
+                    <li data-index="rs-2946" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="500"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" >
+                        <!-- MAIN IMAGE 滑动背景图片-->
+                        <img src="../public/images/slider/slide-img.jpg" alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
+                        <!-- LAYERS 1 第一行文字-->
+                        <div class="tp-caption tp-resizeme"
+                             id="slide-2946-layer-7"
+                             data-x="['middle','middle','middle','middle']"
+                             data-hoffset="['-222','-100',0,'0']"
+                             data-y="['middle','middle','middle','middle']"
+                             data-voffset="['-150','-150','-80','-80']"
+                             data-fontsize="['68','68','60','60']"
+                             data-lineheight="['75','75','60','60']"
+                             data-width="['700','700','none','none']"
+                             data-height="none"
+                             data-whitespace="nowrap"
+                             data-type="text"
+                             data-responsive_offset="on"
+                             data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1000,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                             data-textAlign="['left','left','left','left']"
+                             data-paddingtop="[0,0,0,0]"
+                             data-paddingright="[0,0,0,0]"
+                             data-paddingbottom="[0,0,0,0]"
+                             data-paddingleft="[0,0,0,0]"
+                             style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">开启您的</div>
+                        <!-- LAYER NR. 2 第二行文字-->
+                        <div class="tp-caption tp-resizeme"
+                             id="slide-2946-layer-10"
+                             data-x="['middle','middle','middle','middle']"
+                             data-hoffset="['-222','-100',0,'0']"
+                             data-y="['middle','middle','middle','middle']"
+                             data-voffset="['-70','-70','-10','-10']"
+                             data-fontsize="['68','68','60','60']"
+                             data-lineheight="['75','75','60','60']"
+                             data-width="['700','700','none','none']"
+                             data-height="none"
+                             data-whitespace="nowrap"
+                             data-type="text"
+                             data-responsive_offset="on"
+                             data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1250,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                             data-textAlign="['left','left','left','left']"
+                             data-paddingtop="[0,0,0,0]"
+                             data-paddingright="[0,0,0,0]"
+                             data-paddingbottom="[0,0,0,0]"
+                             data-paddingleft="[0,0,0,0]"
+                            style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">暗池交易之旅</div>
+                        <!-- LAYER NR. 3 第三行文字-->
+                        <div class="tp-caption tp-resizeme"
+                             id="slide-2946-layer-9"
+                             data-x="['middle','middle','middle','middle']"
+                             data-hoffset="['-222','-100',0,'0']"
+                             data-y="['middle','middle','middle','middle']"
+                             data-voffset="['30','30','55','55']"
+                             data-fontsize="['18','18','14','14']"
+                             data-lineheight="['33','33','22','22']"
+                             data-width="['700','700','none','none']"
+                             data-height="none"
+                             data-whitespace="nowrap"
+                             data-type="text"
+                             data-responsive_offset="on"
+                             data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1500,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                             data-textAlign="['left','left','left','left']"
+                             data-paddingtop="[0,0,0,0]"
+                             data-paddingright="[0,0,0,0]"
+                             data-paddingbottom="[0,0,0,0]"
+                             data-paddingleft="[0,0,0,0]"
+                             style="z-index: 5; white-space: nowrap; font-family: 'Roboto', sans-serif; color: #fff;">全球最大规模的暗池交易系统<br>
+                            支持多种加密货币<br>
+                            无需交互的交易体验</div>
+                        <!-- LAYER NR. 4 第四行文字-->
+                        <div class="tp-caption  tp-resizeme"
+                             id="slide-2946-layer-8"
+                             data-x="['middle','middle','middle','middle']"
+                             data-hoffset="['-544','-422',0,'0']"
+                             data-y="['middle','middle','middle','middle']"
+                             data-voffset="['140','140','140','140']"
+                             data-width="['48','48','150','150']"
+                             data-height="['48','48','48','48']"
+                             data-whitespace="nowrap"
+                             data-type="text"
+                             data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2947","delay":""}]'
+                             data-responsive_offset="on"
+                             data-responsive="off"
+                             data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(51, 51, 51, 1.00);bw:2px 2px 2px 2px;"}]'
+                             data-textAlign="['center','center','center','center']"
+                             data-paddingtop="[0,0,0,0]"
+                             data-paddingright="[0,0,0,0]"
+                             data-paddingbottom="[0,0,0,0]"
+                             data-paddingleft="[0,0,0,0]" style="z-index: 5; text-transform: capitalize; white-space: nowrap; font-family: 'Lora', serif; font-weight: 700;">
+                            <a style="color: #222;" href="#" class="cryptod-button-warning">了解更多</a>
+                        </div>
+                    </li>
+                    <li data-index="rs-2947" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="500"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" >
 
-    </div>
+                        <!-- MAIN IMAGE -->
+                        <img src="../public/images/slider/slide-img-2.jpg" alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
+                        <!-- LAYERS 1-->
+                            <div class="tp-caption tp-resizeme"
+                                 id="slide-2947-layer-7"
+                                 data-x="['middle','middle','middle','middle']"
+                                 data-hoffset="['-222','-100',0,'0']"
+                                 data-y="['middle','middle','middle','middle']"
+                                 data-voffset="['-150','-150','-80','-80']"
+                                 data-fontsize="['76','76','60','60']"
+                                 data-lineheight="['75','75','60','60']"
+                                 data-width="['700','700','none','none']"
+                                 data-height="none"
+                                 data-whitespace="nowrap"
+                                 data-type="text"
+                                 data-responsive_offset="on"
+                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1000,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                                 data-textAlign="['left','left','left','left']"
+                                 data-paddingtop="[0,0,0,0]"
+                                 data-paddingright="[0,0,0,0]"
+                                 data-paddingbottom="[0,0,0,0]"
+                                 data-paddingleft="[0,0,0,0]"
+                                 style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">保护您的</div>
+                            <!-- LAYER NR. 2 -->
+                            <div class="tp-caption tp-resizeme"
+                                 id="slide-2947-layer-10"
+                                 data-x="['middle','middle','middle','middle']"
+                                 data-hoffset="['-222','-100',0,'0']"
+                                 data-y="['middle','middle','middle','middle']"
+                                 data-voffset="['-70','-70','-10','-10']"
+                                 data-fontsize="['76','76','60','60']"
+                                 data-lineheight="['75','75','60','60']"
+                                 data-width="['700','700','none','none']"
+                                 data-height="none"
+                                 data-whitespace="nowrap"
+                                 data-type="text"
+                                 data-responsive_offset="on"
+                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1250,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                                 data-textAlign="['left','left','left','left']"
+                                 data-paddingtop="[0,0,0,0]"
+                                 data-paddingright="[0,0,0,0]"
+                                 data-paddingbottom="[0,0,0,0]"
+                                 data-paddingleft="[0,0,0,0]"
+                                style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">交易隐私信息</div>
+                            <!-- LAYER NR. 3 -->
+                            <div class="tp-caption tp-resizeme"
+                                 id="slide-2947-layer-9"
+                                 data-x="['middle','middle','middle','middle']"
+                                 data-hoffset="['-222','-100',0,'0']"
+                                 data-y="['middle','middle','middle','middle']"
+                                 data-voffset="['30','30','55','55']"
+                                 data-fontsize="['18','18','14','14']"
+                                 data-lineheight="['33','33','22','22']"
+                                 data-width="['700','700','none','none']"
+                                 data-height="none"
+                                 data-whitespace="nowrap"
+                                 data-type="text"
+                                 data-responsive_offset="on"
+                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1500,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                                 data-textAlign="['left','left','left','left']"
+                                 data-paddingtop="[0,0,0,0]"
+                                 data-paddingright="[0,0,0,0]"
+                                 data-paddingbottom="[0,0,0,0]"
+                                 data-paddingleft="[0,0,0,0]" style="z-index: 5; white-space: nowrap; font-family: 'Roboto', sans-serif; color: #fff;">加密您的订单数据<br>
+                                全自动交易匹配<br>
+                                公平公正的交易模式</div>
+                            <!-- LAYER NR. 4 -->
+                            <div class="tp-caption  tp-resizeme"
+                                 id="slide-2947-layer-8"
+                                 data-x="['middle','middle','middle','middle']"
+                                 data-hoffset="['-544','-422',0,'0']"
+                                 data-y="['middle','middle','middle','middle']"
+                                 data-voffset="['140','140','140','140']"
+                                 data-width="['48','48','150','150']"
+                                 data-height="['48','48','48','48']"
+                                 data-whitespace="nowrap"
+                                 data-type="text"
+                                 data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2947","delay":""}]'
+                                 data-responsive_offset="on"
+                                 data-responsive="off"
+                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(51, 51, 51, 1.00);bw:2px 2px 2px 2px;"}]'
+                                 data-textAlign="['center','center','center','center']"
+                                 data-paddingtop="[0,0,0,0]"
+                                 data-paddingright="[0,0,0,0]"
+                                 data-paddingbottom="[0,0,0,0]"
+                                 data-paddingleft="[0,0,0,0]" style="z-index: 5; text-transform: capitalize; white-space: nowrap; font-family: 'Lora', serif; font-weight: 700;">
+                                <a style="color: #222;" href="#" class="cryptod-button-warning">了解更多</a>
+                            </div>
+                    </li>
+                </ul>
+                <div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;">
+                </div>
+            </div>
+        </div><!--/.container-->
+    </div><!-- END REVOLUTION SLIDER -->
 
-    <!-- 暗池交易系统主体，留出两侧边距 -->
-    <div id="darkpool" style="margin-left: 2%; margin-right: 2%;">
+    <section class="cryptocurrency-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="cryptocurrency-slide custom-nav owl-carousel owl-theme boxshadow wow fadeInUp" data-wow-duration="1.5s" data-wow-delay=".6s">
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/bitcoin.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Bitcoin</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-up"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/ripple.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Ripple</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-down"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/monero.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Monerro</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-up"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/ethereum.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Ethereum</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-down"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/litecoin.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Litecoin</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-down"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/bitcoin.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Bitcoin</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-up"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/ripple.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Ripple</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-up"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/monero.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Monerro</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-down"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/ethereum.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Ethereum</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-down"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/litecoin.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Litecoin</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-up"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="../public/images/icon/bitcoin.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">Bitcoin</a></h4>
+                                <p class="dolar">9,380.05</p>
+                                <p class="price-down"><span>%1.5</span></p>
+                            </div>
+                        </div><!--/.currency-price-->
+                    </div><!--/.cryptocurrency slider-->
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.curency section-->
 
-        <!-- 选项卡样式 -->
-        <el-tabs type="border-card" @tab-click="handleClick" style="opacity: 0.95;">
+    <!-- 转账查询 -->
+    <a href="#" name="transfer_query"></a>
+    <section class="bg-deep about-section">
+        <div class="container">
+            <div class="row row-eq-height">
+                <div class="col-md-12 col-sm-12">
+                    <div class="about-inner-text-content">
+                        <div>
+                            <h2>转账查询</h2>
+                        </div>
+                        <el-button @click="get_transfer()">点击刷新</el-button>
+                            <el-table :data="transfer_list.slice((currentPage-1)*pageSize,currentPage*pageSize)" stripe style="width: 100%">
+                                <el-table-column prop="from" label="发起方" width="180"></el-table-column>
+                                <el-table-column prop="to" label="接收方" width="180"></el-table-column>
+                                <el-table-column prop="name" label="代币类型" width="180"></el-table-column>
+                                <el-table-column prop="value" label="金额"></el-table-column>
+                            </el-table>
+                            <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page="currentPage"
+                                :page-sizes="[10, 20, 30, 50, 100]"
+                                :page-size="pageSize"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                :total="transfer_list.length">
+                            </el-pagination>
+                    </div><!--/.about-inner-text-content-->
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.转账查询-->
 
-            <!-- 转账查询 -->
-            <el-tab-pane label="转账查询" name="query_transfer">
-                <el-table :data="transfer_list.slice((currentPage-1)*pageSize,currentPage*pageSize)" stripe style="width: 100%">
-                    <el-table-column prop="from" label="发起方" width="180"></el-table-column>
-                    <el-table-column prop="to" label="接收方" width="180"></el-table-column>
-                    <el-table-column prop="name" label="代币类型" width="180"></el-table-column>
-                    <el-table-column prop="value" label="金额"></el-table-column>
-                </el-table>
-                <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage"
-                    :page-sizes="[10, 20, 30, 50, 100]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="transfer_list.length">
-                </el-pagination>
-            </el-tab-pane>
+    <!-- 发起转账 -->
+    <a href="#" name="transfer"></a>
+    <div id="counter" class="counter-section section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <div class="achivement">
+                        <h2>向其他用户发起<span>多种</span>代币转账</h2>
+                    </div><!--/.achivement-->
+                </div>
+                <div class="col-md-9">
+                    <el-form :model="transfer_info">
+                        <el-form-item label="接收方">
+                            <el-input v-model="transfer_info.to" style="width: 20%;"></el-input>
+                        </el-form-item>
+                        <el-form-item label="代币种类">
+                            <el-select v-model="transfer_info.item" placeholder="请选择">
+                                <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="转账数量">
+                            <el-input v-model="transfer_info.amount" style="width: 20%;"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <el-button type="primary" @click="transfer()">确 定</el-button>
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </div><!--/#counter-->
 
-            <!-- 发起转账 -->
-            <el-tab-pane label="发起转账" name="transfer">
-                <el-form :model="transfer_info">
-                    <el-form-item label="接收方">
-                        <el-input v-model="transfer_info.to" style="width: 20%;"></el-input>
+    <!-- 订单查询 -->
+    <a href="#" name="order_query"></a>
+    <section class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-head text-center">
+                        <h2>订单查询</h2>
+                        <el-button @click="get_order()">查询订单的详细信息</el-button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <el-table :data="order_list.slice((currentOrderPage-1)*pageSize,currentOrderPage*pageSize)" style="width: 100%">
+                        <el-table-column prop="order_id" label="订单编号"></el-table-column>
+                        <el-table-column prop="creator" label="创建者"></el-table-column>
+                        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+                        <el-table-column prop="type" label="订单类型"></el-table-column>
+                        <el-table-column prop="item" label="交易物品"></el-table-column>
+                        <el-table-column prop="amount" label="交易数量"></el-table-column>
+                        <el-table-column label="订单碎片">
+                            <template slot-scope="scope">
+                                <el-button icon="el-icon-document" type="text"
+                                    @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
+                                <el-dialog title="订单碎片信息" :append-to-body="true"
+                                    :visible.sync="scope.row.share_info_visible" center>
+                                    <div>{[order_list[scope.$index].shares]}</div>
+                                    <span slot="footer" class="dialog-footer" center>
+                                        <el-button type="primary" @click="scope.row.share_info_visible = false">确 定</el-button>
+                                    </span>
+                                </el-dialog>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="deal" label="是否成交"></el-table-column>
+                        <el-table-column prop="deal_price" label="成交价(Tether)"></el-table-column>
+                        <el-table-column prop="deal_time" label="成交时间"></el-table-column>
+                    </el-table>
+                    <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentOrderPage"
+                        :page-sizes="[10, 20, 30, 50, 100]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="order_list.length">
+                    </el-pagination>
+                </div>
+            </div>
+        </div>
+    </section><!--/.section-padding-->
+
+    <!-- 创建订单 -->
+    <a href="#" name="create_order"></a>
+    <section class="parallax-section section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-head text-center">
+                        <h2 class="title-white">创建订单</h2>
+                        <el-button @click="create_order()">创建订单</el-button>
+                    </div>
+                </div>
+            </div>
+            <div class="row row-eq-height">
+                <el-form :model="order_form">
+                    <el-form-item label="订单类型">
+                        <el-radio v-model="order_form.type" label="buy">买单</el-radio>
+                        <el-radio v-model="order_form.type" label="sell">卖单</el-radio>
                     </el-form-item>
-                    <el-form-item label="代币种类">
-                        <el-select v-model="transfer_info.item" placeholder="请选择">
-                            <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
-                                :value="item.value">
+                    <el-form-item label="交易物品">
+                        <el-select v-model="order_form.item" placeholder="请选择">
+                            <el-option v-for="item in itemoptions_order" :key="item.value" :label="item.label"
+                                :value="item.value" :disabled="item.disabled">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="转账数量">
-                        <el-input v-model="transfer_info.amount" style="width: 20%;"></el-input>
+                    <el-form-item label="交易数量">
+                        <el-input v-model="order_form.amount" style="width: 20%;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="交易价格(Tether)">
+                        <el-input v-model="order_form.price" style="width: 20%;"></el-input>
                     </el-form-item>
                 </el-form>
-                <el-button type="primary" @click="transfer()">确 定</el-button>
-            </el-tab-pane>
+                <div>
+                    <el-button type="primary" @click="create_order()">确 定</el-button>
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.parallax section-->
 
-            <!-- 订单查询 -->
-            <el-tab-pane label="订单查询" name="query_order">
-                <el-table :data="order_list.slice((currentOrderPage-1)*pageSize,currentOrderPage*pageSize)" style="width: 100%">
-                    <el-table-column prop="order_id" label="订单编号"></el-table-column>
-                    <el-table-column prop="creator" label="创建者"></el-table-column>
-                    <el-table-column prop="create_time" label="创建时间"></el-table-column>
-                    <el-table-column prop="type" label="订单类型"></el-table-column>
-                    <el-table-column prop="item" label="交易物品"></el-table-column>
-                    <el-table-column prop="amount" label="交易数量"></el-table-column>
-                    <el-table-column label="订单碎片">
-                        <template slot-scope="scope">
-                            <el-button icon="el-icon-document" type="text"
-                                @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
-                            <el-dialog title="订单碎片信息" :append-to-body="true"
-                                :visible.sync="scope.row.share_info_visible" center>
-                                <div>{[order_list[scope.$index].shares]}</div>
-                                <span slot="footer" class="dialog-footer" center>
-                                    <el-button type="primary" @click="scope.row.share_info_visible = false">确 定</el-button>
-                                </span>
-                            </el-dialog>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="deal" label="是否成交"></el-table-column>
-                    <el-table-column prop="deal_price" label="成交价(Tether)"></el-table-column>
-                    <el-table-column prop="deal_time" label="成交时间"></el-table-column>
-                </el-table>
-                <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentOrderPage"
-                    :page-sizes="[10, 20, 30, 50, 100]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="order_list.length">
-                </el-pagination>
-            </el-tab-pane>
-
-            <!-- 查询匹配订单 -->
-            <el-tab-pane label="查询匹配交易" name="query_dealed_order">
+    <!-- 查询匹配交易 -->
+    <a href="#" name='dealed_order_query'></a>
+    <section class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-head text-center">
+                        <h2>查询匹配交易</h2>
+                        <el-button @click="get_dealed_order()">查询</el-button>
+                    </div>
+                </div>
+            </div>
+            <div class="row row-eq-height">
                 <el-table
                     :data="dealed_order_list.slice((currentDealedOrderPage-1)*pageSize,currentDealedOrderPage*pageSize)"
                     style="width: 100%">
@@ -257,325 +696,424 @@
                     layout="total, sizes, prev, pager, next, jumper"
                     :total="dealed_order_list.length">
                 </el-pagination>
-            </el-tab-pane>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.team-section-->
 
-            <!-- 创建订单 -->
-            <el-tab-pane label="创建订单" name="create_order">
-                <el-form :model="order_form">
-                    <el-form-item label="订单类型">
-                        <el-radio v-model="order_form.type" label="buy">买单</el-radio>
-                        <el-radio v-model="order_form.type" label="sell">卖单</el-radio>
-                    </el-form-item>
-                    <el-form-item label="交易物品">
-                        <el-select v-model="order_form.item" placeholder="请选择">
-                            <el-option v-for="item in itemoptions_order" :key="item.value" :label="item.label"
-                                :value="item.value" :disabled="item.disabled">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="交易数量">
-                        <el-input v-model="order_form.amount" style="width: 20%;"></el-input>
-                    </el-form-item>
-                    <el-form-item label="交易价格(Tether)">
-                        <el-input v-model="order_form.price" style="width: 20%;"></el-input>
-                    </el-form-item>
-                </el-form>
-                <div>
-                    <el-button type="primary" @click="create_order()">确 定</el-button>
+    <!-- 竞选委员 -->
+    <a href="#" name="elect_committee"></a>
+    <section class="testimonial-section section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>竞选委员</h2>
+                            <div class="quote-icon">
+                                <i class="ion-quote"></i>
+                            </div>
+
+                            <p class="item-text">The create amazings and tight duration presented you with were undoub a challenge
+                                everon is ver happ with how well a team delivered. Create amazin tight duration pres
+                                everyone is very happy with how well your team</p>
+
+                            <div class="star-rating">
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                            </div>
+                            
+                            <!-- 抵押代币竞选委员 -->
+                            <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">我要竞选</el-button>
+                            <el-dialog title="抵押代币" :append-to-body="true" :visible.sync="elect_visible" width="50%">
+                                <el-form :model="elect_form">
+                                    <el-form-item label="代币种类">
+                                        <el-select v-model="elect_form.item" disabled placeholder="请选择">
+                                            <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
+                                                :value="item.value">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="抵押数量">
+                                        <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>
+                                    </el-form-item>
+                                </el-form>
+                                <el-button @click="elect_visible = false">取 消</el-button>
+                                <el-button type="primary" @click="elect_committee();elect_visible = false">确 定</el-button>
+                            </el-dialog>
+
+                            <!-- 显示候选人信息 -->
+                            <el-table :data="candidates" style="width: 100%">
+                                <el-table-column prop="name" label="候选人名称" width="450"></el-table-column>
+                                <el-table-column prop="amount" label="抵押代币数量(Tether)"></el-table-column>
+                            </el-table>
+                            <!-- 显示委员会成员信息 -->
+                            <el-table :data="committee" style="width: 100%">
+                                <el-table-column prop="name" label="委员名称" width="450"></el-table-column>
+                                <el-table-column prop="amount" label="抵押代币数量(Tether)" width="180"></el-table-column>
+                                <el-table-column prop="pub" label="公钥信息"></el-table-column>
+                            </el-table>
                 </div>
-            </el-tab-pane>
+            </div>
+        </div>
+    </section><!--/.testimonial-section-->
 
-            <!-- 竞选委员 -->
-            <el-tab-pane label="竞选委员" name="committee">
-                <!-- 抵押代币竞选委员 -->
-                <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">我要竞选</el-button>
-                <el-dialog title="抵押代币" :append-to-body="true" :visible.sync="elect_visible" width="50%">
-                    <el-form :model="elect_form">
-                        <el-form-item label="代币种类">
-                            <el-select v-model="elect_form.item" disabled placeholder="请选择">
-                                <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
-                                    :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="抵押数量">
-                            <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>
-                        </el-form-item>
-                    </el-form>
-                    <el-button @click="elect_visible = false">取 消</el-button>
-                    <el-button type="primary" @click="elect_committee();elect_visible = false">确 定</el-button>
-                </el-dialog>
+    
+    <section class="footer-area">
+        <div class="container">
+            <div class="row footer-banner row-eq-height">
+                <div class="col-md-4 col-sm-6">
+                    <div class="footer-content">
+                        <div class="footer-logo">
+                            <a href=""><img src="../public/images/footer-logo.png" alt=""></a>
+                        </div>
+                        <div class="text-content">
+                            <p>Nam libero tempore, cum soluta nobis est eligen
+                                ptio cumque nihil impedit quo minus id quod ma
+                                placeat facere possimus, omnis voluptas assume
+                                est  omnis dolor repellendus. Temporibus autem</p>
+                            <p>placeat facere possimus, omnis voluptas assume
+                                est  omnis dolor repellendus. Temporibus autem
+                                busdam et aut officiis debitis aut rerum</p>
+                        </div>
+                    </div><!--/.footer-content-->
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="footer-content">
+                        <h4><a href="">Recent News</a></h4>
+                        <ul>
+                            <li><a href="">Project Management</a></li>
+                            <li><a href="">Rsik and Return Management</a></li>
+                            <li><a href="">Small Mediaum Investment</a></li>
+                            <li><a href="">Business Growth in Future</a></li>
+                            <li><a href="">Financial Analysis</a></li>
+                            <li><a href="">Business Goal</a></li>
+                        </ul>
+                    </div><!--/.footer-content-->
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="footer-content">
+                        <h4><a href="">Popular News</a></h4>
+                        <ul>
+                            <li><a href="">Project Management</a></li>
+                            <li><a href="">Rsik and Return Management</a></li>
+                            <li><a href="">Small Mediaum Investment</a></li>
+                            <li><a href="">Business Growth in Future</a></li>
+                            <li><a href="">Financial Analysis</a></li>
+                            <li><a href="">Business Goal</a></li>
+                        </ul>
+                    </div><!--/.footer-content-->
+                </div>
+                <div class="col-md-2 col-sm-6 col-xs-6">
+                    <div class="footer-content">
+                        <h4><a href="">Useful Links</a></h4>
+                        <ul>
+                            <li><a href="">About US</a></li>
+                            <li><a href="">Financial Service</a></li>
+                            <li><a href="">Contact Us</a></li>
+                            <li><a href="">Our History</a></li>
+                            <li><a href="">News and Article</a></li>
+                            <li><a href="">Business Plan</a></li>
+                        </ul>
+                    </div><!--/.footer-content-->
+                </div>
+            </div><!--/.rwo footer-banner-->
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="copyright-info">
+                            <p>Copyright &copy; 2021.Company name All rights reserved.</p>
+                        </div>
+                    </div><!--/.copyright-info-->
+                    <div class="col-md-6 col-sm-6">
+                        <div class="social text-right content-align">
+                            <ul>
+                                <li><a href="#"><i class="ion-social-facebook"></i></a></li>
+                                <li><a href="#"><i class="ion-social-googleplus"></i></a></li>
+                                <li><a href="#"><i class="ion-social-skype"></i></a></li>
+                                <li><a href="#"><i class="ion-social-twitter"></i></a></li>
+                                <li><a href="#"><i class="ion-social-linkedin"></i></a></li>
+                            </ul>
+                        </div><!--/.social-->
+                    </div>
+                </div>
+            </div><!--/.copyright-->
+        </div><!--/.contianer-->
+    </section><!--/.footer area-->
+</div><!-- vue darkpool -->
 
-                <!-- 显示候选人信息 -->
-                <el-table :data="candidates" style="width: 100%">
-                    <el-table-column prop="name" label="候选人名称" width="450"></el-table-column>
-                    <el-table-column prop="amount" label="抵押代币数量(Tether)"></el-table-column>
-                </el-table>
-                <!-- 显示委员会成员信息 -->
-                <el-table :data="committee" style="width: 100%">
-                    <el-table-column prop="name" label="委员名称" width="450"></el-table-column>
-                    <el-table-column prop="amount" label="抵押代币数量(Tether)" width="180"></el-table-column>
-                    <el-table-column prop="pub" label="公钥信息"></el-table-column>
-                </el-table>
-            </el-tab-pane>
-
-        </el-tabs>
-
-    </div>
-</body>
-
-<script>
-    // account变量专门处理与用户信息相关的操作
-    var account = new Vue({
-        el: "#account",
-        delimiters: ["{[", "]}"],
-        data: {
-            userinfo: [], // 当前用户信息
-            infoFormVisible: false,  // 查看用户信息对话框
-            formLabelWidth: '150px',
-        },
-        methods: {
-            // 退出登录，跳转
-            exitlogin() {
-                window.location.href = "http://localhost:9000/"
+    <!-- Vue -->
+    <script>    
+        // 暗池交易系统
+        var dp = new Vue({
+            el: "#darkpool",
+            delimiters: ["{[", "]}"],
+            data: {
+                userinfo: [], // 当前用户信息
+                infoFormVisible: false,  // 查看用户信息对话框
+                formLabelWidth: '150px',
+                username: document.getElementById("cur_un").innerHTML,  // 用户名
+    
+                transfer_list: [],  // 转账查询
+                transfer_info: {
+                    'from': document.getElementById("cur_un").innerHTML,
+                    'to': '',
+                    'item': '',
+                    'amount': null,
+                },  // 发起转账的转账信息
+    
+                dealed_order_list: [],  // 匹配订单信息
+                order_list: [],  // 订单信息
+    
+                // 创建的订单信息
+                order_form: {
+                    'username': document.getElementById("cur_un").innerHTML,
+                    'type': '',
+                    'item': '',
+                    'amount': null,
+                    'price': null,
+                },
+    
+                // 竞选委员抵押信息
+                elect_form: {
+                    'username': document.getElementById("cur_un").innerHTML,
+                    'item': 'USDT',
+                    'amount': null,
+                },
+                candidates: [],  // 候选人列表
+                committee: [],  // 委员会列表
+    
+                // 币种选择
+                itemoptions: [{
+                    'value': 'Tether',
+                    'label': 'USDT',
+                }, {
+                    'value': 'Bitcoin',
+                    'label': 'BTC',
+                }, {
+                    'value': 'Dogecoin',
+                    'label': 'DOGE',
+                }],
+    
+                // 币种选择-创建订单
+                itemoptions_order: [{
+                    'value': 'Tether',
+                    'label': 'USDT',
+                    disabled: true
+                }, {
+                    'value': 'Bitcoin',
+                    'label': 'BTC',
+                }, {
+                    'value': 'Dogecoin',
+                    'label': 'DOGE',
+                }],
+    
+                // 控制参数
+                currentPage: 1, // 查询结果当前页
+                currentOrderPage: 1,
+                currentDealedOrderPage: 1,
+                pageSize: 10, // 查询结果每页多少条
+                elect_visible: false,
             },
-            // 获得当前用户信息
-            get_userinfo() {
-                axios.post('http://localhost:9000/getinfo', {
-                    'username': document.getElementById("cur_un").innerText,
-                })
-                    .then(Response => {
-                        console.log(Response['data']['userinfo'])
-                        this.userinfo = Response['data']['userinfo']
-                        this.infoFormVisible = true
+            methods: {
+                // 退出登录，跳转
+                exitlogin() {
+                    window.location.href = "http://localhost:9000/"
+                },
+                // 获得当前用户信息
+                get_userinfo() {
+                    axios.post('http://localhost:9000/getinfo', {
+                        'username': document.getElementById("cur_un").innerHTML,
                     })
-                    .catch(function (error) {
-                        console.log(error);
+                        .then(Response => {
+                            console.log(Response['data']['userinfo'])
+                            this.userinfo = Response['data']['userinfo']
+                            this.infoFormVisible = true
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        })
+                },
+                // 形成委员会
+                form_committee() {
+                    axios.post('http://localhost:9000/formcommittee').then(Response => {
+                        console.log(Response['data']['status']);
+                        if (Response['data']['status']) {
+                            this.$notify({
+                                title: '成功',
+                                message: '委员会形成成功',
+                                type: 'success'
+                            });
+                        }
+                        else {
+                            this.$notify({
+                                title: '失败',
+                                message: '委员会形成失败',
+                                type: 'warning'
+                            });
+                        }
                     })
-            },
-            // 形成委员会
-            form_committee() {
-                axios.post('http://localhost:9000/formcommittee').then(Response => {
-                    console.log(Response['data']['status']);
-                    if (Response['data']['status']) {
-                        this.$notify({
-                            title: '成功',
-                            message: '委员会形成成功',
-                            type: 'success'
-                        });
+                },
+                // 菜单选择
+                handleClick(tab, event) {
+                    console.log(tab, event);
+                    if (tab.name == 'query_transfer') {
+                        this.get_transfer();
                     }
-                    else {
-                        this.$notify({
-                            title: '失败',
-                            message: '委员会形成失败',
-                            type: 'warning'
-                        });
+                    else if (tab.name == 'query_order') {
+                        this.get_order();
                     }
-                })
+                    else if (tab.name == 'query_dealed_order'){
+                        this.get_dealed_order();
+                    }
+                    else if (tab.name == 'committee') {
+                        this.query_committee();
+                    }
+                },
+                // 查询转账信息
+                get_transfer() {
+                    axios.get('http://localhost:9000/transfer')
+                        .then(Response => {
+                            console.log(Response['data']['transfer_list'])
+                            this.transfer_list = Response['data']['transfer_list']
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        })
+                },
+                // 发起转账
+                transfer() {
+                    axios.post('http://localhost:9000/transfer', {
+                        'from': this.transfer_info.from,
+                        'to': this.transfer_info.to,
+                        'item': this.transfer_info.item,
+                        'amount': this.transfer_info.amount,
+                    }).then(Response => {
+                        console.log(Response['data']);
+                    })
+                },
+                // 创建订单
+                create_order() {
+                    axios.post('http://localhost:9000/createorder', {
+                        'username': this.order_form.username,
+                        'type': this.order_form.type,
+                        'item': this.order_form.item,
+                        'amount': this.order_form.amount,
+                        'price': this.order_form.price,
+                    }).then(Response => {
+                        console.log(Response['data'])
+                        if (Response['data']['status']=='NoCommittee') {
+                            this.$notify({
+                                title: '失败',
+                                message: '委员会未创建',
+                                type: 'warning'
+                            });
+                        }
+                        else if (Response['data']['status']=='NotAvailable') {
+                            this.$notify({
+                                title: '失败',
+                                message: '账户余额不足',
+                                type: 'warning'
+                            });
+                        }
+                        else {
+                            this.$notify({
+                                title: '成功',
+                                message: '订单创建成功',
+                                type: 'success'
+                            });
+                        }
+                    })
+                },
+                // 查询订单信息
+                get_order() {
+                    axios.post('http://localhost:9000/getorder', {
+                        'username': this.username,
+                    }).then(Response => {
+                        this.order_list = Response['data']['OrderList']
+                    })
+                },
+                // 查询匹配交易信息
+                get_dealed_order(){
+                    axios.post('http://localhost:9000/getdealedorder', {
+                        'username': this.username,
+                    }).then(Response => {
+                        console.log(Response['data']['DealedOrderList'])
+                        this.dealed_order_list = Response['data']['DealedOrderList']
+                    })
+                },
+                // 查询委员会情况
+                query_committee() {
+                    axios.post('http://localhost:9000/queryCommittee', {
+                        'username': this.username,
+                    }).then(Response => {
+                        console.log(Response['data'])
+                        this.candidates = Response['data']['candidates']
+                        this.committee = Response['data']['committee']
+                    })
+                },
+                // 竞选委员
+                elect_committee() {
+                    axios.post('http://localhost:9000/electCommittee', {
+                        'username': this.elect_form.username,
+                        'item': this.elect_form.item,
+                        'amount': this.elect_form.amount,
+                    }).then(Response => {
+                        if (Response['data']['status']) {
+                            this.$notify({
+                                title: '成功',
+                                message: '竞选委员成功',
+                                type: 'success'
+                            });
+                        }
+                        else {
+                            this.$notify({
+                                title: '失败',
+                                message: '竞选委员失败',
+                                type: 'warning'
+                            });
+                        }
+                    })
+                },
+                // 每页多少条
+                handleSizeChange(val) {
+                    this.pageSize = val;
+                },
+                // 当前页
+                handleCurrentChange(val) {
+                    this.currentPage = val;
+                },
             }
-        }
-    });
+        });
+    </script>
 
-    // 暗池交易系统
-    var dp = new Vue({
-        el: "#darkpool",
-        delimiters: ["{[", "]}"],
-        data: {
-            username: document.getElementById("cur_un").innerText,  // 用户名
-
-            transfer_list: [],  // 转账查询
-            transfer_info: {
-                'from': document.getElementById("cur_un").innerText,
-                'to': '',
-                'item': '',
-                'amount': null,
-            },  // 发起转账的转账信息
-
-            dealed_order_list: [],  // 匹配订单信息
-            order_list: [],  // 订单信息
-
-            // 创建的订单信息
-            order_form: {
-                'username': document.getElementById("cur_un").innerText,
-                'type': '',
-                'item': '',
-                'amount': null,
-                'price': null,
-            },
-
-            // 竞选委员抵押信息
-            elect_form: {
-                'username': document.getElementById("cur_un").innerText,
-                'item': 'USDT',
-                'amount': null,
-            },
-            candidates: [],  // 候选人列表
-            committee: [],  // 委员会列表
-
-            // 币种选择
-            itemoptions: [{
-                'value': 'Tether',
-                'label': 'USDT',
-            }, {
-                'value': 'Bitcoin',
-                'label': 'BTC',
-            }, {
-                'value': 'Dogecoin',
-                'label': 'DOGE',
-            }],
-
-            // 币种选择-创建订单
-            itemoptions_order: [{
-                'value': 'Tether',
-                'label': 'USDT',
-                disabled: true
-            }, {
-                'value': 'Bitcoin',
-                'label': 'BTC',
-            }, {
-                'value': 'Dogecoin',
-                'label': 'DOGE',
-            }],
-
-            // 控制参数
-            currentPage: 1, // 查询结果当前页
-            currentOrderPage: 1,
-            currentDealedOrderPage: 1,
-            pageSize: 10, // 查询结果每页多少条
-            elect_visible: false,
-        },
-        methods: {
-            // 菜单选择
-            handleClick(tab, event) {
-                console.log(tab, event);
-                if (tab.name == 'query_transfer') {
-                    this.get_transfer();
-                }
-                else if (tab.name == 'query_order') {
-                    this.get_order();
-                }
-                else if (tab.name == 'query_dealed_order'){
-                    this.get_dealed_order();
-                }
-                else if (tab.name == 'committee') {
-                    this.query_committee();
-                }
-            },
-            // 查询转账信息
-            get_transfer() {
-                axios.get('http://localhost:9000/transfer')
-                    .then(Response => {
-                        console.log(Response['data']['transfer_list'])
-                        this.transfer_list = Response['data']['transfer_list']
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-            },
-            // 发起转账
-            transfer() {
-                axios.post('http://localhost:9000/transfer', {
-                    'from': this.transfer_info.from,
-                    'to': this.transfer_info.to,
-                    'item': this.transfer_info.item,
-                    'amount': this.transfer_info.amount,
-                }).then(Response => {
-                    console.log(Response['data']);
-                })
-            },
-            // 创建订单
-            create_order() {
-                axios.post('http://localhost:9000/createorder', {
-                    'username': this.order_form.username,
-                    'type': this.order_form.type,
-                    'item': this.order_form.item,
-                    'amount': this.order_form.amount,
-                    'price': this.order_form.price,
-                }).then(Response => {
-                    console.log(Response['data'])
-                    if (Response['data']['status']=='NoCommittee') {
-                        this.$notify({
-                            title: '失败',
-                            message: '委员会未创建',
-                            type: 'warning'
-                        });
-                    }
-                    else if (Response['data']['status']=='NotAvailable') {
-                        this.$notify({
-                            title: '失败',
-                            message: '账户余额不足',
-                            type: 'warning'
-                        });
-                    }
-                    else {
-                        this.$notify({
-                            title: '成功',
-                            message: '订单创建成功',
-                            type: 'success'
-                        });
-                    }
-                })
-            },
-            // 查询订单信息
-            get_order() {
-                axios.post('http://localhost:9000/getorder', {
-                    'username': this.username,
-                }).then(Response => {
-                    this.order_list = Response['data']['OrderList']
-                })
-            },
-            // 查询匹配交易信息
-            get_dealed_order(){
-                axios.post('http://localhost:9000/getdealedorder', {
-                    'username': this.username,
-                }).then(Response => {
-                    console.log(Response['data']['DealedOrderList'])
-                    this.dealed_order_list = Response['data']['DealedOrderList']
-                })
-            },
-            // 查询委员会情况
-            query_committee() {
-                axios.post('http://localhost:9000/queryCommittee', {
-                    'username': this.username,
-                }).then(Response => {
-                    console.log(Response['data'])
-                    this.candidates = Response['data']['candidates']
-                    this.committee = Response['data']['committee']
-                })
-            },
-            // 竞选委员
-            elect_committee() {
-                axios.post('http://localhost:9000/electCommittee', {
-                    'username': this.elect_form.username,
-                    'item': this.elect_form.item,
-                    'amount': this.elect_form.amount,
-                }).then(Response => {
-                    if (Response['data']['status']) {
-                        this.$notify({
-                            title: '成功',
-                            message: '竞选委员成功',
-                            type: 'success'
-                        });
-                    }
-                    else {
-                        this.$notify({
-                            title: '失败',
-                            message: '竞选委员失败',
-                            type: 'warning'
-                        });
-                    }
-                })
-            },
-            // 每页多少条
-            handleSizeChange(val) {
-                this.pageSize = val;
-            },
-            // 当前页
-            handleCurrentChange(val) {
-                this.currentPage = val;
-            },
-        }
-    });
-</script>
-
+    <!-- == jQuery Librery == -->
+    <script src="../public/js/jquery-3.3.1.min.js"></script>
+    <!-- == Bootsrap js File == -->
+    <script src="../public/js/bootstrap.min.js"></script>
+    <!-- == wow min js == -->
+    <script src="../public/js/wow.min.js"></script>
+    <!-- == Custom Menu js == -->
+    <script src="../public/js/custom-menu.js"></script>
+    <!-- == Custom Counter js == -->
+    <script src="../public/js/custom-counter.js"></script>
+    <script src="../public/js/Chart.min.js"></script>
+    <script src="../public/js/active-chart.js"></script>
+    <!-- == Prallex js == -->
+    <script src="../public/js/prallex.js"></script>
+    <!-- == Owl Carousel  == -->
+    <script src="../public/js/owl.carousel.min.js"></script>
+    <!-- == Revolution Slider JS == -->
+   <script src="../public/js/revolution/jquery.themepunch.tools.min.js"></script>
+   <script src="../public/js/revolution/jquery.themepunch.revolution.min.js"></script>
+   <script src="../public/js/revolution/extensions/revolution.extension.actions.min.js"></script>
+   <script src="../public/js/revolution/extensions/revolution.extension.layeranimation.min.js"></script>
+   <script src="../public/js/revolution/extensions/revolution.extension.navigation.min.js"></script>
+   <script src="../public/js/revolution/extensions/revolution.extension.parallax.min.js"></script>
+   <script src="../public/js/revolution/extensions/revolution.extension.slideanims.min.js"></script>
+   <script src="../public/js/revolution-active.js"></script>
+    <!-- == Custom js  == -->
+   <script src="../public/js/custom.js"></script>
+</body>
 </html>
+

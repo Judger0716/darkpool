@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- CDN INSTALL -->
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui@2.14.1/lib/index.js"></script>
+    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
+    <!-- LOCAL INSTALL
+        <script src="../static/vue.js"></script>
+        <link rel="stylesheet" href="../static/index.css">
+        <script src="../static/index.js"></script>
+        <script src="../static/axios.min.js"></script>
+        -->
+
+    <title>Main</title>
+
+    <style>
+        #welcome {
+            font-size: 20px;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .usrinfo {
+            font-size: 18px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .mbutton {
+            display: inline;
+        }
+        .demo-table-expand {
+          font-size: 0;
+        }
+        .demo-table-expand label {
+          width: 100px;
+          color: #99a9bf;
+        }
+        .demo-table-expand .el-form-item {
+          margin-right: 0;
+          margin-bottom: 0;
+          width: 50%;
+        }
+      </style>
+</head>
+
+<body style="background-image:url(../public/static/main_bg.jpg); background-size: cover;">
+    <!-- body部分添加背景图片 -->
+
+    <!-- 抬头欢迎提示 -->
+    <div id="welcome" style="margin-left: 2%;">
+        <h1 style="display: inline;">欢迎：</h1>
+        <h1 style="display: inline;" id="cur_un">
+            <%=username%>
+        </h1>
+    </div>
+
+    <!-- 账户相关，由vue变量account控制 -->
+    <div id="account" style="margin-left: 2%; margin-top: 20px; font-size: 30px; margin-bottom: 15px;">
+
+        <el-button class="mbutton" type="success" icon="el-icon-user-solid" @click="get_userinfo()">查看账户信息</el-button>
+        <el-button class="mbutton" type="primary" icon="el-icon-s-opportunity" @click="form_committee()">形成委员会
+        </el-button>
+        <el-button class="mbutton" type="warning" icon="el-icon-s-home" @click="exitlogin()">退出登录</el-button>
+
+        <!-- 查看个人信息 -->
+        <el-dialog title="账户信息" :visible.sync="infoFormVisible" width="50%">
+            <el-table :data="userinfo" stripe style="width: 100%">
+                <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column>
+                <el-table-column prop="balance" label="代币数量" width="180"></el-table-column>
+                <el-table-column prop="freeze" label="已冻结数量" width="180"></el-table-column>
+                <el-table-column prop="available" label="可用数量"></el-table-column>
+            </el-table>
+            <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
+                <el-button type="primary" @click="infoFormVisible = false">确 定</el-button>
+            </div>
+        </el-dialog>
+
+    </div>
+
+    <!-- 暗池交易系统主体，留出两侧边距 -->
+    <div id="darkpool" style="margin-left: 2%; margin-right: 2%;">
+
+        <!-- 选项卡样式 -->
+        <el-tabs type="border-card" @tab-click="handleClick" style="opacity: 0.95;">
+
+            <!-- 转账查询 -->
+            <el-tab-pane label="转账查询" name="query_transfer">
+                <el-table :data="transfer_list.slice((currentPage-1)*pageSize,currentPage*pageSize)" stripe style="width: 100%">
+                    <el-table-column prop="from" label="发起方" width="180"></el-table-column>
+                    <el-table-column prop="to" label="接收方" width="180"></el-table-column>
+                    <el-table-column prop="name" label="代币类型" width="180"></el-table-column>
+                    <el-table-column prop="value" label="金额"></el-table-column>
+                </el-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[10, 20, 30, 50, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="transfer_list.length">
+                </el-pagination>
+            </el-tab-pane>
+
+            <!-- 发起转账 -->
+            <el-tab-pane label="发起转账" name="transfer">
+                <el-form :model="transfer_info">
+                    <el-form-item label="接收方">
+                        <el-input v-model="transfer_info.to" style="width: 20%;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="代币种类">
+                        <el-select v-model="transfer_info.item" placeholder="请选择">
+                            <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="转账数量">
+                        <el-input v-model="transfer_info.amount" style="width: 20%;"></el-input>
+                    </el-form-item>
+                </el-form>
+                <el-button type="primary" @click="transfer()">确 定</el-button>
+            </el-tab-pane>
+
+            <!-- 订单查询 -->
+            <el-tab-pane label="订单查询" name="query_order">
+                <el-table :data="order_list.slice((currentOrderPage-1)*pageSize,currentOrderPage*pageSize)" style="width: 100%">
+                    <el-table-column prop="order_id" label="订单编号"></el-table-column>
+                    <el-table-column prop="creator" label="创建者"></el-table-column>
+                    <el-table-column prop="create_time" label="创建时间"></el-table-column>
+                    <el-table-column prop="type" label="订单类型"></el-table-column>
+                    <el-table-column prop="item" label="交易物品"></el-table-column>
+                    <el-table-column prop="amount" label="交易数量"></el-table-column>
+                    <el-table-column label="订单碎片">
+                        <template slot-scope="scope">
+                            <el-button icon="el-icon-document" type="text"
+                                @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
+                            <el-dialog title="订单碎片信息" :append-to-body="true"
+                                :visible.sync="scope.row.share_info_visible" center>
+                                <div>{[order_list[scope.$index].shares]}</div>
+                                <span slot="footer" class="dialog-footer" center>
+                                    <el-button type="primary" @click="scope.row.share_info_visible = false">确 定</el-button>
+                                </span>
+                            </el-dialog>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="deal" label="是否成交"></el-table-column>
+                    <el-table-column prop="deal_price" label="成交价(Tether)"></el-table-column>
+                    <el-table-column prop="deal_time" label="成交时间"></el-table-column>
+                </el-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentOrderPage"
+                    :page-sizes="[10, 20, 30, 50, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="order_list.length">
+                </el-pagination>
+            </el-tab-pane>
+
+            <!-- 查询匹配订单 -->
+            <el-tab-pane label="查询匹配交易" name="query_dealed_order">
+                <el-table
+                    :data="dealed_order_list.slice((currentDealedOrderPage-1)*pageSize,currentDealedOrderPage*pageSize)"
+                    style="width: 100%">
+                    <el-table-column type="expand">
+                        <template slot-scope="props">
+                            <el-form label-position="left" inline class="demo-table-expand">
+                                <el-form-item label="买单序号">
+                                    <span>{[ props.row.buy_order.order_id ]}</span>
+                                </el-form-item>
+                                <el-form-item label="卖单序号">
+                                    <span>{[ props.row.sell_order.order_id ]}</span>
+                                </el-form-item>
+                                <el-form-item label="买单交易物品">
+                                    <span>{[ props.row.buy_order.item ]}</span>
+                                </el-form-item>
+                                <el-form-item label="卖单交易物品">
+                                    <span>{[ props.row.sell_order.item ]}</span>
+                                </el-form-item>
+                                <el-form-item label="买单交易数量">
+                                    <span>{[ props.row.buy_order.amount ]}</span>
+                                </el-form-item>
+                                <el-form-item label="卖单交易数量">
+                                    <span>{[ props.row.sell_order.amount ]}</span>
+                                </el-form-item>
+                                <el-form-item label="买单创建时间">
+                                    <span>{[ props.row.buy_order.create_time ]}</span>
+                                </el-form-item>
+                                <el-form-item label="卖单创建时间">
+                                    <span>{[ props.row.sell_order.create_time ]}</span>
+                                </el-form-item>
+                                <el-form-item label="买单价格碎片">
+                                    <el-button icon="el-icon-document" type="text"
+                                        @click="props.row.buy_order.share_info_visible = true;">查看订单碎片</el-button>
+                                    <el-dialog title="订单碎片信息" :append-to-body="true"
+                                        :visible.sync="props.row.buy_order.share_info_visible" center>
+                                        <div>{[props.row.buy_order.shares]}</div>
+                                        <span slot="footer" class="dialog-footer" center>
+                                            <el-button type="primary" @click="props.row.buy_order.share_info_visible = false">确 定</el-button>
+                                        </span>
+                                    </el-dialog>
+                                </el-form-item>
+                                <el-form-item label="卖单价格碎片">
+                                    <el-button icon="el-icon-document" type="text"
+                                        @click="props.row.sell_order.share_info_visible = true;">查看订单碎片</el-button>
+                                    <el-dialog title="订单碎片信息" :append-to-body="true"
+                                        :visible.sync="props.row.sell_order.share_info_visible" center>
+                                        <div>{[props.row.sell_order.shares]}</div>
+                                        <span slot="footer" class="dialog-footer" center>
+                                            <el-button type="primary" @click="props.row.sell_order.share_info_visible = false">确 定</el-button>
+                                        </span>
+                                    </el-dialog>
+                                </el-form-item>
+                            </el-form>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="交易序号" prop="deal_id"></el-table-column>
+                    <el-table-column label="成交价格(Tether)" prop="deal_price"></el-table-column>
+                    <el-table-column label="成交时间" prop="deal_time"></el-table-column>
+                    <el-table-column label="买家" prop="buyer"></el-table-column>
+                    <el-table-column label="卖家" prop="seller"></el-table-column>
+                    <el-table-column label="相关委员">
+                        <template slot-scope="props">
+                            <div v-for="comm in props.row.related_comm" style="display:inline">
+                                {[ comm ]}
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="举报">
+                        <template slot-scope="props">
+                            <el-button type="danger" @click="props.row.report_visible = true">点击举报</el-button>
+                            <el-dialog
+                                title="确认举报"
+                                :visible.sync="props.row.report_visible"
+                                width="30%"
+                                :append-to-body="true"
+                                center>
+                                <span slot="footer" class="dialog-footer">
+                                    <el-button @click="props.row.report_visible = false">取 消</el-button>
+                                    <el-button type="primary" @click="props.row.report_visible = false">确 定</el-button>
+                                </span>
+                                </el-dialog>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentDealedOrderPage"
+                    :page-sizes="[10, 20, 30, 50, 100]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="dealed_order_list.length">
+                </el-pagination>
+            </el-tab-pane>
+
+            <!-- 创建订单 -->
+            <el-tab-pane label="创建订单" name="create_order">
+                <el-form :model="order_form">
+                    <el-form-item label="订单类型">
+                        <el-radio v-model="order_form.type" label="buy">买单</el-radio>
+                        <el-radio v-model="order_form.type" label="sell">卖单</el-radio>
+                    </el-form-item>
+                    <el-form-item label="交易物品">
+                        <el-select v-model="order_form.item" placeholder="请选择">
+                            <el-option v-for="item in itemoptions_order" :key="item.value" :label="item.label"
+                                :value="item.value" :disabled="item.disabled">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="交易数量">
+                        <el-input v-model="order_form.amount" style="width: 20%;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="交易价格(Tether)">
+                        <el-input v-model="order_form.price" style="width: 20%;"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div>
+                    <el-button type="primary" @click="create_order()">确 定</el-button>
+                </div>
+            </el-tab-pane>
+
+            <!-- 竞选委员 -->
+            <el-tab-pane label="竞选委员" name="committee">
+                <!-- 抵押代币竞选委员 -->
+                <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">我要竞选</el-button>
+                <el-dialog title="抵押代币" :append-to-body="true" :visible.sync="elect_visible" width="50%">
+                    <el-form :model="elect_form">
+                        <el-form-item label="代币种类">
+                            <el-select v-model="elect_form.item" disabled placeholder="请选择">
+                                <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="抵押数量">
+                            <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <el-button @click="elect_visible = false">取 消</el-button>
+                    <el-button type="primary" @click="elect_committee();elect_visible = false">确 定</el-button>
+                </el-dialog>
+
+                <!-- 显示候选人信息 -->
+                <el-table :data="candidates" style="width: 100%">
+                    <el-table-column prop="name" label="候选人名称" width="450"></el-table-column>
+                    <el-table-column prop="amount" label="抵押代币数量(Tether)"></el-table-column>
+                </el-table>
+                <!-- 显示委员会成员信息 -->
+                <el-table :data="committee" style="width: 100%">
+                    <el-table-column prop="name" label="委员名称" width="450"></el-table-column>
+                    <el-table-column prop="amount" label="抵押代币数量(Tether)" width="180"></el-table-column>
+                    <el-table-column prop="pub" label="公钥信息"></el-table-column>
+                </el-table>
+            </el-tab-pane>
+
+        </el-tabs>
+
+    </div>
+</body>
+
+<script>
+    // account变量专门处理与用户信息相关的操作
+    var account = new Vue({
+        el: "#account",
+        delimiters: ["{[", "]}"],
+        data: {
+            userinfo: [], // 当前用户信息
+            infoFormVisible: false,  // 查看用户信息对话框
+            formLabelWidth: '150px',
+        },
+        methods: {
+            // 退出登录，跳转
+            exitlogin() {
+                window.location.href = "http://localhost:9000/"
+            },
+            // 获得当前用户信息
+            get_userinfo() {
+                axios.post('http://localhost:9000/getinfo', {
+                    'username': document.getElementById("cur_un").innerText,
+                })
+                    .then(Response => {
+                        console.log(Response['data']['userinfo'])
+                        this.userinfo = Response['data']['userinfo']
+                        this.infoFormVisible = true
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            },
+            // 形成委员会
+            form_committee() {
+                axios.post('http://localhost:9000/formcommittee').then(Response => {
+                    console.log(Response['data']['status']);
+                    if (Response['data']['status']) {
+                        this.$notify({
+                            title: '成功',
+                            message: '委员会形成成功',
+                            type: 'success'
+                        });
+                    }
+                    else {
+                        this.$notify({
+                            title: '失败',
+                            message: '委员会形成失败',
+                            type: 'warning'
+                        });
+                    }
+                })
+            }
+        }
+    });
+
+    // 暗池交易系统
+    var dp = new Vue({
+        el: "#darkpool",
+        delimiters: ["{[", "]}"],
+        data: {
+            username: document.getElementById("cur_un").innerText,  // 用户名
+
+            transfer_list: [],  // 转账查询
+            transfer_info: {
+                'from': document.getElementById("cur_un").innerText,
+                'to': '',
+                'item': '',
+                'amount': null,
+            },  // 发起转账的转账信息
+
+            dealed_order_list: [],  // 匹配订单信息
+            order_list: [],  // 订单信息
+
+            // 创建的订单信息
+            order_form: {
+                'username': document.getElementById("cur_un").innerText,
+                'type': '',
+                'item': '',
+                'amount': null,
+                'price': null,
+            },
+
+            // 竞选委员抵押信息
+            elect_form: {
+                'username': document.getElementById("cur_un").innerText,
+                'item': 'USDT',
+                'amount': null,
+            },
+            candidates: [],  // 候选人列表
+            committee: [],  // 委员会列表
+
+            // 币种选择
+            itemoptions: [{
+                'value': 'Tether',
+                'label': 'USDT',
+            }, {
+                'value': 'Bitcoin',
+                'label': 'BTC',
+            }, {
+                'value': 'Dogecoin',
+                'label': 'DOGE',
+            }],
+
+            // 币种选择-创建订单
+            itemoptions_order: [{
+                'value': 'Tether',
+                'label': 'USDT',
+                disabled: true
+            }, {
+                'value': 'Bitcoin',
+                'label': 'BTC',
+            }, {
+                'value': 'Dogecoin',
+                'label': 'DOGE',
+            }],
+
+            // 控制参数
+            currentPage: 1, // 查询结果当前页
+            currentOrderPage: 1,
+            currentDealedOrderPage: 1,
+            pageSize: 10, // 查询结果每页多少条
+            elect_visible: false,
+        },
+        methods: {
+            // 菜单选择
+            handleClick(tab, event) {
+                console.log(tab, event);
+                if (tab.name == 'query_transfer') {
+                    this.get_transfer();
+                }
+                else if (tab.name == 'query_order') {
+                    this.get_order();
+                }
+                else if (tab.name == 'query_dealed_order'){
+                    this.get_dealed_order();
+                }
+                else if (tab.name == 'committee') {
+                    this.query_committee();
+                }
+            },
+            // 查询转账信息
+            get_transfer() {
+                axios.get('http://localhost:9000/transfer')
+                    .then(Response => {
+                        console.log(Response['data']['transfer_list'])
+                        this.transfer_list = Response['data']['transfer_list']
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            },
+            // 发起转账
+            transfer() {
+                axios.post('http://localhost:9000/transfer', {
+                    'from': this.transfer_info.from,
+                    'to': this.transfer_info.to,
+                    'item': this.transfer_info.item,
+                    'amount': this.transfer_info.amount,
+                }).then(Response => {
+                    console.log(Response['data']);
+                })
+            },
+            // 创建订单
+            create_order() {
+                axios.post('http://localhost:9000/createorder', {
+                    'username': this.order_form.username,
+                    'type': this.order_form.type,
+                    'item': this.order_form.item,
+                    'amount': this.order_form.amount,
+                    'price': this.order_form.price,
+                }).then(Response => {
+                    console.log(Response['data'])
+                    if (Response['data']['status']=='NoCommittee') {
+                        this.$notify({
+                            title: '失败',
+                            message: '委员会未创建',
+                            type: 'warning'
+                        });
+                    }
+                    else if (Response['data']['status']=='NotAvailable') {
+                        this.$notify({
+                            title: '失败',
+                            message: '账户余额不足',
+                            type: 'warning'
+                        });
+                    }
+                    else {
+                        this.$notify({
+                            title: '成功',
+                            message: '订单创建成功',
+                            type: 'success'
+                        });
+                    }
+                })
+            },
+            // 查询订单信息
+            get_order() {
+                axios.post('http://localhost:9000/getorder', {
+                    'username': this.username,
+                }).then(Response => {
+                    this.order_list = Response['data']['OrderList']
+                })
+            },
+            // 查询匹配交易信息
+            get_dealed_order(){
+                axios.post('http://localhost:9000/getdealedorder', {
+                    'username': this.username,
+                }).then(Response => {
+                    console.log(Response['data']['DealedOrderList'])
+                    this.dealed_order_list = Response['data']['DealedOrderList']
+                })
+            },
+            // 查询委员会情况
+            query_committee() {
+                axios.post('http://localhost:9000/queryCommittee', {
+                    'username': this.username,
+                }).then(Response => {
+                    console.log(Response['data'])
+                    this.candidates = Response['data']['candidates']
+                    this.committee = Response['data']['committee']
+                })
+            },
+            // 竞选委员
+            elect_committee() {
+                axios.post('http://localhost:9000/electCommittee', {
+                    'username': this.elect_form.username,
+                    'item': this.elect_form.item,
+                    'amount': this.elect_form.amount,
+                }).then(Response => {
+                    if (Response['data']['status']) {
+                        this.$notify({
+                            title: '成功',
+                            message: '竞选委员成功',
+                            type: 'success'
+                        });
+                    }
+                    else {
+                        this.$notify({
+                            title: '失败',
+                            message: '竞选委员失败',
+                            type: 'warning'
+                        });
+                    }
+                })
+            },
+            // 每页多少条
+            handleSizeChange(val) {
+                this.pageSize = val;
+            },
+            // 当前页
+            handleCurrentChange(val) {
+                this.currentPage = val;
+            },
+        }
+    });
+</script>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .login {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            min-width: 1000px;
+            z-index: -10;
+            zoom: 1;
+            background-color: #fff;
+            background: url(../public/static/login_bg.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            -webkit-background-size: cover;
+            -o-background-size: cover;
+            background-position: center 0;
+            text-align: center;
+        }
+
+        .form {
+            width: 400px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            border-radius: 25px;
+            background-color: #fff;
+            opacity: 0.8;
+            text-align: center;
+            vertical-align: middle;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .input {
+            border-radius: 40px;
+        }
+
+        #welcome {
+            color: aliceblue;
+            font-size: 24px;
+            position: absolute;
+            left: 50%;
+            top: 15%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login">
+        <div id="welcome">
+            <h1 style="text-shadow: 2px 3px 1px grey">欢迎进入暗池交易系统</h1>
+            <!--
+            <span style="text-shadow: 2px 3px 1px grey;">Welcome to the Darkpool Trading System</span>
+            -->
+        </div>
+        <br>
+        <div class='form'>
+            <h1 id="title">登 录</h1>
+            <div style="font-size: small; color: blue;">提示：<%=msg%></div><br>
+            <form action="/login" method="post">
+                <div class="input"><input type="text" name="username" placeholder="请输入用户名"></div>
+                <div style="margin-top: 15px">
+                    <button type="submit" style="margin-right: 30px;">登录</button>
+                    <button type="button" onclick="window.location.href='register'">注册</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
