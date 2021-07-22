@@ -2,6 +2,7 @@
 
 //global variable
 var transfer_list = [];
+var block_list = [];
 
 // Requirements
 const fs = require('fs');
@@ -58,6 +59,20 @@ app.post('/update_priceList', function (req, res){
     }
     res.json({
         'priceList': priceList,
+    })
+})
+
+// 
+app.post('/query_new_value', function (req, res){
+    res.json({
+        'new_value': [{
+            timestamp: new Date().getTime(),
+            open: 13670+Math.random(),
+            high: 13673+Math.random(),
+            low: 13666+Math.random(),
+            close: 13672.35+Math.random(),
+            volume: 2,
+        }]
     })
 })
 
@@ -269,6 +284,32 @@ var server = app.listen(9000, async function () {
         // Value
         transfer_list.push(evt);  // Add to global variable
     }, { startBlock: 0 });  // From genesis block
+
+    const listener = async (event) => {
+        // Handle block event
+        //console.log(event.blockData.metadata);
+        var cur_block = {};
+        cur_block['blockNumber'] = parseInt(event.blockNumber);
+        cur_block['header'] = {};
+        cur_block['header']['number'] = parseInt(event.blockData.header.number);
+        cur_block['header']['previous_hash'] = event.blockData.header.previous_hash.toString('hex');
+        cur_block['header']['data_hash'] = event.blockData.header.data_hash.toString('hex');
+        cur_block['data'] = {};
+        cur_block['data']['signature'] = event.blockData.data.data[0].signature.toString('hex');
+        cur_block['data']['payload'] = event.blockData.data.data[0].payload;
+        cur_block['data']['payload']['header'] = event.blockData.data.data[0].payload.header;
+        cur_block['data']['payload']['data'] = event.blockData.data.data[0].payload.data;
+        // Listener may remove itself if desired
+        //if (event.blockNumber.equals(endBlock)) {
+        //    network.removeBlockListener(listener);
+        //}
+        //console.log(cur_block['data']['payload']['header']);
+        block_list.push(cur_block);
+    }
+    const options = {
+        startBlock: 1
+    };
+    await network.addBlockListener(listener, options);
 
     //var host = server.address().address
     var port = server.address().port

@@ -12,21 +12,45 @@
     <script type="text/javascript" src="../kline/klinecharts.min.js"></script>
     -->
     <script type="text/javascript" src="../kline/kline.js"></script>
+
+    <!-- CDN 安装 Vue&ElementUI -->
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui@2.14.1/lib/index.js"></script>
+    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
+    
+    <!-- 本地安装 Vue&ElementUI
+        <script src="../static/vue.js"></script>
+        <link rel="stylesheet" href="../static/index.css">
+        <script src="../static/index.js"></script>
+        <script src="../static/axios.min.js"></script>
+    -->
+
 </head>
 <body style="margin: 0;height: 100%">
 <div id="chart" style="height: 100%"></div>
 <script>
-    window.onload = function () {
-        // 初始化图表
-        var chart = klinecharts.init('chart')
-        // 创建一个主图技术指标
+    // 引入Vue变量控制kline
+    var kline = new Vue({
+        data: {
+            new_value: [],
+        },
+        methods: {
+            query_new_value() {
+                axios.post('http://localhost:9000/query_new_value').then(Response =>{
+                    this.new_value = Response['data']['new_value'];
+                })
+            }
+        }
+    })
+    // kline绘图,页面加载时初始化
+    var chart = klinecharts.init('chart')
+    var chartDataList = []
+    window.onload = function draw_kline() {
         chart.createTechnicalIndicator('MA', false, { id: 'candle_pane' })
-        // 创建一个副图技术指标VOL
         chart.createTechnicalIndicator('VOL')
-        // 创建一个副图技术指标MACD
         chart.createTechnicalIndicator('MACD')
-        // 加载数据
-        var chartDataList = kLineDataList.map(function (data) {
+        chartDataList = kLineDataList.map(function (data) {
             return {
                 timestamp: new Date(data[0]).getTime(),
                 open: +data[1],
@@ -38,6 +62,14 @@
         })
         chart.applyNewData(chartDataList)
     }
+    // 随后按照间隔不断更新
+    window.setInterval(() => {
+        setTimeout(function() {
+            kline.query_new_value();
+            chartDataList = chartDataList.concat(kline.new_value)
+            chart.applyNewData(chartDataList)
+        }, 600)
+    }, 5000)
 </script>
 </body>
 

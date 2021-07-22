@@ -1,18 +1,25 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
+
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Cryptod</title>
+    <title>BlockExplorer</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="enroutedigitallab">
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Google Font -->
-
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i%7CRoboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
-
     <!-- Bootstrap css-->
     <link rel="stylesheet" href="../public/css/bootstrap.min.css">
     <!-- Font Awesome css-->
@@ -37,6 +44,7 @@
     <link rel="stylesheet" href="../public/css/responsive.css">
     <!-- Modernizr js-->
     <script src="../public/js/modernizr-2.8.3.min.js"></script>
+
 </head>
 <body>
 
@@ -44,25 +52,9 @@
     <div class="preloader">
         <div class="loading"></div>
     </div><!--/.preloader-->
+
     <!--header-->
     <header class="stricky">
-        <div class="input-search-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <form id="contact-2" action="#">
-                            <div class="search-input pr">
-                                <input type="text" name="name" placeholder="Search Here....." class="form-control" required="">
-                                <button type="submit" class="submit-btn"><i class="ion-search"></i></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="close-button">
-                    <i class="ion-ios-close-outline"></i>
-                </div>
-            </div>
-        </div>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -73,21 +65,12 @@
                         <div id="head-mobile"></div>
                         <div class="button"></div>
                         <ul class="pull-right header-list">
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about-us.html">About</a></li>
-                            <li><a href="service.html">Service</a></li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="blog.html">Blog</a></li>
-                                    <li><a href="blog-details.html">Blog Details</a></li>
-                                    <li><a href="blog-left-sidebar.html">Blog Left Sidebar</a></li>
-                                    <li><a href="blog-full-width.html">Blog Fullwidth</a></li>
-                                    <li><a href="blog-grid-two.html">Blog Grid Two</a></li>
-                                    <li><a href="blog-grid-three.html">Blog Grid Three</a></li>
-                                </ul><!--/.dropdown-->
-                            </li>
-                            <li><a href="contact.html">Contact</a></li>
-                            <li class="search-option"><a href="#"><i class="ion-search"></i></a></li>
+                            <li><a href="../public/index.html"><span class="glyphicon glyphicon-home">首页</span></a></li>
+                            <li><a href="../public/kline/basic.html"><span class="glyphicon glyphicon glyphicon-stats">查看行情</span></a></li>
+                            <li><a href="../public/tutorial.html"><span class="glyphicon glyphicon-info-sign">快速入门</span></a></li>
+                            <li><a href="../public/block_explorer.html"><span class="glyphicon glyphicon-globe">区块浏览</span></a></li>
+                            <li><a href="../public/login.html"><span class="glyphicon glyphicon-btc">一键买币</span></a></li>
+                            <li><a href="#" onClick="javascript :history.back(-1);"><span class="glyphicon glyphicon-backward"></span>返回</a></li>
                         </ul><!--/.pull-right-->
                     </nav><!--/#cssmenu-->
                 </div>
@@ -100,7 +83,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="banner-title text-center">
-                        <h2>Services</h2>
+                        <h2>快速入门</h2>
+                        <h2 style="font-size: small;">暗池交易系统功能介绍</h2>
                     </div>
                 </div>
             </div><!--/.row-->
@@ -113,27 +97,19 @@
                 <div class="col-md-4 col-sm-6">
                     <div class="service-text">
                         <div>
-                            <h2>We are <span>Cryptod</span> Inspires to Help Business. Our Goal is always client Satisfiction</h2>
+                            <h2>输入用户名和密码注册您的账号<br>获取您的<span>X.509证书</span>作为您在系统中的凭证</h2>
                         </div>
                     </div><!--/.about-inner-text-content-->
                 </div>
                 <div class="col-md-8 col-sm-6">
                     <div class="about-inner">
-                        <p class="text">our power of choice is untrammelled and when nothing prevents our being able
-                            to do leasure to be welcomed and every pain avoided But in certan circumstances and own
-                            obligations of business it will frequently occur tha pleasures have to be repudiated a man
-                            therefore always holds in these matters to this principle of selection our power of choice is
-                            untrammelled and when nothing prevents our being able to do leasure to be welcomed and every</p>
-
-                        <p>man therefore always holds in these matters to this principle of selectionour power of choice is untrammelled
-                            a and every pain avoided But in certan circumstances and own obligations of business
-                            it will frequently occur tha pleasures have to be repudiated a man therefore always
-                            holds in these matters to this principle of selection our power of choice is untrammelled and when nothing prevents</p>
+                        <p class="text">通过用户名和密码登录系统，系统将检测存在本地的X.509证书信息</p>
                     </div>
                 </div>
             </div><!--/.row-->
         </div><!--/.container-->
     </section><!--/.about-section-->
+
     <section class="section-padding">
         <div class="container">
             <div class="row">
@@ -151,53 +127,95 @@
             </div>
         </div>
     </section><!--/.section-padding-->
-    <div id="counter" class="counter-section section-padding">
+    
+    <section class="testimonial-section section-padding">
         <div class="container">
             <div class="row">
-                <div class="col-md-5 col-sm-12">
-                    <div class="achivement">
-                        <h2>Our Achievement Always <span>Inspires</span> to help Other's Business.</h2>
-                    </div><!--/.achivement-->
-                </div>
-                <div class="col-md-7">
-                    <div class="row">
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="counter-up">
-                                <div class="counter-value" data-count="1000">
-                                </div>
-                                <h4><a href="">Projects Done</a></h4>
-                            </div><!--/.counter-up-->
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="counter-up">
-                                <div class="counter-value" data-count="72">
-                                </div>
-                                <h4><a href="">Awards Won</a></h4>
-                            </div><!--/.counter-up-->
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="counter-up">
-                                <div class="counter-value" data-count="100">
-                                </div>
-                                <h4><a href="">Satisfied Clients</a></h4>
-                            </div><!--/.counter-up-->
-                        </div>
+                <div class="col-md-12">
+                    <div class="testimonial-slider owl-carousel">
+                        <div class="testimonial text-center">
+                            <h2>Testimonials</h2>
+                            <div class="quote-icon">
+                                <i class="ion-quote"></i>
+                            </div>
+
+                            <p class="item-text">The create amazings and tight duration presented you with were undoub a challenge
+                                everon is ver happ with how well a team delivered. Create amazin tight duration pres
+                                everyone is very happy with how well your team</p>
+
+                            <div class="star-rating">
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="#">Jordan Hopes</a></h4>
+                                <p>Finance Expo</p>
+                            </div>
+                        </div><!--/.testimonial-->
+                        <div class="testimonial text-center">
+                            <h2>Testimonials</h2>
+                            <div class="quote-icon">
+                                <i class="ion-quote"></i>
+                            </div>
+
+                            <p class="item-text">The create amazings and tight duration presented you with were undoub a challenge
+                                everon is ver happ with how well a team delivered. Create amazin tight duration pres
+                                everyone is very happy with how well your team</p>
+
+                            <div class="star-rating">
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="#">Jordan Hopes</a></h4>
+                                <p>Finance Expo</p>
+                            </div>
+                        </div><!--/.testimonial-->
+                        <div class="testimonial text-center">
+                            <h2>Testimonials</h2>
+                            <div class="quote-icon">
+                                <i class="ion-quote"></i>
+                            </div>
+
+                            <p class="item-text">The create amazings and tight duration presented you with were undoub a challenge
+                                everon is ver happ with how well a team delivered. Create amazin tight duration pres
+                                everyone is very happy with how well your team</p>
+
+                            <div class="star-rating">
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                                <span class="ion-android-star"></span>
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="#">Jordan Hopes</a></h4>
+                                <p>Finance Expo</p>
+                            </div>
+                        </div><!--/.testimonial-->
                     </div>
                 </div>
-            </div><!--/.row-->
-        </div><!--/.container-->
-    </div><!--/#counter-->
+            </div>
+        </div>
+    </section><!--/.testimonial-section-->
+    
     <div class="quote-section section-padding">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-sm-8 col-xs-12">
                     <div class="text-quote">
-                        <h3>He system ands expound ta actual an happiness</h3>
+                        <h3>登录账号以体验上述功能</h3>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 col-xs-12">
                     <div class="button-area text-right content-align">
-                        <a class="cryptod-button-success" href="">Read More</a>
+                        <a class="cryptod-button-success" href="../public/login.html">即刻开始</a>
                     </div>
                 </div>
             </div>

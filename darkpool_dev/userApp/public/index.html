@@ -1,7 +1,9 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
+
     <!-- CDN 安装 Bootstrap -->
     <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
@@ -85,9 +87,10 @@
                         <ul class="pull-right header-list">
                             <li><a href="../public/index.html"><span class="glyphicon glyphicon-home">首页</span></a></li>
                             <li><a href="../public/kline/basic.html"><span class="glyphicon glyphicon glyphicon-stats">查看行情</span></a></li>
-                            <li><a href="../public/service.html"><span class="glyphicon glyphicon-info-sign">快速入门</span></a></li>
+                            <li><a href="../public/tutorial.html"><span class="glyphicon glyphicon-info-sign">快速入门</span></a></li>
+                            <li><a href="../public/block_explorer.html"><span class="glyphicon glyphicon-globe">区块浏览</span></a></li>
                             <li><a href="../public/login.html"><span class="glyphicon glyphicon-btc">一键买币</span></a></li>
-                            <li><a href="../public/login.html"><span class="glyphicon glyphicon-user"></span>登录/注册</a></li>
+                            <li><a href="../public/login.html"><span class="glyphicon glyphicon-log-in"></span>登录/注册</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -95,7 +98,7 @@
         </div>
     </header><!--/header-->
 
-    <!-- 滑动显示区域 -->
+    <!-- 币价显示区域 -->
     <div class="slider-section">
         <div id="rev_slider_1052_1_wrapper" class="rev_slider_wrapper fullscreen-container" data-alias="web-product-dark122" data-source="gallery">
             <!-- START REVOLUTION SLIDER 5.3.0.2 fullscreen mode -->
@@ -506,22 +509,30 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12" id="kline">
+                <div class="col-md-12">
                     <div id="chart" style="height: 100%"></div>
                     <script>
+                        // 引入Vue变量控制kline
+                        var kline = new Vue({
+                            data: {
+                                new_value: [],
+                            },
+                            methods: {
+                                query_new_value() {
+                                    axios.post('http://localhost:9000/query_new_value').then(Response =>{
+                                        this.new_value = Response['data']['new_value'];
+                                    })
+                                }
+                            }
+                        })
+                        // kline绘图,页面加载时初始化
+                        var chart = klinecharts.init('chart')
+                        var chartDataList = []
                         window.onload = function draw_kline() {
-                            console.log("draw!")
-                            // 初始化图表
-                            var chart = klinecharts.init('chart')
-                            // 创建一个主图技术指标
                             chart.createTechnicalIndicator('MA', false, { id: 'candle_pane' })
-                            // 创建一个副图技术指标VOL
                             chart.createTechnicalIndicator('VOL')
-                            // 创建一个副图技术指标MACD
                             chart.createTechnicalIndicator('MACD')
-
-                            // 加载数据
-                            var chartDataList = kLineDataList.map(function (data) {
+                            chartDataList = kLineDataList.map(function (data) {
                                 return {
                                     timestamp: new Date(data[0]).getTime(),
                                     open: +data[1],
@@ -533,6 +544,14 @@
                             })
                             chart.applyNewData(chartDataList)
                         }
+                        // 随后按照间隔不断更新
+                        window.setInterval(() => {
+                            setTimeout(function() {
+                                kline.query_new_value();
+                                chartDataList = chartDataList.concat(kline.new_value)
+                                chart.applyNewData(chartDataList)
+                            }, 600)
+                        }, 5000)
                     </script>
                 </div>
             </div>
@@ -622,6 +641,7 @@
     </section><!--/.footer area-->
 
     <script>
+        // 币价显示
         var token = new Vue({
             el: "#token",
             delimiters: ["{[", "]}"],
@@ -632,37 +652,37 @@
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: true,
-                        rate: Math.random().toFixed(),
+                        rate: Math.random().toFixed(2),
                     },
                     'Ripple': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: false,
-                        rate: Math.random().toFixed(),
+                        rate: Math.random().toFixed(2),
                     },
                     'Monerro': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: true,
-                        rate: Math.random().toFixed(),
+                        rate: Math.random().toFixed(2),
                     },
                     'Ethereum': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: false,
-                        rate: Math.random().toFixed(),
+                        rate: Math.random().toFixed(2),
                     },
                     'Litecoin': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: true,
-                        rate: Math.random().toFixed(),
+                        rate: Math.random().toFixed(2),
                     },
                     'Tether': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: true,
-                        rate: Math.random().toFixed(),
+                        rate: Math.random().toFixed(2),
                     },
                 },
             },
@@ -679,14 +699,13 @@
                             'priceList': that.priceList,
                         }).then(function(res) {
                             var data = res.data;
-                            console.log(data['priceList']['Bitcoin'].price);
                             that.priceList = data['priceList'];
                         })
                         .catch(function(err) {
                             console.log("=err====" + err);
                         })
                     }, 600)
-                }, 6000)
+                }, 5000)
             },
         })
     </script>

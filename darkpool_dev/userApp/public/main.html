@@ -25,7 +25,6 @@
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Home</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="enroutedigitallab">
@@ -55,6 +54,17 @@
     <link rel="stylesheet" href="../public/css/responsive.css">
     <!-- Modernizr js-->
     <script src="../public/js/modernizr-2.8.3.min.js"></script>
+
+    <style>
+        .el-form-item__label{
+            color: #F3CF33;
+            text-shadow: 0px 0px 1px white;
+            font-weight: bold;
+            font-size: 18px;
+            width: 200px;
+        }
+    </style>
+
 </head>
 
 <!-- 首页主体 -->
@@ -82,11 +92,13 @@
                         <div class="button"></div>
                         <!-- 顶部跳转按钮 -->
                         <ul class="pull-right header-list">
-                            <li><a href="../public/index.html"><span class="glyphicon glyphicon-home">退出登录</span></a></li>
+                            <li><a href="../public/index.html"><span class="glyphicon glyphicon-log-out">退出登录</span></a></li>
                             <li><a href="../public/kline/basic.html"><span class="glyphicon glyphicon glyphicon-stats">查看行情</span></a></li>
-                            <li><a href="../public/service.html"><span class="glyphicon glyphicon-info-sign">更多服务</span></a></li>
+                            <li><a href="../public/tutorial.html"><span class="glyphicon glyphicon-info-sign">快速入门</span></a></li>
+                            <li><a href="../public/block_explorer.html"><span class="glyphicon glyphicon-globe">区块浏览</span></a></li>
                             <li><a href="../public/main_old.html"><span class="glyphicon glyphicon-th-list">个人中心</span></a>
                                 <ul class="dropdown">
+                                    <li><a href="../public/login.html"><span>一键买币</span></a></li>
                                     <li>
                                         <a href="#" @click="get_userinfo()">查看资产信息</a>
                                          <!-- 查看个人信息 -->
@@ -124,7 +136,6 @@
             <!-- START REVOLUTION SLIDER 5.3.0.2 fullscreen mode -->
             <div id="rev_slider_1052_1" class="rev_slider fullscreenbanner" style="display:none;" data-version="5.3.0.2">
                 <ul>	<!-- SLIDE  -->
-                    <!-- 滑动插件参数教程：https://www.jb51.net/article/67281.htm -->
                     <li data-index="rs-2946" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="500"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" >
                         <!-- MAIN IMAGE 滑动背景图片-->
                         <img src="../public/images/slider/slide-img.jpg" alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
@@ -314,19 +325,21 @@
         </div><!--/.container-->
     </div><!-- END REVOLUTION SLIDER -->
 
+    <!-- 币价滚动条 -->
     <section class="cryptocurrency-section">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="cryptocurrency-slide custom-nav owl-carousel owl-theme boxshadow wow fadeInUp" data-wow-duration="1.5s" data-wow-delay=".6s">
+                    <div id="token" class="cryptocurrency-slide custom-nav owl-carousel owl-theme boxshadow wow fadeInUp" data-wow-duration="0.3s" data-wow-delay="0.2s">
                         <div class="currency-price pr">
                             <div class="image">
                                 <img src="../public/images/icon/bitcoin.png" alt="">
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Bitcoin</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-up"><span>%1.5</span></p>
+                                <p class="dolar">{[priceList['Bitcoin'].price]}</p>
+                                <p v-if="priceList['Bitcoin'].isup==true" class="price-up"><span>%{[priceList['Bitcoin'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Bitcoin'].rate]}</span></p>
                             </div>
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
@@ -335,8 +348,9 @@
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Ripple</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-down"><span>%1.5</span></p>
+                                <p class="dolar">{[priceList['Ripple'].price]}</p>
+                                <p v-if="priceList['Ripple'].isup==true" class="price-up"><span>%{[priceList['Ripple'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Ripple'].rate]}</span></p>
                             </div>
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
@@ -345,8 +359,9 @@
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Monerro</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-up"><span>%1.5</span></p>
+                                <p class="dolar">{[priceList['Monerro'].price]}</p>
+                                <p v-if="priceList['Monerro'].isup==true" class="price-up"><span>%{[priceList['Monerro'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Monerro'].rate]}</span></p>
                             </div>
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
@@ -355,8 +370,9 @@
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Ethereum</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-down"><span>%1.5</span></p>
+                                <p class="dolar">{[priceList['Ethereum'].price]}</p>
+                                <p v-if="priceList['Ethereum'].isup==true" class="price-up"><span>%{[priceList['Ethereum'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Ethereum'].rate]}</span></p>
                             </div>
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
@@ -365,102 +381,58 @@
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Litecoin</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-down"><span>%1.5</span></p>
+                                <p class="dolar">{[priceList['Litecoin'].price]}</p>
+                                <p v-if="priceList['Litecoin'].isup==true" class="price-up"><span>%{[priceList['Litecoin'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Litecoin'].rate]}</span></p>
                             </div>
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="../public/images/icon/bitcoin.png" alt="">
+                                <img src="../public/images/icon/usdt.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Bitcoin</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-up"><span>%1.5</span></p>
-                            </div>
-                        </div><!--/.currency-price-->
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/ripple.png" alt="">
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="">Ripple</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-up"><span>%1.5</span></p>
-                            </div>
-                        </div><!--/.currency-price-->
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/monero.png" alt="">
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="">Monerro</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-down"><span>%1.5</span></p>
-                            </div>
-                        </div><!--/.currency-price-->
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/ethereum.png" alt="">
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="">Ethereum</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-down"><span>%1.5</span></p>
-                            </div>
-                        </div><!--/.currency-price-->
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/litecoin.png" alt="">
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="">Litecoin</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-up"><span>%1.5</span></p>
-                            </div>
-                        </div><!--/.currency-price-->
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/bitcoin.png" alt="">
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="">Bitcoin</a></h4>
-                                <p class="dolar">9,380.05</p>
-                                <p class="price-down"><span>%1.5</span></p>
+                                <h4><a href="">Tether</a></h4>
+                                <p class="dolar">{[priceList['Tether'].price]}</p>
+                                <p v-if="priceList['Tether'].isup==true" class="price-up"><span>%{[priceList['Tether'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Tether'].rate]}</span></p>
                             </div>
                         </div><!--/.currency-price-->
                     </div><!--/.cryptocurrency slider-->
                 </div>
             </div><!--/.row-->
         </div><!--/.container-->
-    </section><!--/.curency section-->
+    </section><!--/.curency section 币价滚动条 -->
 
     <!-- 转账查询 -->
     <a href="#" name="transfer_query"></a>
     <section class="bg-deep about-section">
         <div class="container">
             <div class="row row-eq-height">
-                <div class="col-md-12 col-sm-12">
+                <div class="col-md-12 col-sm-12" style="margin-bottom: 20px;">
                     <div class="about-inner-text-content">
-                        <div>
+                        <div class="section-head text-center">
                             <h2>转账查询</h2>
+                            <el-button size="mini" icon="el-icon-refresh-right" @click="get_transfer()">点击刷新</el-button>
                         </div>
-                        <el-button @click="get_transfer()">点击刷新</el-button>
-                            <el-table :data="transfer_list.slice((currentPage-1)*pageSize,currentPage*pageSize)" stripe style="width: 100%">
-                                <el-table-column prop="from" label="发起方" width="180"></el-table-column>
-                                <el-table-column prop="to" label="接收方" width="180"></el-table-column>
-                                <el-table-column prop="name" label="代币类型" width="180"></el-table-column>
-                                <el-table-column prop="value" label="金额"></el-table-column>
-                            </el-table>
-                            <el-pagination
-                                @size-change="handleSizeChange"
-                                @current-change="handleCurrentChange"
-                                :current-page="currentPage"
-                                :page-sizes="[10, 20, 30, 50, 100]"
-                                :page-size="pageSize"
-                                layout="total, sizes, prev, pager, next, jumper"
-                                :total="transfer_list.length">
-                            </el-pagination>
+                        <el-table :data="transfer_list.slice((currentPage-1)*pageSize,currentPage*pageSize)" 
+                        stripe
+                        border 
+                        style="width: 100%">
+                            <el-table-column prop="from" label="发起方"></el-table-column>
+                            <el-table-column prop="to" label="接收方"></el-table-column>
+                            <el-table-column prop="name" label="代币类型"></el-table-column>
+                            <el-table-column prop="value" label="金额"></el-table-column>
+                        </el-table>
+                        <el-pagination
+                            style="margin-top: 10px;"
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-sizes="[10, 20, 30, 50, 100]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="transfer_list.length">
+                        </el-pagination>
                     </div><!--/.about-inner-text-content-->
                 </div>
             </div><!--/.row-->
@@ -472,28 +444,30 @@
     <div id="counter" class="counter-section section-padding">
         <div class="container">
             <div class="row">
-                <div class="col-md-3 col-sm-12">
+                <div class="col-md-4 col-sm-12">
                     <div class="achivement">
-                        <h2>向其他用户发起<span>多种</span>代币转账</h2>
+                        <h2>向其他用户<br>发起<span>多种</span>代币转账</h2>
+                        <el-button @click="transfer()" style="margin-top: 20px; margin-bottom: 20px; background-color: #F3CF33; border-color: #F3CF33;"><div style="color: white; font-weight: bold;">确  定</div></el-button>
                     </div><!--/.achivement-->
                 </div>
-                <div class="col-md-9">
-                    <el-form :model="transfer_info">
+                <div class="col-md-8">
+                    <el-form :model="transfer_info"  
+                    label-width="120px" 
+                    style="margin-top: 20px; margin-bottom: 20px;">
                         <el-form-item label="接收方">
-                            <el-input v-model="transfer_info.to" style="width: 20%;"></el-input>
+                            <el-input v-model="transfer_info.to" style="width: 500px;"></el-input>
                         </el-form-item>
                         <el-form-item label="代币种类">
-                            <el-select v-model="transfer_info.item" placeholder="请选择">
+                            <el-select v-model="transfer_info.item" placeholder="请选择" style="width: 500px;">
                                 <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
                                     :value="item.value">
                                 </el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="转账数量">
-                            <el-input v-model="transfer_info.amount" style="width: 20%;"></el-input>
+                            <el-input v-model="transfer_info.amount" style="width: 500px;"></el-input>
                         </el-form-item>
                     </el-form>
-                    <el-button type="primary" @click="transfer()">确 定</el-button>
                 </div>
             </div><!--/.row-->
         </div><!--/.container-->
@@ -558,35 +532,32 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="section-head text-center">
-                        <h2 class="title-white">创建订单</h2>
-                        <el-button @click="create_order()">创建订单</el-button>
+                        <h2 class="title-white" @click="create_order()">创建订单</h2>
                     </div>
-                </div>
+                    <el-form :model="order_form" style="margin-top: 20px; margin-bottom: 20px; margin-left: 25%;">
+                        <el-form-item label="订单类型">
+                            <el-radio v-model="order_form.type" label="buy" style="color: white">买单</el-radio>
+                            <el-radio v-model="order_form.type" label="sell" style="color: white">卖单</el-radio>
+                        </el-form-item>
+                        <el-form-item label="交易物品">
+                            <el-select v-model="order_form.item" placeholder="请选择">
+                                <el-option v-for="item in itemoptions_order" :key="item.value" :label="item.label"
+                                    :value="item.value" :disabled="item.disabled" style="width: 400px;">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="交易数量">
+                            <el-input v-model="order_form.amount" style="width: 400px;"></el-input>
+                        </el-form-item>
+                        <el-form-item label="交易价格(Tether)">
+                            <el-input v-model="order_form.price" style="width: 400px;"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div class="text-center">
+                        <el-button type="primary" @click="create_order()">确 定</el-button>
+                    </div>
+                </div>        
             </div>
-            <div class="row row-eq-height">
-                <el-form :model="order_form">
-                    <el-form-item label="订单类型">
-                        <el-radio v-model="order_form.type" label="buy">买单</el-radio>
-                        <el-radio v-model="order_form.type" label="sell">卖单</el-radio>
-                    </el-form-item>
-                    <el-form-item label="交易物品">
-                        <el-select v-model="order_form.item" placeholder="请选择">
-                            <el-option v-for="item in itemoptions_order" :key="item.value" :label="item.label"
-                                :value="item.value" :disabled="item.disabled">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="交易数量">
-                        <el-input v-model="order_form.amount" style="width: 20%;"></el-input>
-                    </el-form-item>
-                    <el-form-item label="交易价格(Tether)">
-                        <el-input v-model="order_form.price" style="width: 20%;"></el-input>
-                    </el-form-item>
-                </el-form>
-                <div>
-                    <el-button type="primary" @click="create_order()">确 定</el-button>
-                </div>
-            </div><!--/.row-->
         </div><!--/.container-->
     </section><!--/.parallax section-->
 
@@ -706,58 +677,46 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h2>竞选委员</h2>
-                            <div class="quote-icon">
-                                <i class="ion-quote"></i>
-                            </div>
+                    <div class="section-head text-center">
+                        <h2 style="color: white;">竞选委员</h2>
+                        <p class="item-text" style="color: white;">抵押Tether代币竞选委员</p>
+                        <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">我要竞选</el-button>
+                        <p class="item-text" style="color: white;">下表将显示委员会候选人名单，若有已存在的委员会，则同时显示委员会成员</p>    
+                    </div>
 
-                            <p class="item-text">The create amazings and tight duration presented you with were undoub a challenge
-                                everon is ver happ with how well a team delivered. Create amazin tight duration pres
-                                everyone is very happy with how well your team</p>
+                    <!-- 抵押代币竞选委员 -->
+                    <el-dialog title="抵押代币" :append-to-body="true" :visible.sync="elect_visible" width="50%">
+                        <el-form :model="elect_form">
+                            <el-form-item label="代币种类">
+                                <el-select v-model="elect_form.item" disabled placeholder="请选择">
+                                    <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="抵押数量">
+                                <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <el-button @click="elect_visible = false">取 消</el-button>
+                        <el-button type="primary" @click="elect_committee();elect_visible = false">确 定</el-button>
+                    </el-dialog>
 
-                            <div class="star-rating">
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                            </div>
-                            
-                            <!-- 抵押代币竞选委员 -->
-                            <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">我要竞选</el-button>
-                            <el-dialog title="抵押代币" :append-to-body="true" :visible.sync="elect_visible" width="50%">
-                                <el-form :model="elect_form">
-                                    <el-form-item label="代币种类">
-                                        <el-select v-model="elect_form.item" disabled placeholder="请选择">
-                                            <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
-                                                :value="item.value">
-                                            </el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                    <el-form-item label="抵押数量">
-                                        <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>
-                                    </el-form-item>
-                                </el-form>
-                                <el-button @click="elect_visible = false">取 消</el-button>
-                                <el-button type="primary" @click="elect_committee();elect_visible = false">确 定</el-button>
-                            </el-dialog>
-
-                            <!-- 显示候选人信息 -->
-                            <el-table :data="candidates" style="width: 100%">
-                                <el-table-column prop="name" label="候选人名称" width="450"></el-table-column>
-                                <el-table-column prop="amount" label="抵押代币数量(Tether)"></el-table-column>
-                            </el-table>
-                            <!-- 显示委员会成员信息 -->
-                            <el-table :data="committee" style="width: 100%">
-                                <el-table-column prop="name" label="委员名称" width="450"></el-table-column>
-                                <el-table-column prop="amount" label="抵押代币数量(Tether)" width="180"></el-table-column>
-                                <el-table-column prop="pub" label="公钥信息"></el-table-column>
-                            </el-table>
+                    <!-- 显示候选人信息 -->
+                    <el-table :data="candidates" style="width: 100%">
+                        <el-table-column prop="name" label="候选人名称" width="450"></el-table-column>
+                        <el-table-column prop="amount" label="抵押代币数量(Tether)"></el-table-column>
+                    </el-table>
+                    <!-- 显示委员会成员信息 -->
+                    <el-table :data="committee" style="width: 100%">
+                        <el-table-column prop="name" label="委员名称" width="450"></el-table-column>
+                        <el-table-column prop="amount" label="抵押代币数量(Tether)" width="180"></el-table-column>
+                        <el-table-column prop="pub" label="公钥信息"></el-table-column>
+                    </el-table>
                 </div>
             </div>
         </div>
     </section><!--/.testimonial-section-->
-
     
     <section class="footer-area">
         <div class="container">
@@ -843,12 +802,53 @@
 </div><!-- vue darkpool -->
 
     <!-- Vue -->
-    <script>    
+    <script>
         // 暗池交易系统
         var dp = new Vue({
             el: "#darkpool",
             delimiters: ["{[", "]}"],
             data: {
+
+                tokenList: ['Bitcoin', 'Ripple', 'Monerro', 'Ethereum', 'Litecoin', 'Tether'],
+                priceList: {
+                    'Bitcoin': {
+                        oldprice: (Math.random()*10000).toFixed(2),
+                        price: (Math.random()*10000).toFixed(2),
+                        isup: true,
+                        rate: Math.random().toFixed(2),
+                    },
+                    'Ripple': {
+                        oldprice: (Math.random()*10000).toFixed(2),
+                        price: (Math.random()*10000).toFixed(2),
+                        isup: false,
+                        rate: Math.random().toFixed(2),
+                    },
+                    'Monerro': {
+                        oldprice: (Math.random()*10000).toFixed(2),
+                        price: (Math.random()*10000).toFixed(2),
+                        isup: true,
+                        rate: Math.random().toFixed(2),
+                    },
+                    'Ethereum': {
+                        oldprice: (Math.random()*10000).toFixed(2),
+                        price: (Math.random()*10000).toFixed(2),
+                        isup: false,
+                        rate: Math.random().toFixed(2),
+                    },
+                    'Litecoin': {
+                        oldprice: (Math.random()*10000).toFixed(2),
+                        price: (Math.random()*10000).toFixed(2),
+                        isup: true,
+                        rate: Math.random().toFixed(2),
+                    },
+                    'Tether': {
+                        oldprice: (Math.random()*10000).toFixed(2),
+                        price: (Math.random()*10000).toFixed(2),
+                        isup: true,
+                        rate: Math.random().toFixed(2),
+                    },
+                },
+
                 userinfo: [], // 当前用户信息
                 infoFormVisible: false,  // 查看用户信息对话框
                 formLabelWidth: '150px',
@@ -1006,21 +1006,24 @@
                             this.$notify({
                                 title: '失败',
                                 message: '委员会未创建',
-                                type: 'warning'
+                                type: 'warning',
+                                offset: 100
                             });
                         }
                         else if (Response['data']['status']=='NotAvailable') {
                             this.$notify({
                                 title: '失败',
                                 message: '账户余额不足',
-                                type: 'warning'
+                                type: 'warning',
+                                offset: 100
                             });
                         }
                         else {
                             this.$notify({
                                 title: '成功',
                                 message: '订单创建成功',
-                                type: 'success'
+                                type: 'success',
+                                offset: 100
                             });
                         }
                     })
@@ -1083,6 +1086,30 @@
                 handleCurrentChange(val) {
                     this.currentPage = val;
                 },
+            },
+            created: function() {
+                this.get_transfer();
+                this.get_order();
+                this.get_dealed_order();
+                var that = this;
+                // setInterval不会清除定时器队列，每重复执行1次都会导致定时器叠加 \
+                window.setInterval(() => {
+                    // setTimeout是自带清除定时器
+                    setTimeout(function() {
+                        for(var index=0; index<that.tokenList.length; index++){
+                            that.priceList[that.tokenList[index]].oldprice = that.priceList[that.tokenList[index]].price;
+                        }
+                        axios.post('http://localhost:9000/update_priceList',{
+                            'priceList': that.priceList,
+                        }).then(function(res) {
+                            var data = res.data;
+                            that.priceList = data['priceList'];
+                        })
+                        .catch(function(err) {
+                            console.log("=err====" + err);
+                        })
+                    }, 600)
+                }, 5000)
             }
         });
     </script>
@@ -1114,6 +1141,7 @@
    <script src="../public/js/revolution-active.js"></script>
     <!-- == Custom js  == -->
    <script src="../public/js/custom.js"></script>
+
 </body>
 </html>
 
