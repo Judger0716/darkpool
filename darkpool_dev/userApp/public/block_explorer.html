@@ -11,6 +11,18 @@
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+    <!-- CDN INSTALL Vue-->
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui@2.14.1/lib/index.js"></script>
+    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
+    <!-- LOCAL INSTALL
+        <script src="../static/vue.js"></script>
+        <link rel="stylesheet" href="../static/index.css">
+        <script src="../static/index.js"></script>
+        <script src="../static/axios.min.js"></script>
+    -->
+
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>BlockExplorer</title>
     <meta name="description" content="">
@@ -44,6 +56,22 @@
     <link rel="stylesheet" href="../public/css/responsive.css">
     <!-- Modernizr js-->
     <script src="../public/js/modernizr-2.8.3.min.js"></script>
+
+    <style>
+        .demo-table-expand {
+          font-size: 0;
+        }
+        .demo-table-expand label {
+          width: 90px;
+          color: #99a9bf;
+        }
+        .demo-table-expand .el-form-item {
+          margin-right: 0;
+          margin-bottom: 0;
+          width: 50%;
+        }
+    </style>
+      
 
 </head>
 <body>
@@ -83,144 +111,65 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="banner-title text-center">
-                        <h2>快速入门</h2>
-                        <h2 style="font-size: small;">暗池交易系统功能介绍</h2>
+                        <h2>区块信息浏览</h2>
+                        <h2 style="font-size: small;">HyperLedger Fabric 区块信息浏览</h2>
                     </div>
                 </div>
             </div><!--/.row-->
         </div><!--/.container-->
     </div><!--/.banner-section-->
 
-    <section class="bg-deep section-padding">
-        <div class="container">
-            <div class="row row-eq-height">
-                <div class="col-md-4 col-sm-6">
-                    <div class="service-text">
-                        <div>
-                            <h2>输入用户名和密码注册您的账号<br>获取您的<span>X.509证书</span>作为您在系统中的凭证</h2>
-                        </div>
-                    </div><!--/.about-inner-text-content-->
-                </div>
-                <div class="col-md-8 col-sm-6">
-                    <div class="about-inner">
-                        <p class="text">通过用户名和密码登录系统，系统将检测存在本地的X.509证书信息</p>
-                    </div>
-                </div>
-            </div><!--/.row-->
-        </div><!--/.container-->
-    </section><!--/.about-section-->
-
     <section class="section-padding">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
-                    <div class="section-head text-center">
-                        <h2>Growth of Crypto Currency</h2>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                   <canvas id="mixed-chart"></canvas>
+                <div class="col-md-12" id="explorer">
+                    <el-table :data="block_list.slice((currentPage-1)*pageSize,currentPage*pageSize)" style="width: 100%">
+                        <el-table-column type="expand">
+                            <template slot-scope="props">
+                                <el-form label-position="left" inline class="demo-table-expand">
+                                    <el-form-item label="通道ID">
+                                        <span>{{ props.row.data.payload.header.channel_header.channel_id }}</span>
+                                    </el-form-item>
+                                    <el-form-item label="交易ID" v-if="props.row.data.payload.header.channel_header.txid">
+                                        <span>{{ props.row.data.payload.header.channel_header.txid }}</span>
+                                    </el-form-item>
+                                    <el-form-item label="Extension">
+                                        <span>{{ props.row.data.payload.header.channel_header.extension }}</span>
+                                    </el-form-item>
+                                    <el-form-item label="TypeString">
+                                        <span>{{ props.row.data.payload.header.channel_header.typeString }}</span>
+                                    </el-form-item>
+                                    <el-form-item label="签名创建者">
+                                        <span>{{ props.row.data.payload.header.signature_header.creator.mspid }}</span>
+                                    </el-form-item>
+                                    <el-form-item label="签名者ID">
+                                        <span>{{ props.row.data.payload.header.signature_header.creator.id_bytes }}</span>
+                                    </el-form-item>
+                                </el-form>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="区块高度" prop="blockNumber" width="100"></el-table-column>
+                        <el-table-column label="时间" prop="data.payload.header.channel_header.timestamp" width="100"></el-table-column>
+                        <el-table-column label="随机数" prop="data.payload.header.signature_header.nonce" width="100"></el-table-column>
+                        <el-table-column label="区块头">
+                            <el-table-column label="前一区块哈希" prop="header.previous_hash"></el-table-column>
+                            <el-table-column label="区块数据哈希" prop="header.data_hash"></el-table-column>
+                        </el-table-column>
+                        <el-table-column label="区块数据签名(详细点击左侧查看)" prop="data.signature"></el-table-column>
+                    </el-table>
+                    <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="currentPage"
+                        :page-sizes="[10, 20, 30, 50, 100]"
+                        :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="block_list.length">
+                    </el-pagination>
                 </div>
             </div>
         </div>
     </section><!--/.section-padding-->
-    
-    <section class="testimonial-section section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="testimonial-slider owl-carousel">
-                        <div class="testimonial text-center">
-                            <h2>Testimonials</h2>
-                            <div class="quote-icon">
-                                <i class="ion-quote"></i>
-                            </div>
-
-                            <p class="item-text">The create amazings and tight duration presented you with were undoub a challenge
-                                everon is ver happ with how well a team delivered. Create amazin tight duration pres
-                                everyone is very happy with how well your team</p>
-
-                            <div class="star-rating">
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="#">Jordan Hopes</a></h4>
-                                <p>Finance Expo</p>
-                            </div>
-                        </div><!--/.testimonial-->
-                        <div class="testimonial text-center">
-                            <h2>Testimonials</h2>
-                            <div class="quote-icon">
-                                <i class="ion-quote"></i>
-                            </div>
-
-                            <p class="item-text">The create amazings and tight duration presented you with were undoub a challenge
-                                everon is ver happ with how well a team delivered. Create amazin tight duration pres
-                                everyone is very happy with how well your team</p>
-
-                            <div class="star-rating">
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="#">Jordan Hopes</a></h4>
-                                <p>Finance Expo</p>
-                            </div>
-                        </div><!--/.testimonial-->
-                        <div class="testimonial text-center">
-                            <h2>Testimonials</h2>
-                            <div class="quote-icon">
-                                <i class="ion-quote"></i>
-                            </div>
-
-                            <p class="item-text">The create amazings and tight duration presented you with were undoub a challenge
-                                everon is ver happ with how well a team delivered. Create amazin tight duration pres
-                                everyone is very happy with how well your team</p>
-
-                            <div class="star-rating">
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                                <span class="ion-android-star"></span>
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="#">Jordan Hopes</a></h4>
-                                <p>Finance Expo</p>
-                            </div>
-                        </div><!--/.testimonial-->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section><!--/.testimonial-section-->
-    
-    <div class="quote-section section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-sm-8 col-xs-12">
-                    <div class="text-quote">
-                        <h3>登录账号以体验上述功能</h3>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-4 col-xs-12">
-                    <div class="button-area text-right content-align">
-                        <a class="cryptod-button-success" href="../public/login.html">即刻开始</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!--/.quote-section-->
 
     <section class="footer-area">
         <div class="container">
@@ -285,7 +234,7 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
                         <div class="copyright-info">
-                            <p>Copyright &copy; 2018.Company name All rights reserved.<a target="_blank" href="http://sc.chinaz.com/moban/">&#x7F51;&#x9875;&#x6A21;&#x677F;</a></p>
+                            <p>Copyright &copy; 2021.Company name All rights reserved.</p>
                         </div>
                     </div><!--/.copyright-info-->
                     <div class="col-md-6 col-sm-6">
@@ -324,6 +273,45 @@
     <script src="../public/js/owl.carousel.min.js"></script>
     <!-- == Custom js  == -->
    <script src="../public/js/custom.js"></script>
+
+    <script>
+        var explorer = new Vue({
+            el: "#explorer",
+            data: {
+                block_list: [],
+                // 控制参数
+                currentPage: 1, // 查询结果当前页
+                currentOrderPage: 1,
+                currentDealedOrderPage: 1,
+                pageSize: 10, // 查询结果每页多少条
+            },
+            methods: {
+                // 查询转账信息
+                query_block() {
+                    axios.post('http://localhost:9000/query_block')
+                    .then(Response => {
+                        console.log(Response['data']['block_list'])
+                        this.block_list = Response['data']['block_list']
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+                },
+                // 每页多少条
+                handleSizeChange(val) {
+                    this.pageSize = val;
+                },
+                // 当前页
+                handleCurrentChange(val) {
+                    this.currentPage = val;
+                },
+            },
+            created: function() {
+                this.query_block();
+            }
+        })
+    </script>
+
 </body>
 </html>
 

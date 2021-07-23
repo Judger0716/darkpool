@@ -99,6 +99,7 @@
                             <li><a href="../public/main_old.html"><span class="glyphicon glyphicon-th-list">个人中心</span></a>
                                 <ul class="dropdown">
                                     <li><a href="../public/login.html"><span>一键买币</span></a></li>
+                                    <li><a href="#" @click="form_committee()"><span>形成委员会</span></a></li>
                                     <li>
                                         <a href="#" @click="get_userinfo()">查看资产信息</a>
                                          <!-- 查看个人信息 -->
@@ -942,33 +943,19 @@
                             this.$notify({
                                 title: '成功',
                                 message: '委员会形成成功',
-                                type: 'success'
+                                type: 'success',
+                                offset: 100,
                             });
                         }
                         else {
                             this.$notify({
                                 title: '失败',
                                 message: '委员会形成失败',
-                                type: 'warning'
+                                type: 'warning',
+                                offset: 100,
                             });
                         }
                     })
-                },
-                // 菜单选择
-                handleClick(tab, event) {
-                    console.log(tab, event);
-                    if (tab.name == 'query_transfer') {
-                        this.get_transfer();
-                    }
-                    else if (tab.name == 'query_order') {
-                        this.get_order();
-                    }
-                    else if (tab.name == 'query_dealed_order'){
-                        this.get_dealed_order();
-                    }
-                    else if (tab.name == 'committee') {
-                        this.query_committee();
-                    }
                 },
                 // 查询转账信息
                 get_transfer() {
@@ -1066,14 +1053,16 @@
                             this.$notify({
                                 title: '成功',
                                 message: '竞选委员成功',
-                                type: 'success'
+                                type: 'success',
+                                offset: 100,
                             });
                         }
                         else {
                             this.$notify({
                                 title: '失败',
                                 message: '竞选委员失败',
-                                type: 'warning'
+                                type: 'warning',
+                                offset: 100,
                             });
                         }
                     })
@@ -1091,6 +1080,7 @@
                 this.get_transfer();
                 this.get_order();
                 this.get_dealed_order();
+                this.query_committee();
                 var that = this;
                 // setInterval不会清除定时器队列，每重复执行1次都会导致定时器叠加 \
                 window.setInterval(() => {

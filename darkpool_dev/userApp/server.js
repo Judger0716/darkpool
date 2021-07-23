@@ -62,7 +62,7 @@ app.post('/update_priceList', function (req, res){
     })
 })
 
-// 
+// 更新k线图
 app.post('/query_new_value', function (req, res){
     res.json({
         'new_value': [{
@@ -73,6 +73,13 @@ app.post('/query_new_value', function (req, res){
             close: 13672.35+Math.random(),
             volume: 2,
         }]
+    })
+})
+
+// Query Block
+app.post('/query_block', function (req, res){
+    res.json({
+        'block_list': block_list,
     })
 })
 
@@ -297,13 +304,14 @@ var server = app.listen(9000, async function () {
         cur_block['data'] = {};
         cur_block['data']['signature'] = event.blockData.data.data[0].signature.toString('hex');
         cur_block['data']['payload'] = event.blockData.data.data[0].payload;
-        cur_block['data']['payload']['header'] = event.blockData.data.data[0].payload.header;
+        cur_block['data']['payload']['header']['channel_header']['extension'] = event.blockData.data.data[0].payload.header.channel_header.extension.toString('hex');
+        cur_block['data']['payload']['header']['signature_header']['creator']['id_bytes'] = event.blockData.data.data[0].payload['header']['signature_header']['creator']['id_bytes'].toString('hex');
+        cur_block['data']['payload']['header']['signature_header']['nonce'] = event.blockData.data.data[0].payload['header']['signature_header']['nonce'].toString('hex');
         cur_block['data']['payload']['data'] = event.blockData.data.data[0].payload.data;
         // Listener may remove itself if desired
         //if (event.blockNumber.equals(endBlock)) {
         //    network.removeBlockListener(listener);
         //}
-        //console.log(cur_block['data']['payload']['header']);
         block_list.push(cur_block);
     }
     const options = {
