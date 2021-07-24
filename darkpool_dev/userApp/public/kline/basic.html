@@ -68,6 +68,15 @@
         <script src="../../static/axios.min.js"></script>
     -->
 
+    <style>
+        .el-table th {
+            background-color: #F8F8F8;
+        }
+        .el-table tr {
+            background-color: #F8F8F8;
+        }
+    </style>
+
 </head>
 
 <body style="margin: 0;height: 100%">
@@ -102,76 +111,63 @@
         </div>
     </header><!--/header-->
 
-    <div class="container"></div>
-        <div class="row" id="kline">
-            <div class="col-md-9">
-                <div id="chart" style="height: 100%"></div>
-            </div>
-            <div class="col-md-3">
-                <el-table
-                    :data="new_value"
-                    style="width: 100%">
-                    <el-table-column
-                        prop="timestamp"
-                        label="日期"
-                        width="180">
-                    </el-table-column>
-                    <el-table-column
-                        prop="open"
-                        label="成交价"
-                        width="180">
-                    </el-table-column>
-                </el-table>
-            </div>
-        </div>
-    </div>
+    <div class="banner-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="banner-title text-center">
+                        <h2>行情实时查看</h2>
+                    </div>
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </div><!--/.banner-section-->
+
+    <section class="bg-deep about-content-section">
+        <div class="container">
+            <div class="row row-eq-height" id="kline">
+                <div class="col-md-8 col-sm-6">
+                    <div class="about-inner" id="chart"></div><!--/.about-inner-->
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="about-inner-text-content">
+                        <el-table
+                            :data="new_value"
+                            style="width: 100%; background-color: #F8F8F8;">
+                            <el-table-column
+                                prop="timestamp"
+                                label="日期"
+                                width="180">
+                            </el-table-column>
+                            <el-table-column
+                                prop="open"
+                                label="成交价"
+                                width="180">
+                            </el-table-column>
+                        </el-table>
+                    </div><!--/.about-inner-text-content-->
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.about-section-->
 
     <section class="footer-area">
         <div class="container">
             <div class="row footer-banner row-eq-height">
-                <div class="col-md-4 col-sm-6">
+                <div class="col-md-8 col-sm-6">
                     <div class="footer-content">
                         <div class="footer-logo">
                             <a href=""><img src="../public/images/footer-logo.png" alt=""></a>
                         </div>
                         <div class="text-content">
-                            <p>Nam libero tempore, cum soluta nobis est eligen
-                                ptio cumque nihil impedit quo minus id quod ma
-                                placeat facere possimus, omnis voluptas assume
-                                est  omnis dolor repellendus. Temporibus autem</p>
+                            <p>本平台致力于打造全球规模最大的暗池交易系统</p>
                             <p>placeat facere possimus, omnis voluptas assume
                                 est  omnis dolor repellendus. Temporibus autem
                                 busdam et aut officiis debitis aut rerum</p>
                         </div>
                     </div><!--/.footer-content-->
                 </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-content">
-                        <h4><a href="">Recent News</a></h4>
-                        <ul>
-                            <li><a href="">Project Management</a></li>
-                            <li><a href="">Rsik and Return Management</a></li>
-                            <li><a href="">Small Mediaum Investment</a></li>
-                            <li><a href="">Business Growth in Future</a></li>
-                            <li><a href="">Financial Analysis</a></li>
-                            <li><a href="">Business Goal</a></li>
-                        </ul>
-                    </div><!--/.footer-content-->
-                </div>
-                <div class="col-md-3 col-sm-6 col-xs-6">
-                    <div class="footer-content">
-                        <h4><a href="">Popular News</a></h4>
-                        <ul>
-                            <li><a href="">Project Management</a></li>
-                            <li><a href="">Rsik and Return Management</a></li>
-                            <li><a href="">Small Mediaum Investment</a></li>
-                            <li><a href="">Business Growth in Future</a></li>
-                            <li><a href="">Financial Analysis</a></li>
-                            <li><a href="">Business Goal</a></li>
-                        </ul>
-                    </div><!--/.footer-content-->
-                </div>
-                <div class="col-md-2 col-sm-6 col-xs-6">
+                <div class="col-md-4 col-sm-6 col-xs-6">
                     <div class="footer-content">
                         <h4><a href="">Useful Links</a></h4>
                         <ul>
@@ -192,17 +188,6 @@
                             <p>Copyright &copy; 2021.Company name All rights reserved.</p>
                         </div>
                     </div><!--/.copyright-info-->
-                    <div class="col-md-6 col-sm-6">
-                        <div class="social text-right content-align">
-                            <ul>
-                                <li><a href="#"><i class="ion-social-facebook"></i></a></li>
-                                <li><a href="#"><i class="ion-social-googleplus"></i></a></li>
-                                <li><a href="#"><i class="ion-social-skype"></i></a></li>
-                                <li><a href="#"><i class="ion-social-twitter"></i></a></li>
-                                <li><a href="#"><i class="ion-social-linkedin"></i></a></li>
-                            </ul>
-                        </div><!--/.social-->
-                    </div>
                 </div>
             </div><!--/.copyright-->
         </div><!--/.contianer-->
