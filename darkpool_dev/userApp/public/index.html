@@ -59,7 +59,7 @@
     <!-- 本地安装 K线图绘制
     <script type="text/javascript" src="../kline/klinecharts.min.js"></script>
     -->
-    <script type="text/javascript" src="../public/kline/kline.js"></script>
+    <script type="text/javascript" src="../public/kline/kline_usdt_btc.js"></script>
 
 </head>
 
@@ -632,6 +632,7 @@
                 old_value: {},
                 new_value: {},
                 klineList: [],
+                klineList_rev: [],
             },
             methods: {
                 query_new_value() {
@@ -640,13 +641,17 @@
                     }).then(Response =>{
                         this.new_value = Response['data']['new_value'];
                         this.klineList.push(this.new_value);
+                        this.klineList_rev.unshift(this.new_value);
                         this.old_value = this.new_value;
                     })
                 },
             },
             created: function() {
-                axios.post('http://localhost:9000/init_kline').then(Response =>{
+                axios.post('http://localhost:9000/init_kline',{
+                    'usdt_btc': true,
+                }).then(Response =>{
                     this.klineList = Response['data']['init_klineList'];
+                    this.klineList_rev = Response['data']['init_klineList_rev'];
                     this.old_value = this.klineList[this.klineList.length-1];
                 })
             }

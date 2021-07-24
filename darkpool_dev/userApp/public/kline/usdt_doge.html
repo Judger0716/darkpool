@@ -7,7 +7,7 @@
       name="description"
       content="KLineChart example"/>
 
-    <title>KLineChart_USDT_BTC</title>
+    <title>KLineChart_USDT_DOGE</title>
 
     <!-- 新 Bootstrap 核心 CSS 文件 -->
     <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -53,7 +53,7 @@
     <!-- Local Installation of KlineCharts
     <script type="text/javascript" src="../kline/klinecharts.min.js"></script>
     -->
-    <script type="text/javascript" src="../kline/kline_usdt_btc.js"></script>
+    <script type="text/javascript" src="../kline/kline_usdt_doge.js"></script>
 
     <!-- CDN 安装 Vue&ElementUI -->
     <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
@@ -124,7 +124,7 @@
                 <div class="col-md-12">
                     <div class="banner-title text-center">
                         <h2>行情实时查看</h2>
-                        <h2>USDT-BTC</h2>
+                        <h2>USDT-DOGE</h2>
                     </div>
                 </div>
             </div><!--/.row-->
@@ -133,8 +133,8 @@
 
     <section class="bg-deep about-content-section" id="kline">
         <div class="container">
-            <a href="#" class="btn btn-primary btn-lg active" role="button">USDT----BTC</a>
-            <a href="../kline/usdt_doge.html" class="btn btn-default btn-lg active" role="button">USDT----DOGE</a>
+            <a href="../kline/basic.html" class="btn btn-default btn-lg active" role="button">USDT----BTC</a>
+            <a href="#" class="btn btn-primary btn-lg active" role="button">USDT----DOGE</a>
             <div class="row row-eq-height">
                 <div class="col-md-12 col-sm-6">
                     <div class="about-inner" id="chart"></div><!--/.about-inner-->
@@ -251,7 +251,7 @@
             },
             created: function() {
                 axios.post('http://localhost:9000/init_kline',{
-                    'usdt_btc': true,
+                    'usdt_doge': true,
                 }).then(Response =>{
                     this.klineList = Response['data']['init_klineList'];
                     this.klineList_rev = Response['data']['init_klineList_rev'];
