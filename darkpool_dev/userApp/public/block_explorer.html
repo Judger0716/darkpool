@@ -68,7 +68,7 @@
         .demo-table-expand .el-form-item {
           margin-right: 0;
           margin-bottom: 0;
-          width: 50%;
+          width: 100%;
         }
     </style>
       
@@ -130,25 +130,29 @@
                                     <el-form-item label="通道ID">
                                         <span>{{ props.row.data.payload.header.channel_header.channel_id }}</span>
                                     </el-form-item>
-                                    <el-form-item label="交易ID" v-if="props.row.data.payload.header.channel_header.txid">
-                                        <span>{{ props.row.data.payload.header.channel_header.txid }}</span>
+                                    <el-form-item label="交易ID">
+                                        <span v-if="props.row.data.payload.header.channel_header.tx_id">{{ props.row.data.payload.header.channel_header.tx_id }}</span>
+                                        <span v-else>无</span>
                                     </el-form-item>
                                     <el-form-item label="Extension">
-                                        <span>{{ props.row.data.payload.header.channel_header.extension }}</span>
+                                        <span v-if="props.row.data.payload.header.channel_header.extension">{{ props.row.data.payload.header.channel_header.extension }}</span>
+                                        <span v-else>无</span>
                                     </el-form-item>
                                     <el-form-item label="TypeString">
                                         <span>{{ props.row.data.payload.header.channel_header.typeString }}</span>
                                     </el-form-item>
                                     <el-form-item label="签名创建者">
-                                        <span>{{ props.row.data.payload.header.signature_header.creator.mspid }}</span>
+                                        <span v-if="props.row.data.payload.header.signature_header.creator.mspid">{{ props.row.data.payload.header.signature_header.creator.mspid }}</span>
+                                        <span v-else>无</span>
                                     </el-form-item>
-                                    <el-form-item label="签名者ID">
-                                        <span>{{ props.row.data.payload.header.signature_header.creator.id_bytes }}</span>
+                                    <el-form-item label="Endorser" v-for="eds in props.row.endorser">
+                                        <span>mspid: {{ eds.mspid }}</span><br>
+                                        <span>signature: {{ eds.signature }}</span>
                                     </el-form-item>
                                 </el-form>
                             </template>
                         </el-table-column>
-                        <el-table-column label="区块高度" prop="blockNumber" width="100"></el-table-column>
+                        <el-table-column label="区块高度" prop="blockNumber" width="50"></el-table-column>
                         <el-table-column label="时间" prop="data.payload.header.channel_header.timestamp" width="100"></el-table-column>
                         <el-table-column label="随机数" prop="data.payload.header.signature_header.nonce" width="100"></el-table-column>
                         <el-table-column label="区块头">

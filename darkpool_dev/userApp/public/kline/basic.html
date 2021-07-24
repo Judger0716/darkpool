@@ -125,24 +125,51 @@
 
     <section class="bg-deep about-content-section">
         <div class="container">
-            <div class="row row-eq-height" id="kline">
-                <div class="col-md-8 col-sm-6">
+            <div class="row row-eq-height">
+                <div class="col-md-12 col-sm-6">
                     <div class="about-inner" id="chart"></div><!--/.about-inner-->
                 </div>
-                <div class="col-md-4 col-sm-6">
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.about-section-->
+
+    <section class="bg-deep about-content-section">
+        <div class="container" style="margin-bottom: 20px;">
+            <div class="row row-eq-height" id="kline">
+                <div class="col-md-12 col-sm-6">
                     <div class="about-inner-text-content">
                         <el-table
-                            :data="new_value"
+                            :data="klineList_rev"
+                            height="450"
                             style="width: 100%; background-color: #F8F8F8;">
                             <el-table-column
-                                prop="timestamp"
+                                prop="timestr"
                                 label="日期"
-                                width="180">
+                                width="250">
                             </el-table-column>
                             <el-table-column
                                 prop="open"
-                                label="成交价"
-                                width="180">
+                                label="开盘价"
+                                width="150">
+                            </el-table-column>
+                            <el-table-column
+                                prop="close"
+                                label="收盘价"
+                                width="150">
+                            </el-table-column>
+                            <el-table-column
+                                prop="high"
+                                label="最高价"
+                                width="150">
+                            </el-table-column>
+                            <el-table-column
+                                prop="low"
+                                label="最低价"
+                                width="150">
+                            </el-table-column>
+                            <el-table-column
+                                prop="volume"
+                                label="成交量">
                             </el-table-column>
                         </el-table>
                     </div><!--/.about-inner-text-content-->
@@ -198,14 +225,29 @@
         var kline = new Vue({
             el: "#kline",
             data: {
-                new_value: [],
+                old_value: {},
+                new_value: {},
+                klineList: [],
+                klineList_rev: [],
             },
             methods: {
                 query_new_value() {
-                    axios.post('http://localhost:9000/query_new_value').then(Response =>{
+                    axios.post('http://localhost:9000/query_new_value',{
+                        'old_value': this.old_value,
+                    }).then(Response =>{
                         this.new_value = Response['data']['new_value'];
+                        this.klineList.push(this.new_value);
+                        this.klineList_rev.unshift(this.new_value);
+                        this.old_value = this.new_value;
                     })
-                }
+                },
+            },
+            created: function() {
+                axios.post('http://localhost:9000/init_kline').then(Response =>{
+                    this.klineList = Response['data']['init_klineList'];
+                    this.klineList_rev = Response['data']['init_klineList_rev'];
+                    this.old_value = this.klineList[this.klineList.length-1];
+                })
             }
         })
         // kline绘图,页面加载时初始化
@@ -230,9 +272,8 @@
         // 随后按照间隔不断更新
         window.setInterval(() => {
             setTimeout(function() {
-                kline.query_new_value();
-                chartDataList = chartDataList.concat(kline.new_value)
-                chart.applyNewData(chartDataList)
+                kline.query_new_value()
+                chart.applyNewData(kline.klineList)
             }, 600)
         }, 5000)
     </script>

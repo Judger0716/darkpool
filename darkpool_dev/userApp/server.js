@@ -32,6 +32,7 @@ const QueryCommittee = require('./queryCommittee');
 const ElectCommittee = require('./electCommittee');
 const FormCommittee = require('./formCommittee');
 const QueryDealedOrder = require('./queryDealedOrders');
+const Init_Kline = require('./public/kline/kline');
 
 // Shamir Secret Sharing
 const sss = require('shamirs-secret-sharing')
@@ -62,24 +63,61 @@ app.post('/update_priceList', function (req, res){
     })
 })
 
+// 初始化k线图
+app.post('/init_kline', function (req, res){
+    var ret_klineList = [];
+    var ret_klineList_rev = [];
+    var init_klineList = Init_Kline.init_kline_chart;
+    for(var index=0;index<init_klineList.length;index++){
+        var cur_k = {};
+        cur_k['timestamp'] = new Date(init_klineList[index][0]).getTime();
+        cur_k['timestr'] = new Date(init_klineList[index][0]).toUTCString();
+        cur_k['open'] = +init_klineList[index][1];
+        cur_k['high'] = +init_klineList[index][2];
+        cur_k['low'] =  +init_klineList[index][3];
+        cur_k['close'] = +init_klineList[index][4];
+        cur_k['volume'] = Math.ceil(+init_klineList[index][5]);
+        ret_klineList.push(cur_k);
+        ret_klineList_rev.unshift(cur_k);
+    }
+    res.json({
+        'init_klineList': ret_klineList,
+        'init_klineList_rev': ret_klineList_rev,
+    })
+})
+
 // 更新k线图
 app.post('/query_new_value', function (req, res){
+    var old_value = req.body.old_value;
+
+    var flag1 = (Math.random()-0.5) >= 0;
+    if(flag1) var open = old_value.open + Math.random()*10;
+    else var open = old_value.open - Math.random()*10;
+
+    var flag2 = (Math.random()-0.5) >= 0;
+    if(flag2) var close = open + Math.random()*10;
+    else var close = open - Math.random()*10;
+
+    var high = Math.max(open,close) + Math.random()*5;
+    var low = Math.min(open,close) - Math.random()*5;
+
     res.json({
-        'new_value': [{
+        'new_value': {
             timestamp: new Date().getTime(),
-            open: 13670+Math.random(),
-            high: 13673+Math.random(),
-            low: 13666+Math.random(),
-            close: 13672.35+Math.random(),
-            volume: 2,
-        }]
+            timestr: new Date().toUTCString(),
+            open: parseFloat(open.toFixed(2)),
+            high: parseFloat(high.toFixed(2)),
+            low: parseFloat(low.toFixed(2)),
+            close: parseFloat(close.toFixed(2)),
+            volume: Math.ceil(Math.random()*10),
+        }
     })
 })
 
 // Query Block
 app.post('/query_block', function (req, res){
     res.json({
-        'block_list': block_list,
+        'block_list': block_list.sort(function(a, b){return b.blockNumber - a.blockNumber}),
     })
 })
 
@@ -305,17 +343,28 @@ var server = app.listen(9000, async function () {
         cur_block['data']['signature'] = event.blockData.data.data[0].signature.toString('hex');
         cur_block['data']['payload'] = event.blockData.data.data[0].payload;
         cur_block['data']['payload']['header']['channel_header']['extension'] = event.blockData.data.data[0].payload.header.channel_header.extension.toString('hex');
-        cur_block['data']['payload']['header']['signature_header']['creator']['id_bytes'] = event.blockData.data.data[0].payload['header']['signature_header']['creator']['id_bytes'].toString('hex');
+        //cur_block['data']['payload']['header']['signature_header']['creator']['id_bytes'] = event.blockData.data.data[0].payload['header']['signature_header']['creator']['id_bytes'].toString('hex');
         cur_block['data']['payload']['header']['signature_header']['nonce'] = event.blockData.data.data[0].payload['header']['signature_header']['nonce'].toString('hex');
         cur_block['data']['payload']['data'] = event.blockData.data.data[0].payload.data;
         // Listener may remove itself if desired
         //if (event.blockNumber.equals(endBlock)) {
         //    network.removeBlockListener(listener);
         //}
+        //console.log(cur_block['data']['payload']['data']['actions'][0]['payload']['action']['proposal_response_payload']['extension'])
+        if(cur_block['data']['payload']['data']['actions'] != undefined){
+            cur_block['endorser'] = [];
+            for(var i=0;i<cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'].length;i++){
+                cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'][i]['signature'] = cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'][i]['signature'].toString('hex');
+                cur_block['endorser'].push({
+                    'mspid': cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'][i]['endorser']['mspid'],
+                    'signature': cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'][i]['signature'],
+                })
+            }
+        }
         block_list.push(cur_block);
     }
     const options = {
-        startBlock: 1
+        startBlock: 0
     };
     await network.addBlockListener(listener, options);
 

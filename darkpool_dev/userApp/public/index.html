@@ -497,7 +497,7 @@
     <section class="section-padding">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" id="kline">
                     <div class="section-head text-center">
                         <h2>实时查看行情</h2>
                         <p style="font-weight: bold;">绘制k线图，为您带来更好的判断</p>
@@ -507,48 +507,6 @@
             <div class="row">
                 <div class="col-md-12">
                     <div id="chart" style="height: 100%"></div>
-                    <script>
-                        // 引入Vue变量控制kline
-                        var kline = new Vue({
-                            data: {
-                                new_value: [],
-                            },
-                            methods: {
-                                query_new_value() {
-                                    axios.post('http://localhost:9000/query_new_value').then(Response =>{
-                                        this.new_value = Response['data']['new_value'];
-                                    })
-                                }
-                            }
-                        })
-                        // kline绘图,页面加载时初始化
-                        var chart = klinecharts.init('chart')
-                        var chartDataList = []
-                        window.onload = function draw_kline() {
-                            chart.createTechnicalIndicator('MA', false, { id: 'candle_pane' })
-                            chart.createTechnicalIndicator('VOL')
-                            chart.createTechnicalIndicator('MACD')
-                            chartDataList = kLineDataList.map(function (data) {
-                                return {
-                                    timestamp: new Date(data[0]).getTime(),
-                                    open: +data[1],
-                                    high: +data[2],
-                                    low: +data[3],
-                                    close: +data[4],
-                                    volume: Math.ceil(+data[5]),
-                                }
-                            })
-                            chart.applyNewData(chartDataList)
-                        }
-                        // 随后按照间隔不断更新
-                        window.setInterval(() => {
-                            setTimeout(function() {
-                                kline.query_new_value();
-                                chartDataList = chartDataList.concat(kline.new_value)
-                                chart.applyNewData(chartDataList)
-                            }, 600)
-                        }, 5000)
-                    </script>
                 </div>
             </div>
         </div>
@@ -666,6 +624,60 @@
         })
     </script>
 
+    <script>
+        // 引入Vue变量控制kline
+        var kline = new Vue({
+            el: "#kline",
+            data: {
+                old_value: {},
+                new_value: {},
+                klineList: [],
+            },
+            methods: {
+                query_new_value() {
+                    axios.post('http://localhost:9000/query_new_value',{
+                        'old_value': this.old_value,
+                    }).then(Response =>{
+                        this.new_value = Response['data']['new_value'];
+                        this.klineList.push(this.new_value);
+                        this.old_value = this.new_value;
+                    })
+                },
+            },
+            created: function() {
+                axios.post('http://localhost:9000/init_kline').then(Response =>{
+                    this.klineList = Response['data']['init_klineList'];
+                    this.old_value = this.klineList[this.klineList.length-1];
+                })
+            }
+        })
+        // kline绘图,页面加载时初始化
+        var chart = klinecharts.init('chart')
+        var chartDataList = []
+        window.onload = function draw_kline() {
+            chart.createTechnicalIndicator('MA', false, { id: 'candle_pane' })
+            chart.createTechnicalIndicator('VOL')
+            chart.createTechnicalIndicator('MACD')
+            chartDataList = kLineDataList.map(function (data) {
+                return {
+                    timestamp: new Date(data[0]).getTime(),
+                    open: +data[1],
+                    high: +data[2],
+                    low: +data[3],
+                    close: +data[4],
+                    volume: Math.ceil(+data[5]),
+                }
+            })
+            chart.applyNewData(chartDataList)
+        }
+        // 随后按照间隔不断更新
+        window.setInterval(() => {
+            setTimeout(function() {
+                kline.query_new_value()
+                chart.applyNewData(kline.klineList)
+            }, 600)
+        }, 5000)
+    </script>
 
     <!-- == jQuery Librery == -->
     <script src="../public/js/jquery-3.3.1.min.js"></script>
