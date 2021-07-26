@@ -49,7 +49,7 @@ app.get('/', function (req, res) {
 
 // Update TokenPriceList
 app.post('/update_priceList', function (req, res){
-    var tokenList = ['Bitcoin', 'Ripple', 'Monerro', 'Ethereum', 'Litecoin', 'Tether'];
+    var tokenList = ['Gold', 'Sliver', 'Iron', 'Oil', 'Carbon', 'Moutai'];
     var priceList = req.body.priceList;
     for(var index=0; index<tokenList.length; index++){
         var random_price = Math.random()*10000;
@@ -163,7 +163,7 @@ app.post('/login', async function (req, res) {
 
 // register
 app.get('/register', function (req, res) {
-    res.render(__dirname + "/" + "public/register.html", { msg: '请输入注册的用户名' });
+    res.render(__dirname + "/" + "public/register.html", { msg: '' });
 })
 
 app.post('/register', async function (req, res) {

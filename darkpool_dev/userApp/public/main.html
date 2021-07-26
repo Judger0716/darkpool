@@ -341,71 +341,71 @@
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Gold</a></h4>
-                                <p class="dolar">{[priceList['Bitcoin'].price]}</p>
-                                <p v-if="priceList['Bitcoin'].isup==true" class="price-up"><span>%{[priceList['Bitcoin'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Bitcoin'].rate]}</span></p>
+                                <p class="dolar">{[priceList['Gold'].price]}</p>
+                                <p v-if="priceList['Gold'].isup==true" class="price-up"><span>%{[priceList['Gold'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Gold'].rate]}</span></p>
                             </div>
-                        </div><!--/.currency-price-->
+                        </div>
                         <div class="currency-price pr">
                             <div class="image">
                                 <img src="../public/images/icon/sliver.png" alt="">
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Sliver</a></h4>
-                                <p class="dolar">{[priceList['Ripple'].price]}</p>
-                                <p v-if="priceList['Ripple'].isup==true" class="price-up"><span>%{[priceList['Ripple'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Ripple'].rate]}</span></p>
+                                <p class="dolar">{[priceList['Sliver'].price]}</p>
+                                <p v-if="priceList['Sliver'].isup==true" class="price-up"><span>%{[priceList['Sliver'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Sliver'].rate]}</span></p>
                             </div>
-                        </div><!--/.currency-price-->
+                        </div>
                         <div class="currency-price pr">
                             <div class="image">
                                 <img src="../public/images/icon/iron.png" alt="">
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Iron</a></h4>
-                                <p class="dolar">{[priceList['Monerro'].price]}</p>
-                                <p v-if="priceList['Monerro'].isup==true" class="price-up"><span>%{[priceList['Monerro'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Monerro'].rate]}</span></p>
+                                <p class="dolar">{[priceList['Iron'].price]}</p>
+                                <p v-if="priceList['Iron'].isup==true" class="price-up"><span>%{[priceList['Iron'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Iron'].rate]}</span></p>
                             </div>
-                        </div><!--/.currency-price-->
+                        </div>
                         <div class="currency-price pr">
                             <div class="image">
                                 <img src="../public/images/icon/oil.png" alt="">
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Oil</a></h4>
-                                <p class="dolar">{[priceList['Ethereum'].price]}</p>
-                                <p v-if="priceList['Ethereum'].isup==true" class="price-up"><span>%{[priceList['Ethereum'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Ethereum'].rate]}</span></p>
+                                <p class="dolar">{[priceList['Oil'].price]}</p>
+                                <p v-if="priceList['Oil'].isup==true" class="price-up"><span>%{[priceList['Oil'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Oil'].rate]}</span></p>
                             </div>
-                        </div><!--/.currency-price-->
+                        </div>
                         <div class="currency-price pr">
                             <div class="image">
                                 <img src="../public/images/icon/carbon.png" alt="">
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Carbon</a></h4>
-                                <p class="dolar">{[priceList['Litecoin'].price]}</p>
-                                <p v-if="priceList['Litecoin'].isup==true" class="price-up"><span>%{[priceList['Litecoin'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Litecoin'].rate]}</span></p>
+                                <p class="dolar">{[priceList['Carbon'].price]}</p>
+                                <p v-if="priceList['Carbon'].isup==true" class="price-up"><span>%{[priceList['Carbon'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Carbon'].rate]}</span></p>
                             </div>
-                        </div><!--/.currency-price-->
+                        </div>
                         <div class="currency-price pr">
                             <div class="image">
                                 <img src="../public/images/icon/moutai.png" alt="">
                             </div>
                             <div class="text-content">
                                 <h4><a href="">Moutai</a></h4>
-                                <p class="dolar">{[priceList['Tether'].price]}</p>
-                                <p v-if="priceList['Tether'].isup==true" class="price-up"><span>%{[priceList['Tether'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Tether'].rate]}</span></p>
+                                <p class="dolar">{[priceList['Moutai'].price]}</p>
+                                <p v-if="priceList['Moutai'].isup==true" class="price-up"><span>%{[priceList['Moutai'].rate]}</span></p>
+                                <p v-else class="price-down"><span>%{[priceList['Moutai'].rate]}</span></p>
                             </div>
-                        </div><!--/.currency-price-->
-                    </div><!--/.cryptocurrency slider-->
+                        </div>
+                    </div>
                 </div>
             </div><!--/.row-->
         </div><!--/.container-->
-    </section><!--/.curency section 商品价格滚动条 -->
+    </section><!-- 商品价格滚动条 -->
     
     <!-- 转账查询 
     <a href="#" name="transfer_query"></a>
@@ -493,7 +493,10 @@
                 <div class="col-md-12">
                     <el-table :data="order_list.slice((currentOrderPage-1)*pageSize,currentOrderPage*pageSize)" style="width: 100%">
                         <el-table-column prop="order_id" label="订单编号"></el-table-column>
-                        <el-table-column prop="creator" label="创建者"></el-table-column>
+                        <el-table-column prop="creator" label="创建者"
+                        :filters="[{text: '仅显示自己的订单', value: 'only_mine'}]"
+                        :filter-method="filterHandler"
+                        ></el-table-column>
                         <el-table-column prop="create_time" label="创建时间"></el-table-column>
                         <el-table-column prop="type" label="订单类型"></el-table-column>
                         <el-table-column prop="item" label="交易物品"></el-table-column>
@@ -689,8 +692,10 @@
                     </div>
 
                     <!-- 抵押代币竞选委员 -->
-                    <el-dialog title="抵押代币" :append-to-body="true" :visible.sync="elect_visible" width="50%">
+                    <el-dialog title="抵押金额" :append-to-body="true" :visible.sync="elect_visible" width="50%">
+                        <!--
                         <el-form :model="elect_form">
+                            
                             <el-form-item label="代币种类">
                                 <el-select v-model="elect_form.item" disabled placeholder="请选择">
                                     <el-option v-for="item in itemoptions" :key="item.value" :label="item.label"
@@ -698,12 +703,13 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="抵押数量">
+                            <el-form-item label="抵押数量" style="color: black;">
                                 <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>
                             </el-form-item>
-                        </el-form>
-                        <el-button @click="elect_visible = false">取 消</el-button>
+                        </el-form>-->
+                        <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>           
                         <el-button type="primary" @click="elect_committee();elect_visible = false">确 定</el-button>
+                        <el-button @click="elect_visible = false">取 消</el-button>
                     </el-dialog>
 
                     <!-- 显示候选人信息 -->
@@ -726,29 +732,36 @@
     <section class="footer-area">
         <div class="container">
             <div class="row footer-banner row-eq-height">
-                <div class="col-md-8 col-sm-6">
+                <div class="col-md-6 col-sm-6">
                     <div class="footer-content">
                         <div class="footer-logo">
                             <a href=""><img src="../public/images/footer-logo.png" alt=""></a>
                         </div>
                         <div class="text-content">
                             <p>本平台致力于打造全球规模最大的暗池交易系统</p>
-                            <p>placeat facere possimus, omnis voluptas assume
-                                est  omnis dolor repellendus. Temporibus autem
-                                busdam et aut officiis debitis aut rerum</p>
+                            <p>加入CryptoPool，成为我们的一员</p>
                         </div>
                     </div><!--/.footer-content-->
                 </div>
-                <div class="col-md-4 col-sm-6 col-xs-6">
+                <div class="col-md-3 col-sm-6">
                     <div class="footer-content">
-                        <h4><a href="">Useful Links</a></h4>
+                        <h4><a href="#">最近要闻</a></h4>
                         <ul>
-                            <li><a href="">About US</a></li>
-                            <li><a href="">Financial Service</a></li>
-                            <li><a href="">Contact Us</a></li>
-                            <li><a href="">Our History</a></li>
-                            <li><a href="">News and Article</a></li>
-                            <li><a href="">Business Plan</a></li>
+                            <li><a href="#">平台动态</a></li>
+                            <li><a href="#">市场快报</a></li>
+                            <li><a href="#">投资建议</a></li>
+                            <li><a href="#">商业合作</a></li>
+                        </ul>
+                    </div><!--/.footer-content-->
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-6">
+                    <div class="footer-content">
+                        <h4><a href="">友情链接</a></h4>
+                        <ul>
+                            <li><a href="../public/tutorial.html">快速入门</a></li>
+                            <li><a href="../public/kline/basic.html">查看行情</a></li>
+                            <li><a href="../public/block_explorer.html">区块浏览</a></li>
+                            <li><a href="#">联系我们</a></li>
                         </ul>
                     </div><!--/.footer-content-->
                 </div>
@@ -757,9 +770,21 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
                         <div class="copyright-info">
-                            <p>Copyright &copy; 2021.Company name All rights reserved.</p>
+                            <p>Copyright &copy; 2021.CryptoPool All rights reserved.</p>
                         </div>
                     </div><!--/.copyright-info-->
+                    <div class="col-md-6 col-sm-6">
+                        <div class="social text-right content-align">
+                            <ul>
+                                <li><a href="#"><i><img src="../public/images/footer/wechat.png" style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/alipay.png" style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/weibo.png" style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/facebook.png" style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/twitter.png" style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/ins.png" style="height: 18px; width: 18px;"></i></a></li>
+                            </ul>
+                        </div><!--/.social-->
+                    </div>
                 </div>
             </div><!--/.copyright-->
         </div><!--/.contianer-->
@@ -774,39 +799,39 @@
             delimiters: ["{[", "]}"],
             data: {
 
-                tokenList: ['Bitcoin', 'Ripple', 'Monerro', 'Ethereum', 'Litecoin', 'Tether'],
+                tokenList: ['Gold', 'Sliver', 'Iron', 'Oil', 'Carbon', 'Moutai'],
                 priceList: {
-                    'Bitcoin': {
+                    'Gold': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: true,
                         rate: Math.random().toFixed(2),
                     },
-                    'Ripple': {
+                    'Sliver': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: false,
                         rate: Math.random().toFixed(2),
                     },
-                    'Monerro': {
+                    'Iron': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: true,
                         rate: Math.random().toFixed(2),
                     },
-                    'Ethereum': {
+                    'Oil': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: false,
                         rate: Math.random().toFixed(2),
                     },
-                    'Litecoin': {
+                    'Carbon': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: true,
                         rate: Math.random().toFixed(2),
                     },
-                    'Tether': {
+                    'Moutai': {
                         oldprice: (Math.random()*10000).toFixed(2),
                         price: (Math.random()*10000).toFixed(2),
                         isup: true,
@@ -862,15 +887,11 @@
     
                 // 币种选择-创建订单
                 itemoptions_order: [{
-                    'value': 'Tether',
-                    'label': 'USDT',
-                    disabled: true
-                }, {
                     'value': 'Bitcoin',
-                    'label': 'BTC',
+                    'label': 'Gold',
                 }, {
                     'value': 'Dogecoin',
-                    'label': 'DOGE',
+                    'label': 'Carbon',
                 }],
     
                 // 控制参数
@@ -900,7 +921,7 @@
                 // 形成委员会
                 form_committee() {
                     axios.post('http://localhost:9000/formcommittee').then(Response => {
-                        console.log(Response['data']['status']);
+                        //console.log(Response['data']['status']);
                         if (Response['data']['status']) {
                             this.$notify({
                                 title: '成功',
@@ -923,7 +944,7 @@
                 get_transfer() {
                     axios.get('http://localhost:9000/transfer')
                         .then(Response => {
-                            console.log(Response['data']['transfer_list'])
+                            //console.log(Response['data']['transfer_list'])
                             this.transfer_list = Response['data']['transfer_list']
                         })
                         .catch(function (error) {
@@ -938,7 +959,7 @@
                         'item': this.transfer_info.item,
                         'amount': this.transfer_info.amount,
                     }).then(Response => {
-                        console.log(Response['data']);
+                        //console.log(Response['data']);
                     })
                 },
                 // 创建订单
@@ -950,7 +971,7 @@
                         'amount': this.order_form.amount,
                         'price': this.order_form.price,
                     }).then(Response => {
-                        console.log(Response['data'])
+                        //console.log(Response['data'])
                         if (Response['data']['status']=='NoCommittee') {
                             this.$notify({
                                 title: '失败',
@@ -977,6 +998,11 @@
                         }
                     })
                 },
+                // 订单显示过滤器，按用户名
+                filterHandler(value, row, column) {
+                    const property = column['property'];
+                    return row[property] === this.username;
+                },
                 // 查询订单信息
                 get_order() {
                     axios.post('http://localhost:9000/getorder', {
@@ -990,7 +1016,7 @@
                     axios.post('http://localhost:9000/getdealedorder', {
                         'username': this.username,
                     }).then(Response => {
-                        console.log(Response['data']['DealedOrderList'])
+                        //console.log(Response['data']['DealedOrderList'])
                         this.dealed_order_list = Response['data']['DealedOrderList']
                     })
                 },
@@ -999,7 +1025,7 @@
                     axios.post('http://localhost:9000/queryCommittee', {
                         'username': this.username,
                     }).then(Response => {
-                        console.log(Response['data'])
+                        //console.log(Response['data'])
                         this.candidates = Response['data']['candidates']
                         this.committee = Response['data']['committee']
                     })
