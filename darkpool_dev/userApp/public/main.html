@@ -94,14 +94,16 @@
                         <ul class="pull-right header-list">
                             <li><a href="../public/index.html"><span class="glyphicon glyphicon-log-out">退出登录</span></a></li>
                             <li><a href="../public/kline/basic.html"><span class="glyphicon glyphicon glyphicon-stats">查看行情</span></a></li>
-                            <li><a href="../public/tutorial.html"><span class="glyphicon glyphicon-info-sign">快速入门</span></a></li>
                             <li><a href="../public/block_explorer.html"><span class="glyphicon glyphicon-globe">区块浏览</span></a></li>
                             <li><a href="../public/main_old.html"><span class="glyphicon glyphicon-th-list">个人中心</span></a>
                                 <ul class="dropdown">
-                                    <li><a href="../public/login.html"><span>一键买币</span></a></li>
-                                    <li><a href="#" @click="form_committee()"><span>形成委员会</span></a></li>
+                                    <li><a href="../public/tutorial.html">快速入门<img src="../public/images/footer/tutorial.png" style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
+                                    <li><a href="#">绑定银行卡<img src="../public/images/footer/card.png" style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
+                                    <li><a href="#">绑定微信<img src="../public/images/footer/wechat.png" style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
+                                    <li><a href="#">绑定支付宝<img src="../public/images/footer/alipay.png" style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
+                                    <li><a href="#">账户充值</a></li> 
                                     <li>
-                                        <a href="#" @click="get_userinfo()">查看资产信息</a>
+                                        <a href="#" @click="get_userinfo()">查看余额信息</a>
                                          <!-- 查看个人信息 -->
                                         <el-dialog title="账户信息" :visible.sync="infoFormVisible" width="50%" :append-to-body="true">
                                             <el-table :data="userinfo" stripe style="width: 100%">
@@ -115,12 +117,13 @@
                                             </div>
                                         </el-dialog>
                                     </li>
-                                    <li><a href="#transfer_query">转账查询</a></li>
-                                    <li><a href="#transfer">发起转账</a></li>
+                                    <!--<li><a href="#transfer_query">转账查询</a></li>
+                                    <li><a href="#transfer">发起转账</a></li>-->
                                     <li><a href="#order_query">订单查询</a></li>
                                     <li><a href="#dealed_order_query">查询匹配交易</a></li>
                                     <li><a href="#create_order">创建订单</a></li>
                                     <li><a href="#elect_committee">竞选委员</a></li>
+                                    <li><a href="#" @click="form_committee()"><span>形成委员会</span></a></li>
                                 </ul><!--/.dropdown-->
                             </li>
                             <li><a herf="#"><span class="glyphicon glyphicon-user">欢迎：</span><div id="cur_un" style="display: inline;"><%=username%></div></a></li>
@@ -139,7 +142,7 @@
                 <ul>	<!-- SLIDE  -->
                     <li data-index="rs-2946" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="500"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" >
                         <!-- MAIN IMAGE 滑动背景图片-->
-                        <img src="../public/images/slider/slide-img.jpg" alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
+                        <img src="../public/images/slider/slide-img.png" alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
                         <!-- LAYERS 1 第一行文字-->
                         <div class="tp-caption tp-resizeme"
                              id="slide-2946-layer-7"
@@ -231,7 +234,7 @@
                     <li data-index="rs-2947" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="500"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" >
 
                         <!-- MAIN IMAGE -->
-                        <img src="../public/images/slider/slide-img-2.jpg" alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
+                        <img src="../public/images/slider/slide-img-2.png" alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
                         <!-- LAYERS 1-->
                             <div class="tp-caption tp-resizeme"
                                  id="slide-2947-layer-7"
@@ -326,18 +329,18 @@
         </div><!--/.container-->
     </div><!-- END REVOLUTION SLIDER -->
 
-    <!-- 币价滚动条 -->
-    <section class="cryptocurrency-section">
+   <!-- 商品价格滚动条 -->
+   <section class="cryptocurrency-section">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div id="token" class="cryptocurrency-slide custom-nav owl-carousel owl-theme boxshadow wow fadeInUp" data-wow-duration="0.3s" data-wow-delay="0.2s">
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="../public/images/icon/bitcoin.png" alt="">
+                                <img src="../public/images/icon/gold.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Bitcoin</a></h4>
+                                <h4><a href="">Gold</a></h4>
                                 <p class="dolar">{[priceList['Bitcoin'].price]}</p>
                                 <p v-if="priceList['Bitcoin'].isup==true" class="price-up"><span>%{[priceList['Bitcoin'].rate]}</span></p>
                                 <p v-else class="price-down"><span>%{[priceList['Bitcoin'].rate]}</span></p>
@@ -345,10 +348,10 @@
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="../public/images/icon/ripple.png" alt="">
+                                <img src="../public/images/icon/sliver.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Ripple</a></h4>
+                                <h4><a href="">Sliver</a></h4>
                                 <p class="dolar">{[priceList['Ripple'].price]}</p>
                                 <p v-if="priceList['Ripple'].isup==true" class="price-up"><span>%{[priceList['Ripple'].rate]}</span></p>
                                 <p v-else class="price-down"><span>%{[priceList['Ripple'].rate]}</span></p>
@@ -356,10 +359,10 @@
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="../public/images/icon/monero.png" alt="">
+                                <img src="../public/images/icon/iron.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Monerro</a></h4>
+                                <h4><a href="">Iron</a></h4>
                                 <p class="dolar">{[priceList['Monerro'].price]}</p>
                                 <p v-if="priceList['Monerro'].isup==true" class="price-up"><span>%{[priceList['Monerro'].rate]}</span></p>
                                 <p v-else class="price-down"><span>%{[priceList['Monerro'].rate]}</span></p>
@@ -367,10 +370,10 @@
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="../public/images/icon/ethereum.png" alt="">
+                                <img src="../public/images/icon/oil.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Ethereum</a></h4>
+                                <h4><a href="">Oil</a></h4>
                                 <p class="dolar">{[priceList['Ethereum'].price]}</p>
                                 <p v-if="priceList['Ethereum'].isup==true" class="price-up"><span>%{[priceList['Ethereum'].rate]}</span></p>
                                 <p v-else class="price-down"><span>%{[priceList['Ethereum'].rate]}</span></p>
@@ -378,10 +381,10 @@
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="../public/images/icon/litecoin.png" alt="">
+                                <img src="../public/images/icon/carbon.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Litecoin</a></h4>
+                                <h4><a href="">Carbon</a></h4>
                                 <p class="dolar">{[priceList['Litecoin'].price]}</p>
                                 <p v-if="priceList['Litecoin'].isup==true" class="price-up"><span>%{[priceList['Litecoin'].rate]}</span></p>
                                 <p v-else class="price-down"><span>%{[priceList['Litecoin'].rate]}</span></p>
@@ -389,10 +392,10 @@
                         </div><!--/.currency-price-->
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="../public/images/icon/usdt.png" alt="">
+                                <img src="../public/images/icon/moutai.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Tether</a></h4>
+                                <h4><a href="">Moutai</a></h4>
                                 <p class="dolar">{[priceList['Tether'].price]}</p>
                                 <p v-if="priceList['Tether'].isup==true" class="price-up"><span>%{[priceList['Tether'].rate]}</span></p>
                                 <p v-else class="price-down"><span>%{[priceList['Tether'].rate]}</span></p>
@@ -402,9 +405,9 @@
                 </div>
             </div><!--/.row-->
         </div><!--/.container-->
-    </section><!--/.curency section 币价滚动条 -->
-
-    <!-- 转账查询 -->
+    </section><!--/.curency section 商品价格滚动条 -->
+    
+    <!-- 转账查询 
     <a href="#" name="transfer_query"></a>
     <section class="bg-deep about-section">
         <div class="container">
@@ -434,13 +437,13 @@
                             layout="total, sizes, prev, pager, next, jumper"
                             :total="transfer_list.length">
                         </el-pagination>
-                    </div><!--/.about-inner-text-content-->
+                    </div>
                 </div>
-            </div><!--/.row-->
-        </div><!--/.container-->
-    </section><!--/.转账查询-->
+            </div>
+        </div>
+    </section> -->
 
-    <!-- 发起转账 -->
+    <!-- 发起转账 
     <a href="#" name="transfer"></a>
     <div id="counter" class="counter-section section-padding">
         <div class="container">
@@ -449,7 +452,7 @@
                     <div class="achivement">
                         <h2>向其他用户<br>发起<span>多种</span>代币转账</h2>
                         <el-button @click="transfer()" style="margin-top: 20px; margin-bottom: 20px; background-color: #F3CF33; border-color: #F3CF33;"><div style="color: white; font-weight: bold;">确  定</div></el-button>
-                    </div><!--/.achivement-->
+                    </div>
                 </div>
                 <div class="col-md-8">
                     <el-form :model="transfer_info"  
@@ -470,9 +473,9 @@
                         </el-form-item>
                     </el-form>
                 </div>
-            </div><!--/.row-->
-        </div><!--/.container-->
-    </div><!--/#counter-->
+            </div>
+        </div>
+    </div> -->
 
     <!-- 订单查询 -->
     <a href="#" name="order_query"></a>
@@ -509,7 +512,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="deal" label="是否成交"></el-table-column>
-                        <el-table-column prop="deal_price" label="成交价(Tether)"></el-table-column>
+                        <el-table-column prop="deal_price" label="成交价格"></el-table-column>
                         <el-table-column prop="deal_time" label="成交时间"></el-table-column>
                     </el-table>
                     <el-pagination
@@ -550,7 +553,7 @@
                         <el-form-item label="交易数量">
                             <el-input v-model="order_form.amount" style="width: 400px;"></el-input>
                         </el-form-item>
-                        <el-form-item label="交易价格(Tether)">
+                        <el-form-item label="交易价格">
                             <el-input v-model="order_form.price" style="width: 400px;"></el-input>
                         </el-form-item>
                     </el-form>

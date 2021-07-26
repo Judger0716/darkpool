@@ -32,8 +32,8 @@ const QueryCommittee = require('./queryCommittee');
 const ElectCommittee = require('./electCommittee');
 const FormCommittee = require('./formCommittee');
 const QueryDealedOrder = require('./queryDealedOrders');
-const USDT_BTC = require('./public/kline/kline_usdt_btc');
-const USDT_DOGE = require('./public/kline/kline_usdt_doge');
+const GOLD_SLIVER = require('./public/kline/kline_gold_sliver');
+const GOLD_CARBON = require('./public/kline/kline_gold_carbon');
 
 // Shamir Secret Sharing
 const sss = require('shamirs-secret-sharing')
@@ -66,10 +66,10 @@ app.post('/update_priceList', function (req, res){
 
 // 初始化k线图
 app.post('/init_kline', function (req, res){
-    if(req.body.usdt_btc){
+    if(req.body.GOLD_SLIVER){
         var ret_klineList = [];
         var ret_klineList_rev = [];
-        var init_klineList = USDT_BTC.init_kline_chart;
+        var init_klineList = GOLD_SLIVER.init_kline_chart;
         for(var index=0;index<init_klineList.length;index++){
             var cur_k = {};
             cur_k['timestamp'] = new Date(init_klineList[index][0]).getTime();
@@ -87,10 +87,10 @@ app.post('/init_kline', function (req, res){
             'init_klineList_rev': ret_klineList_rev,
         })
     }
-    else if(req.body.usdt_doge){
+    else if(req.body.GOLD_CARBON){
         var ret_klineList = [];
         var ret_klineList_rev = [];
-        var init_klineList = USDT_DOGE.init_kline_chart;
+        var init_klineList = GOLD_CARBON.init_kline_chart;
         for(var index=0;index<init_klineList.length;index++){
             var cur_k = {};
             cur_k['timestamp'] = new Date(init_klineList[index][0]).getTime();

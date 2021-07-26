@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" style="background: #FFFFFF;height: 100%">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="KLineChart example"/>
+
+    <title>KLineChart_GOLD_CARBON</title>
+
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="enroutedigitallab">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i%7CRoboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <!-- Bootstrap css-->
+    <link rel="stylesheet" href="../../public/css/bootstrap.min.css">
+    <!-- Font Awesome css-->
+    <!--<link rel="stylesheet" href="../../public/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="../../public/css/ionicons.min.css">
+    <!-- animate css-->
+    <link rel="stylesheet" href="../../public/css/animate.min.css">
+    <!-- REVOLUTION SLIDER STYLES -->
+    <link rel="stylesheet" type="text/css" href="../../public/css/settings.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/layers.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/navigation.css">
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="../../public/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../../public/css/owl.theme.default.min.css">
+    <!-- custom menu css-->
+    <link rel="stylesheet" href="../../public/css/custom-menu.css">
+    <!-- c3 min css-->
+    <link rel="stylesheet" href="../../public/css/c3.min.css">
+    <!-- Style css-->
+    <link rel="stylesheet" href="../../public/css/style.css">
+    <!-- Responsive css-->
+    <link rel="stylesheet" href="../../public/css/responsive.css">
+    <!-- Modernizr js-->
+    <script src="../../public/js/modernizr-2.8.3.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/klinecharts@7.3.2/dist/klinecharts.min.js"></script>
+    <!-- Local Installation of KlineCharts
+    <script type="text/javascript" src="../kline/klinecharts.min.js"></script>
+    -->
+    <script type="text/javascript" src="../kline/kline_gold_carbon.js"></script>
+
+    <!-- CDN 安装 Vue&ElementUI -->
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui@2.14.1/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui@2.14.1/lib/index.js"></script>
+    <script src="https://unpkg.com/axios@0.21.0/dist/axios.min.js"></script>
+    
+    <!-- 本地安装 Vue&ElementUI
+        <script src="../../static/vue.js"></script>
+        <link rel="stylesheet" href="../../static/index.css">
+        <script src="../../static/index.js"></script>
+        <script src="../../static/axios.min.js"></script>
+    -->
+
+    <style>
+        .el-table th {
+            background-color: #F8F8F8;
+        }
+        .el-table tr {
+            background-color: #F8F8F8;
+        }
+        .el-table__body-wrapper::-webkit-scrollbar {
+            width: 10px;
+        }
+        .el-table__body-wrapper::-webkit-scrollbar-thumb  {
+            background-color: #919399;
+            border-radius: 8px;
+        }
+    </style>
+
+</head>
+
+<body style="margin: 0;height: 100%">
+
+    <!--Preloader-->
+    <div class="preloader">
+        <div class="loading"></div>
+    </div><!--/.preloader-->
+
+    <!--header-->
+    <header class="stricky">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav id="cssmenu">
+                        <div class="logo">
+                            <a href="index.html"><img src="../../public/images/logo.png" alt=""></a>
+                        </div>
+                        <div id="head-mobile"></div>
+                        <div class="button"></div>
+                        <ul class="pull-right header-list">
+                            <li><a href="../../public/index.html"><span class="glyphicon glyphicon-home">首页</span></a></li>
+                            <li><a href="../../public/kline/basic.html"><span class="glyphicon glyphicon glyphicon-stats">查看行情</span></a></li>
+                            <li><a href="../../public/tutorial.html"><span class="glyphicon glyphicon-info-sign">快速入门</span></a></li>
+                            <li><a href="../../public/block_explorer.html"><span class="glyphicon glyphicon-globe">区块浏览</span></a></li>
+                            <li><a href="#" onClick="javascript :history.back(-1);"><span class="glyphicon glyphicon-backward"></span>返回</a></li>
+                        </ul><!--/.pull-right-->
+                    </nav><!--/#cssmenu-->
+                </div>
+            </div>
+        </div>
+    </header><!--/header-->
+
+    <div class="banner-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="banner-title text-center">
+                        <h2>行情实时查看</h2>
+                        <h2>GOLD--CARBON</h2>
+                    </div>
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </div><!--/.banner-section-->
+
+    <section class="bg-deep about-content-section" id="kline">
+        <div class="container">
+            <a href="../kline/basic.html" class="btn btn-default btn-lg active" role="button">GOLD--SLIVER</a>
+            <a href="#" class="btn btn-primary btn-lg active" role="button">GOLD--CARBON</a>
+            <div class="row row-eq-height">
+                <div class="col-md-12 col-sm-6">
+                    <div class="about-inner" id="chart"></div><!--/.about-inner-->
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+        <div class="container" style="margin-bottom: 20px;">
+            <div class="row row-eq-height">
+                <div class="col-md-12 col-sm-6">
+                    <div class="about-inner-text-content">
+                        <el-table
+                            :data="klineList_rev"
+                            height="450"
+                            style="width: 100%; background-color: #F8F8F8;">
+                            <el-table-column
+                                prop="timestr"
+                                label="日期"
+                                width="250">
+                            </el-table-column>
+                            <el-table-column
+                                prop="open"
+                                label="开盘价"
+                                width="150">
+                            </el-table-column>
+                            <el-table-column
+                                prop="close"
+                                label="收盘价"
+                                width="150">
+                            </el-table-column>
+                            <el-table-column
+                                prop="high"
+                                label="最高价"
+                                width="150">
+                            </el-table-column>
+                            <el-table-column
+                                prop="low"
+                                label="最低价"
+                                width="150">
+                            </el-table-column>
+                            <el-table-column
+                                prop="volume"
+                                label="成交量">
+                            </el-table-column>
+                        </el-table>
+                    </div><!--/.about-inner-text-content-->
+                </div>
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.about-section-->
+
+    <section class="footer-area">
+        <div class="container">
+            <div class="row footer-banner row-eq-height">
+                <div class="col-md-8 col-sm-6">
+                    <div class="footer-content">
+                        <div class="footer-logo">
+                            <a href=""><img src="../public/images/footer-logo.png" alt=""></a>
+                        </div>
+                        <div class="text-content">
+                            <p>本平台致力于打造全球规模最大的暗池交易系统</p>
+                            <p>placeat facere possimus, omnis voluptas assume
+                                est  omnis dolor repellendus. Temporibus autem
+                                busdam et aut officiis debitis aut rerum</p>
+                        </div>
+                    </div><!--/.footer-content-->
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <div class="footer-content">
+                        <h4><a href="">Useful Links</a></h4>
+                        <ul>
+                            <li><a href="">About US</a></li>
+                            <li><a href="">Financial Service</a></li>
+                            <li><a href="">Contact Us</a></li>
+                            <li><a href="">Our History</a></li>
+                            <li><a href="">News and Article</a></li>
+                            <li><a href="">Business Plan</a></li>
+                        </ul>
+                    </div><!--/.footer-content-->
+                </div>
+            </div><!--/.rwo footer-banner-->
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="copyright-info">
+                            <p>Copyright &copy; 2021.Company name All rights reserved.</p>
+                        </div>
+                    </div><!--/.copyright-info-->
+                </div>
+            </div><!--/.copyright-->
+        </div><!--/.contianer-->
+    </section><!--/.footer area-->
+
+    <script>
+        // 引入Vue变量控制kline
+        var kline = new Vue({
+            el: "#kline",
+            data: {
+                old_value: {},
+                new_value: {},
+                klineList: [],
+                klineList_rev: [],
+            },
+            methods: {
+                query_new_value() {
+                    axios.post('http://localhost:9000/query_new_value',{
+                        'old_value': this.old_value,
+                    }).then(Response =>{
+                        this.new_value = Response['data']['new_value'];
+                        this.klineList.push(this.new_value);
+                        this.klineList_rev.unshift(this.new_value);
+                        this.old_value = this.new_value;
+                    })
+                },
+            },
+            created: function() {
+                axios.post('http://localhost:9000/init_kline',{
+                    'GOLD_CARBON': true,
+                }).then(Response =>{
+                    this.klineList = Response['data']['init_klineList'];
+                    this.klineList_rev = Response['data']['init_klineList_rev'];
+                    this.old_value = this.klineList[this.klineList.length-1];
+                })
+            }
+        })
+        // kline绘图,页面加载时初始化
+        var chart = klinecharts.init('chart')
+        var chartDataList = []
+        window.onload = function draw_kline() {
+            chart.createTechnicalIndicator('MA', false, { id: 'candle_pane' })
+            chart.createTechnicalIndicator('VOL')
+            chart.createTechnicalIndicator('MACD')
+            chartDataList = kLineDataList.map(function (data) {
+                return {
+                    timestamp: new Date(data[0]).getTime(),
+                    open: +data[1],
+                    high: +data[2],
+                    low: +data[3],
+                    close: +data[4],
+                    volume: Math.ceil(+data[5]),
+                }
+            })
+            chart.applyNewData(chartDataList)
+        }
+        // 随后按照间隔不断更新
+        window.setInterval(() => {
+            setTimeout(function() {
+                kline.query_new_value()
+                chart.applyNewData(kline.klineList)
+            }, 600)
+        }, 5000)
+    </script>
+    
+    <!-- == jQuery Librery == -->
+    <script src="../../public/js/jquery-3.3.1.min.js"></script>
+    <!-- == Bootsrap js File == -->
+    <script src="../../public/js/bootstrap.min.js"></script>
+    <!-- == wow min js == -->
+    <script src="../../public/js/wow.min.js"></script>
+    <!-- == Custom Menu js == -->
+    <script src="../../public/js/custom-menu.js"></script>
+    <!-- == Custom Counter js == -->
+    <script src="../../public/js/custom-counter.js"></script>
+    <script src="../../public/js/Chart.min.js"></script>
+    <script src="../../public/js/active-chart.js"></script>
+    <!-- == Prallex js == -->
+    <script src="../../public/js/prallex.js"></script>
+    <!-- == Owl Carousel  == -->
+    <script src="../../public/js/owl.carousel.min.js"></script>
+    <!-- == Revolution Slider JS == -->
+   <script src="../../public/js/revolution/jquery.themepunch.tools.min.js"></script>
+   <script src="../../public/js/revolution/jquery.themepunch.revolution.min.js"></script>
+   <script src="../../public/js/revolution/extensions/revolution.extension.actions.min.js"></script>
+   <script src="../../public/js/revolution/extensions/revolution.extension.layeranimation.min.js"></script>
+   <script src="../../public/js/revolution/extensions/revolution.extension.navigation.min.js"></script>
+   <script src="../../public/js/revolution/extensions/revolution.extension.parallax.min.js"></script>
+   <script src="../../public/js/revolution/extensions/revolution.extension.slideanims.min.js"></script>
+   <script src="../../public/js/revolution-active.js"></script>
+    <!-- == Custom js  == -->
+   <script src="../../public/js/custom.js"></script>
+
+</body>
+</html>
