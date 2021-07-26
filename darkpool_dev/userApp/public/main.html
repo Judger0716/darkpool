@@ -105,12 +105,12 @@
                                     <li>
                                         <a href="#" @click="get_userinfo()">查看余额信息</a>
                                          <!-- 查看个人信息 -->
-                                        <el-dialog title="账户信息" :visible.sync="infoFormVisible" width="50%" :append-to-body="true">
+                                        <el-dialog title="余额信息" :visible.sync="infoFormVisible" width="50%" :append-to-body="true">
                                             <el-table :data="userinfo" stripe style="width: 100%">
-                                                <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column>
-                                                <el-table-column prop="balance" label="代币数量" width="180"></el-table-column>
-                                                <el-table-column prop="freeze" label="已冻结数量" width="180"></el-table-column>
-                                                <el-table-column prop="available" label="可用数量"></el-table-column>
+                                                <!-- <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column> -->
+                                                <el-table-column prop="balance" label="总额度" width="180"></el-table-column>
+                                                <el-table-column prop="freeze" label="已冻结额度" width="180"></el-table-column>
+                                                <el-table-column prop="available" label="可用额度"></el-table-column>
                                             </el-table>
                                             <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
                                                 <el-button type="primary" @click="infoFormVisible = false">确 定</el-button>
@@ -634,7 +634,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="交易序号" prop="deal_id"></el-table-column>
-                    <el-table-column label="成交价格(Tether)" prop="deal_price"></el-table-column>
+                    <el-table-column label="成交价格" prop="deal_price"></el-table-column>
                     <el-table-column label="成交时间" prop="deal_time"></el-table-column>
                     <el-table-column label="买家" prop="buyer"></el-table-column>
                     <el-table-column label="卖家" prop="seller"></el-table-column>
@@ -683,7 +683,7 @@
                 <div class="col-md-12">
                     <div class="section-head text-center">
                         <h2 style="color: white;">竞选委员</h2>
-                        <p class="item-text" style="color: white;">抵押Tether代币竞选委员</p>
+                        <p class="item-text" style="color: white;">抵押一部分账户余额竞选委员</p>
                         <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">我要竞选</el-button>
                         <p class="item-text" style="color: white;">下表将显示委员会候选人名单，若有已存在的委员会，则同时显示委员会成员</p>    
                     </div>
@@ -709,13 +709,13 @@
                     <!-- 显示候选人信息 -->
                     <el-table :data="candidates" style="width: 100%">
                         <el-table-column prop="name" label="候选人名称" width="450"></el-table-column>
-                        <el-table-column prop="amount" label="抵押代币数量(Tether)"></el-table-column>
+                        <el-table-column prop="amount" label="抵押金额"></el-table-column>
                     </el-table>
                     
                     <!-- 显示委员会成员信息 -->
                     <el-table :data="committee" style="width: 100%">
                         <el-table-column prop="name" label="委员名称" width="450"></el-table-column>
-                        <el-table-column prop="amount" label="抵押代币数量(Tether)" width="180"></el-table-column>
+                        <el-table-column prop="amount" label="抵押金额" width="180"></el-table-column>
                         <el-table-column prop="pub" label="公钥信息"></el-table-column>
                     </el-table>
                 </div>
@@ -885,19 +885,17 @@
                 exitlogin() {
                     window.location.href = "http://localhost:9000/"
                 },
+                
                 // 获得当前用户信息
                 get_userinfo() {
                     axios.post('http://localhost:9000/getinfo', {
                         'username': document.getElementById("cur_un").innerHTML,
+                    }).then(Response => {
+                        this.userinfo = Response['data']['userinfo']
+                        this.infoFormVisible = true
+                    }).catch(function (error) {
+                        console.log(error);
                     })
-                        .then(Response => {
-                            console.log(Response['data']['userinfo'])
-                            this.userinfo = Response['data']['userinfo']
-                            this.infoFormVisible = true
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        })
                 },
                 // 形成委员会
                 form_committee() {

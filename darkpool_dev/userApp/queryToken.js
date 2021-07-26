@@ -5,7 +5,8 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
-const tokenlist = ['Bitcoin','Dogecoin','Tether'];
+// const tokenlist = ['Bitcoin','Dogecoin','Tether'];
+const tokenlist = ['Tether'];
 
 // Main program function
 exports.QueryBalance = async function (username) {
