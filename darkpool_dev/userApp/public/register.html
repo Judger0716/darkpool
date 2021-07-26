@@ -18,7 +18,9 @@
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i%7CRoboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i%7CRoboto:300,300i,400,400i,500,500i,700,700i"
+        rel="stylesheet">
     <!-- Bootstrap css-->
     <link rel="stylesheet" href="../public/css/bootstrap.min.css">
     <!-- Font Awesome css-->
@@ -55,11 +57,16 @@
 
     <!-- Style -->
     <style>
+        * {
+            font-family: 'Roboto', serif;
+        }
+
         #login_area {
             margin-left: 25%;
             margin-right: 25%;
-            text-align: center; 
+            text-align: center;
         }
+
         .input-group {
             margin-top: 20px;
             margin-bottom: 20px;
@@ -72,7 +79,8 @@
     <!--Preloader-->
     <div class="preloader">
         <div class="loading"></div>
-    </div><!--/.preloader-->
+    </div>
+    <!--/.preloader-->
 
     <!--header-->
     <header class="stricky">
@@ -86,16 +94,19 @@
                         <div id="head-mobile"></div>
                         <div class="button"></div>
                         <ul class="pull-right header-list">
-                            <li><a href="../public/index.html"><span class="glyphicon glyphicon-home">返回首页</span></a></li>
-                        </ul><!--/.pull-right-->
-                    </nav><!--/#cssmenu-->
+                            <li><a href="../public/index.html"><span class="glyphicon glyphicon-home">返回首页</span></a>
+                            </li>
+                        </ul>
+                        <!--/.pull-right-->
+                    </nav>
+                    <!--/#cssmenu-->
                 </div>
             </div>
         </div>
-    </header><!--/header-->
+    </header>
+    <!--/header-->
 
-    <div class="banner-section" 
-        style="
+    <div class="banner-section" style="
         background: url(../public/static/login_bg.png);
         background-size: cover;
         background-position: center;
@@ -106,9 +117,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="banner-title text-center" >
-                        <h2 style="text-shadow: 2px 3px 1px grey;">欢迎进入暗池交易系统</h2>
-                        <h2 style="text-shadow: 2px 3px 1px grey; font-size: 24px;">Welcome to the Darkpool Trading System</h2>
+                    <div class="banner-title text-center">
+                        <h2 style="text-shadow: 2px 3px 1px grey; font-family: Lora, serif; font-weight: 700;">欢迎进入暗池交易系统</h2>
+                        <h2 style="text-shadow: 2px 3px 1px grey; font-size: 24px; font-family: Lora, serif; font-weight: 700;">Welcome to the Darkpool Trading
+                            System</h2>
                         <br>
                         <h2 style="text-shadow: 2px 3px 1px grey; font-size: 24px;">注册 / Register</h2>
                     </div>
@@ -116,26 +128,34 @@
                         <form action="/register" method="post">
                             <div class="input-group">
                                 <span class="input-group-addon" id="basic-addon1">用户名</span>
-                                <input name="username" type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+                                <input name="username" type="text" class="form-control" placeholder="Username"
+                                    aria-describedby="basic-addon1">
                             </div>
                             <div class="input-group">
                                 <span class="input-group-addon" id="basic-addon1">密码</span>
-                                <input name="password" type="password" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
+                                <input name="password" type="password" class="form-control" placeholder="Password"
+                                    aria-describedby="basic-addon1">
                             </div>
                             <div class="input-group">
                                 <span class="input-group-addon" id="basic-addon1">再次输入密码</span>
-                                <input type="password" class="form-control" placeholder="Password" aria-describedby="basic-addon1">
+                                <input type="password" class="form-control" placeholder="Password"
+                                    aria-describedby="basic-addon1">
                             </div>
                             <div class="btn-group" role="group" aria-label="..." style="margin-top: 50px;">
-                                <button type="button" class="btn btn-default" onclick="location.href='login.html'">返回登录</button>
-                                <button type="submit" class="btn btn-warning" onclick="location.href='login.html'">点击注册</button>
+                                <button type="button" class="btn btn-default"
+                                    onclick="location.href='login.html'">返回登录</button>
+                                <button type="submit" class="btn btn-warning"
+                                    onclick="location.href='login.html'">点击注册</button>
                             </div>
                         </form>
-                    </div>   
+                    </div>
                 </div>
-            </div><!--/.row-->
-        </div><!--/.container-->
-    </div><!--/.banner-section-->
+            </div>
+            <!--/.row-->
+        </div>
+        <!--/.container-->
+    </div>
+    <!--/.banner-section-->
 
 
     <section class="footer-area">
@@ -150,7 +170,8 @@
                             <p>本平台致力于打造全球规模最大的暗池交易系统</p>
                             <p>加入CryptoPool，成为我们的一员</p>
                         </div>
-                    </div><!--/.footer-content-->
+                    </div>
+                    <!--/.footer-content-->
                 </div>
                 <div class="col-md-3 col-sm-6">
                     <div class="footer-content">
@@ -161,7 +182,8 @@
                             <li><a href="#">投资建议</a></li>
                             <li><a href="#">商业合作</a></li>
                         </ul>
-                    </div><!--/.footer-content-->
+                    </div>
+                    <!--/.footer-content-->
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-6">
                     <div class="footer-content">
@@ -172,32 +194,45 @@
                             <li><a href="../public/block_explorer.html">区块浏览</a></li>
                             <li><a href="#">联系我们</a></li>
                         </ul>
-                    </div><!--/.footer-content-->
+                    </div>
+                    <!--/.footer-content-->
                 </div>
-            </div><!--/.rwo footer-banner-->
+            </div>
+            <!--/.rwo footer-banner-->
             <div class="copyright">
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
                         <div class="copyright-info">
                             <p>Copyright &copy; 2021.CryptoPool All rights reserved.</p>
                         </div>
-                    </div><!--/.copyright-info-->
+                    </div>
+                    <!--/.copyright-info-->
                     <div class="col-md-6 col-sm-6">
                         <div class="social text-right content-align">
                             <ul>
-                                <li><a href="#"><i><img src="../public/images/footer/wechat.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/alipay.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/weibo.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/facebook.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/twitter.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/ins.png" style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/wechat.png"
+                                                style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/alipay.png"
+                                                style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/weibo.png"
+                                                style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/facebook.png"
+                                                style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/twitter.png"
+                                                style="height: 18px; width: 18px;"></i></a></li>
+                                <li><a href="#"><i><img src="../public/images/footer/ins.png"
+                                                style="height: 18px; width: 18px;"></i></a></li>
                             </ul>
-                        </div><!--/.social-->
+                        </div>
+                        <!--/.social-->
                     </div>
                 </div>
-            </div><!--/.copyright-->
-        </div><!--/.contianer-->
-    </section><!--/.footer area-->
+            </div>
+            <!--/.copyright-->
+        </div>
+        <!--/.contianer-->
+    </section>
+    <!--/.footer area-->
 
     <!--Preloader-->
     <!-- == jQuery Librery == -->
@@ -218,5 +253,5 @@
     <script src="../public/js/custom.js"></script>
 
 </body>
-</html>
 
+</html>

@@ -31,7 +31,9 @@
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i%7CRoboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i%7CRoboto:300,300i,400,400i,500,500i,700,700i"
+        rel="stylesheet">
     <!-- Bootstrap css-->
     <link rel="stylesheet" href="../public/css/bootstrap.min.css">
     <!-- Font Awesome css-->
@@ -56,358 +58,358 @@
     <script src="../public/js/modernizr-2.8.3.min.js"></script>
 
     <style>
-        .el-form-item__label{
+        * {
+            font-family: 'Roboto', serif;
+        }
+
+        .el-form-item__label {
             color: #F3CF33;
             text-shadow: 0px 0px 1px white;
             font-weight: bold;
             font-size: 18px;
             width: 200px;
         }
+
+        .item  .el-form-item__label {
+            margin-top: 4px;
+        }
     </style>
 
 </head>
 
 <!-- 首页主体 -->
+
 <body>
-<!-- 暗池交易 -->
-<div id="darkpool">
+    <!-- 暗池交易 -->
+    <div id="darkpool">
 
-    <!--Preloader-->
-    <div class="preloader">
-        <div class="loading"></div>
-    </div><!--/.preloader-->
+        <!--Preloader-->
+        <div class="preloader">
+            <div class="loading"></div>
+        </div>
+        <!--/.preloader-->
 
-    <!-- 页面顶部 -->
-    <!--header-->
-    <header class="stricky">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <nav id="cssmenu">
-                        <!-- logo -->
-                        <div class="logo">
-                            <a href="../public/index.html"><img src="../public/images/logo.png" alt=""></a>
-                        </div>
-                        <div id="head-mobile"></div>
-                        <div class="button"></div>
-                        <!-- 顶部跳转按钮 -->
-                        <ul class="pull-right header-list">
-                            <li><a href="../public/index.html"><span class="glyphicon glyphicon-log-out">退出登录</span></a></li>
-                            <li><a href="../public/kline/basic.html"><span class="glyphicon glyphicon glyphicon-stats">查看行情</span></a></li>
-                            <li><a href="../public/block_explorer.html"><span class="glyphicon glyphicon-globe">区块浏览</span></a></li>
-                            <li><a href="../public/main_old.html"><span class="glyphicon glyphicon-th-list">个人中心</span></a>
-                                <ul class="dropdown">
-                                    <li><a href="../public/tutorial.html">快速入门<img src="../public/images/footer/tutorial.png" style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
-                                    <li><a href="#">绑定银行卡<img src="../public/images/footer/card.png" style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
-                                    <li><a href="#">绑定微信<img src="../public/images/footer/wechat.png" style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
-                                    <li><a href="#">绑定支付宝<img src="../public/images/footer/alipay.png" style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
-                                    <li><a href="#">账户充值</a></li> 
-                                    <li>
-                                        <a href="#" @click="get_userinfo()">查看余额信息</a>
-                                         <!-- 查看个人信息 -->
-                                        <el-dialog title="余额信息" :visible.sync="infoFormVisible" width="50%" :append-to-body="true">
-                                            <el-table :data="userinfo" stripe style="width: 100%">
-                                                <!-- <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column> -->
-                                                <el-table-column prop="balance" label="总额度" width="180"></el-table-column>
-                                                <el-table-column prop="freeze" label="已冻结额度" width="180"></el-table-column>
-                                                <el-table-column prop="available" label="可用额度"></el-table-column>
-                                            </el-table>
-                                            <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
-                                                <el-button type="primary" @click="infoFormVisible = false">确 定</el-button>
-                                            </div>
-                                        </el-dialog>
-                                    </li>
-                                    <!--<li><a href="#transfer_query">转账查询</a></li>
+        <!-- 页面顶部 -->
+        <!--header-->
+        <header class="stricky">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav id="cssmenu">
+                            <!-- logo -->
+                            <div class="logo">
+                                <a href="../public/index.html"><img src="../public/images/logo.png" alt=""></a>
+                            </div>
+                            <div id="head-mobile"></div>
+                            <div class="button"></div>
+                            <!-- 顶部跳转按钮 -->
+                            <ul class="pull-right header-list">
+                                <li><a href="../public/index.html"><span
+                                            class="glyphicon glyphicon-log-out">退出登录</span></a></li>
+                                <li><a href="../public/kline/basic.html"><span
+                                            class="glyphicon glyphicon glyphicon-stats">查看行情</span></a></li>
+                                <li><a href="../public/block_explorer.html"><span
+                                            class="glyphicon glyphicon-globe">区块浏览</span></a></li>
+                                <li><a href="../public/main_old.html"><span
+                                            class="glyphicon glyphicon-th-list">个人中心</span></a>
+                                    <ul class="dropdown">
+                                        <li><a href="../public/tutorial.html">快速入门<img
+                                                    src="../public/images/footer/tutorial.png"
+                                                    style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
+                                        <li><a href="#">绑定银行卡<img src="../public/images/footer/card.png"
+                                                    style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
+                                        <li><a href="#">绑定微信<img src="../public/images/footer/wechat.png"
+                                                    style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
+                                        <li><a href="#">绑定支付宝<img src="../public/images/footer/alipay.png"
+                                                    style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
+                                        <li><a href="#">账户充值</a></li>
+                                        <li>
+                                            <a href="#" @click="get_userinfo()">查看余额信息</a>
+                                            <!-- 查看个人信息 -->
+                                            <el-dialog title="余额信息" :visible.sync="infoFormVisible" width="50%"
+                                                :append-to-body="true">
+                                                <el-table :data="userinfo" stripe style="width: 100%">
+                                                    <!-- <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column> -->
+                                                    <el-table-column prop="balance" label="总额度" width="180">
+                                                    </el-table-column>
+                                                    <el-table-column prop="freeze" label="已冻结额度" width="180">
+                                                    </el-table-column>
+                                                    <el-table-column prop="available" label="可用额度"></el-table-column>
+                                                </el-table>
+                                                <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
+                                                    <el-button type="primary" @click="infoFormVisible = false">确 定
+                                                    </el-button>
+                                                </div>
+                                            </el-dialog>
+                                        </li>
+                                        <!--<li><a href="#transfer_query">转账查询</a></li>
                                     <li><a href="#transfer">发起转账</a></li>-->
-                                    <li><a href="#order_query">订单查询</a></li>
-                                    <li><a href="#dealed_order_query">查询匹配交易</a></li>
-                                    <li><a href="#create_order">创建订单</a></li>
-                                    <li><a href="#elect_committee">竞选委员</a></li>
-                                    <li><a href="#" @click="form_committee()"><span>形成委员会</span></a></li>
-                                </ul><!--/.dropdown-->
-                            </li>
-                            <li><a herf="#"><span class="glyphicon glyphicon-user">欢迎：</span><div id="cur_un" style="display: inline;"><%=username%></div></a></li>
-                        </ul><!--/.pull-right-->
-                    </nav><!--/#cssmenu-->
+                                        <li><a href="#order_query">订单查询</a></li>
+                                        <li><a href="#dealed_order_query">查询匹配交易</a></li>
+                                        <li><a href="#create_order">创建订单</a></li>
+                                        <li><a href="#elect_committee">竞选委员</a></li>
+                                        <li><a href="#" @click="form_committee()"><span>形成委员会</span></a></li>
+                                    </ul>
+                                    <!--/.dropdown-->
+                                </li>
+                                <li><a herf="#"><span class="glyphicon glyphicon-user">欢迎：</span>
+                                        <div id="cur_un" style="display: inline;" value="<%=username%>">
+                                            <%=username%>
+                                        </div>
+                                    </a></li>
+                            </ul>
+                            <!--/.pull-right-->
+                        </nav>
+                        <!--/#cssmenu-->
+                    </div>
                 </div>
             </div>
-        </div>
-    </header><!--/header-->
-    
-    <!-- 滑动显示区域 -->
-    <div class="slider-section">
-        <div id="rev_slider_1052_1_wrapper" class="rev_slider_wrapper fullscreen-container" data-alias="web-product-dark122" data-source="gallery">
-            <!-- START REVOLUTION SLIDER 5.3.0.2 fullscreen mode -->
-            <div id="rev_slider_1052_1" class="rev_slider fullscreenbanner" style="display:none;" data-version="5.3.0.2">
-                <ul>	<!-- SLIDE  -->
-                    <li data-index="rs-2946" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="500"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" >
-                        <!-- MAIN IMAGE 滑动背景图片-->
-                        <img src="../public/images/slider/slide-img.png" alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
-                        <!-- LAYERS 1 第一行文字-->
-                        <div class="tp-caption tp-resizeme"
-                             id="slide-2946-layer-7"
-                             data-x="['middle','middle','middle','middle']"
-                             data-hoffset="['-222','-100',0,'0']"
-                             data-y="['middle','middle','middle','middle']"
-                             data-voffset="['-150','-150','-80','-80']"
-                             data-fontsize="['68','68','60','60']"
-                             data-lineheight="['75','75','60','60']"
-                             data-width="['700','700','none','none']"
-                             data-height="none"
-                             data-whitespace="nowrap"
-                             data-type="text"
-                             data-responsive_offset="on"
-                             data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1000,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
-                             data-textAlign="['left','left','left','left']"
-                             data-paddingtop="[0,0,0,0]"
-                             data-paddingright="[0,0,0,0]"
-                             data-paddingbottom="[0,0,0,0]"
-                             data-paddingleft="[0,0,0,0]"
-                             style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">开启您的</div>
-                        <!-- LAYER NR. 2 第二行文字-->
-                        <div class="tp-caption tp-resizeme"
-                             id="slide-2946-layer-10"
-                             data-x="['middle','middle','middle','middle']"
-                             data-hoffset="['-222','-100',0,'0']"
-                             data-y="['middle','middle','middle','middle']"
-                             data-voffset="['-70','-70','-10','-10']"
-                             data-fontsize="['68','68','60','60']"
-                             data-lineheight="['75','75','60','60']"
-                             data-width="['700','700','none','none']"
-                             data-height="none"
-                             data-whitespace="nowrap"
-                             data-type="text"
-                             data-responsive_offset="on"
-                             data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1250,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
-                             data-textAlign="['left','left','left','left']"
-                             data-paddingtop="[0,0,0,0]"
-                             data-paddingright="[0,0,0,0]"
-                             data-paddingbottom="[0,0,0,0]"
-                             data-paddingleft="[0,0,0,0]"
-                            style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">暗池交易之旅</div>
-                        <!-- LAYER NR. 3 第三行文字-->
-                        <div class="tp-caption tp-resizeme"
-                             id="slide-2946-layer-9"
-                             data-x="['middle','middle','middle','middle']"
-                             data-hoffset="['-222','-100',0,'0']"
-                             data-y="['middle','middle','middle','middle']"
-                             data-voffset="['30','30','55','55']"
-                             data-fontsize="['18','18','14','14']"
-                             data-lineheight="['33','33','22','22']"
-                             data-width="['700','700','none','none']"
-                             data-height="none"
-                             data-whitespace="nowrap"
-                             data-type="text"
-                             data-responsive_offset="on"
-                             data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1500,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
-                             data-textAlign="['left','left','left','left']"
-                             data-paddingtop="[0,0,0,0]"
-                             data-paddingright="[0,0,0,0]"
-                             data-paddingbottom="[0,0,0,0]"
-                             data-paddingleft="[0,0,0,0]"
-                             style="z-index: 5; white-space: nowrap; font-family: 'Roboto', sans-serif; color: #fff;">全球最大规模的暗池交易系统<br>
-                            支持多种加密货币<br>
-                            无需交互的交易体验</div>
-                        <!-- LAYER NR. 4 第四行文字-->
-                        <div class="tp-caption  tp-resizeme"
-                             id="slide-2946-layer-8"
-                             data-x="['middle','middle','middle','middle']"
-                             data-hoffset="['-544','-422',0,'0']"
-                             data-y="['middle','middle','middle','middle']"
-                             data-voffset="['140','140','140','140']"
-                             data-width="['48','48','150','150']"
-                             data-height="['48','48','48','48']"
-                             data-whitespace="nowrap"
-                             data-type="text"
-                             data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2947","delay":""}]'
-                             data-responsive_offset="on"
-                             data-responsive="off"
-                             data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(51, 51, 51, 1.00);bw:2px 2px 2px 2px;"}]'
-                             data-textAlign="['center','center','center','center']"
-                             data-paddingtop="[0,0,0,0]"
-                             data-paddingright="[0,0,0,0]"
-                             data-paddingbottom="[0,0,0,0]"
-                             data-paddingleft="[0,0,0,0]" style="z-index: 5; text-transform: capitalize; white-space: nowrap; font-family: 'Lora', serif; font-weight: 700;">
-                            <a style="color: #222;" href="#" class="cryptod-button-warning">了解更多</a>
-                        </div>
-                    </li>
-                    <li data-index="rs-2947" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="500"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="1000" data-fsslotamount="7" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" >
+        </header>
+        <!--/header-->
 
-                        <!-- MAIN IMAGE -->
-                        <img src="../public/images/slider/slide-img-2.png" alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
-                        <!-- LAYERS 1-->
-                            <div class="tp-caption tp-resizeme"
-                                 id="slide-2947-layer-7"
-                                 data-x="['middle','middle','middle','middle']"
-                                 data-hoffset="['-222','-100',0,'0']"
-                                 data-y="['middle','middle','middle','middle']"
-                                 data-voffset="['-150','-150','-80','-80']"
-                                 data-fontsize="['76','76','60','60']"
-                                 data-lineheight="['75','75','60','60']"
-                                 data-width="['700','700','none','none']"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1000,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                 style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">保护您的</div>
+        <!-- 滑动显示区域 -->
+        <div class="slider-section">
+            <div id="rev_slider_1052_1_wrapper" class="rev_slider_wrapper fullscreen-container"
+                data-alias="web-product-dark122" data-source="gallery">
+                <!-- START REVOLUTION SLIDER 5.3.0.2 fullscreen mode -->
+                <div id="rev_slider_1052_1" class="rev_slider fullscreenbanner" style="display:none;"
+                    data-version="5.3.0.2">
+                    <ul>
+                        <!-- SLIDE  -->
+                        <li data-index="rs-2946" data-transition="fade" data-slotamount="default" data-hideafterloop="0"
+                            data-hideslideonmobile="off" data-easein="default" data-easeout="default"
+                            data-masterspeed="500" data-rotate="0" data-fstransition="fade" data-fsmasterspeed="1000"
+                            data-fsslotamount="7" data-saveperformance="off" data-title="Slide" data-param1=""
+                            data-param2="" data-param3="">
+                            <!-- MAIN IMAGE 滑动背景图片-->
+                            <img src="/public/images/slider/slide-img.png" alt="" data-bgposition="center center"
+                                data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
+                            <!-- LAYERS 1 第一行文字-->
+                            <div class="tp-caption tp-resizeme" id="slide-2946-layer-7"
+                                data-x="['middle','middle','middle','middle']" data-hoffset="['-222','-100',0,'0']"
+                                data-y="['middle','middle','middle','middle']"
+                                data-voffset="['-150','-150','-80','-80']" data-fontsize="['68','68','60','60']"
+                                data-lineheight="['75','75','60','60']" data-width="['700','700','none','none']"
+                                data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on"
+                                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1000,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                                data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
+                                data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
+                                data-paddingleft="[0,0,0,0]"
+                                style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">
+                                开启您的</div>
+                            <!-- LAYER NR. 2 第二行文字-->
+                            <div class="tp-caption tp-resizeme" id="slide-2946-layer-10"
+                                data-x="['middle','middle','middle','middle']" data-hoffset="['-222','-100',0,'0']"
+                                data-y="['middle','middle','middle','middle']" data-voffset="['-70','-70','-10','-10']"
+                                data-fontsize="['68','68','60','60']" data-lineheight="['75','75','60','60']"
+                                data-width="['700','700','none','none']" data-height="none" data-whitespace="nowrap"
+                                data-type="text" data-responsive_offset="on"
+                                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1250,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                                data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
+                                data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
+                                data-paddingleft="[0,0,0,0]"
+                                style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">
+                                暗池交易之旅</div>
+                            <!-- LAYER NR. 3 第三行文字-->
+                            <div class="tp-caption tp-resizeme" id="slide-2946-layer-9"
+                                data-x="['middle','middle','middle','middle']" data-hoffset="['-222','-100',0,'0']"
+                                data-y="['middle','middle','middle','middle']" data-voffset="['30','30','55','55']"
+                                data-fontsize="['18','18','14','14']" data-lineheight="['33','33','22','22']"
+                                data-width="['700','700','none','none']" data-height="none" data-whitespace="nowrap"
+                                data-type="text" data-responsive_offset="on"
+                                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1500,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                                data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
+                                data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
+                                data-paddingleft="[0,0,0,0]"
+                                style="z-index: 5; white-space: nowrap; font-family: 'Roboto', sans-serif; color: #fff;">
+                                全球最大规模的暗池交易系统<br>
+                                支持多种加密货币<br>
+                                无需交互的交易体验</div>
+                            <!-- LAYER NR. 4 第四行文字-->
+                            <div class="tp-caption  tp-resizeme" id="slide-2946-layer-8"
+                                data-x="['middle','middle','middle','middle']" data-hoffset="['-544','-422',0,'0']"
+                                data-y="['middle','middle','middle','middle']" data-voffset="['140','140','140','140']"
+                                data-width="['48','48','150','150']" data-height="['48','48','48','48']"
+                                data-whitespace="nowrap" data-type="text"
+                                data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2947","delay":""}]'
+                                data-responsive_offset="on" data-responsive="off"
+                                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(51, 51, 51, 1.00);bw:2px 2px 2px 2px;"}]'
+                                data-textAlign="['center','center','center','center']" data-paddingtop="[0,0,0,0]"
+                                data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
+                                data-paddingleft="[0,0,0,0]"
+                                style="z-index: 5; text-transform: capitalize; white-space: nowrap; font-family: 'Lora', serif; font-weight: 700;">
+                                <a style="color: #222;" href="#" class="cryptod-button-warning">了解更多</a>
+                            </div>
+                        </li>
+                        <li data-index="rs-2947" data-transition="fade" data-slotamount="default" data-hideafterloop="0"
+                            data-hideslideonmobile="off" data-easein="default" data-easeout="default"
+                            data-masterspeed="500" data-rotate="0" data-fstransition="fade" data-fsmasterspeed="1000"
+                            data-fsslotamount="7" data-saveperformance="off" data-title="Slide" data-param1=""
+                            data-param2="" data-param3="">
+
+                            <!-- MAIN IMAGE -->
+                            <img src="/public/images/slider/slide-img-2.png" alt="" data-bgposition="center center"
+                                data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg" data-no-retina>
+                            <!-- LAYERS 1-->
+                            <div class="tp-caption tp-resizeme" id="slide-2947-layer-7"
+                                data-x="['middle','middle','middle','middle']" data-hoffset="['-222','-100',0,'0']"
+                                data-y="['middle','middle','middle','middle']"
+                                data-voffset="['-150','-150','-80','-80']" data-fontsize="['76','76','60','60']"
+                                data-lineheight="['75','75','60','60']" data-width="['700','700','none','none']"
+                                data-height="none" data-whitespace="nowrap" data-type="text" data-responsive_offset="on"
+                                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1000,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                                data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
+                                data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
+                                data-paddingleft="[0,0,0,0]"
+                                style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">
+                                保护您的</div>
                             <!-- LAYER NR. 2 -->
-                            <div class="tp-caption tp-resizeme"
-                                 id="slide-2947-layer-10"
-                                 data-x="['middle','middle','middle','middle']"
-                                 data-hoffset="['-222','-100',0,'0']"
-                                 data-y="['middle','middle','middle','middle']"
-                                 data-voffset="['-70','-70','-10','-10']"
-                                 data-fontsize="['76','76','60','60']"
-                                 data-lineheight="['75','75','60','60']"
-                                 data-width="['700','700','none','none']"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1250,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]"
-                                style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">交易隐私信息</div>
+                            <div class="tp-caption tp-resizeme" id="slide-2947-layer-10"
+                                data-x="['middle','middle','middle','middle']" data-hoffset="['-222','-100',0,'0']"
+                                data-y="['middle','middle','middle','middle']" data-voffset="['-70','-70','-10','-10']"
+                                data-fontsize="['76','76','60','60']" data-lineheight="['75','75','60','60']"
+                                data-width="['700','700','none','none']" data-height="none" data-whitespace="nowrap"
+                                data-type="text" data-responsive_offset="on"
+                                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1250,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                                data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
+                                data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
+                                data-paddingleft="[0,0,0,0]"
+                                style="z-index: 5; white-space: nowrap; text-transform: capitalize; color: #fff; font-family: 'Lora', serif; font-weight: 700;">
+                                交易隐私信息</div>
                             <!-- LAYER NR. 3 -->
-                            <div class="tp-caption tp-resizeme"
-                                 id="slide-2947-layer-9"
-                                 data-x="['middle','middle','middle','middle']"
-                                 data-hoffset="['-222','-100',0,'0']"
-                                 data-y="['middle','middle','middle','middle']"
-                                 data-voffset="['30','30','55','55']"
-                                 data-fontsize="['18','18','14','14']"
-                                 data-lineheight="['33','33','22','22']"
-                                 data-width="['700','700','none','none']"
-                                 data-height="none"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-responsive_offset="on"
-                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1500,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
-                                 data-textAlign="['left','left','left','left']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]" style="z-index: 5; white-space: nowrap; font-family: 'Roboto', sans-serif; color: #fff;">加密您的订单数据<br>
+                            <div class="tp-caption tp-resizeme" id="slide-2947-layer-9"
+                                data-x="['middle','middle','middle','middle']" data-hoffset="['-222','-100',0,'0']"
+                                data-y="['middle','middle','middle','middle']" data-voffset="['30','30','55','55']"
+                                data-fontsize="['18','18','14','14']" data-lineheight="['33','33','22','22']"
+                                data-width="['700','700','none','none']" data-height="none" data-whitespace="nowrap"
+                                data-type="text" data-responsive_offset="on"
+                                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1500,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"}]'
+                                data-textAlign="['left','left','left','left']" data-paddingtop="[0,0,0,0]"
+                                data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
+                                data-paddingleft="[0,0,0,0]"
+                                style="z-index: 5; white-space: nowrap; font-family: 'Roboto', sans-serif; color: #fff;">
+                                加密您的订单数据<br>
                                 全自动交易匹配<br>
                                 公平公正的交易模式</div>
                             <!-- LAYER NR. 4 -->
-                            <div class="tp-caption  tp-resizeme"
-                                 id="slide-2947-layer-8"
-                                 data-x="['middle','middle','middle','middle']"
-                                 data-hoffset="['-544','-422',0,'0']"
-                                 data-y="['middle','middle','middle','middle']"
-                                 data-voffset="['140','140','140','140']"
-                                 data-width="['48','48','150','150']"
-                                 data-height="['48','48','48','48']"
-                                 data-whitespace="nowrap"
-                                 data-type="text"
-                                 data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2947","delay":""}]'
-                                 data-responsive_offset="on"
-                                 data-responsive="off"
-                                 data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(51, 51, 51, 1.00);bw:2px 2px 2px 2px;"}]'
-                                 data-textAlign="['center','center','center','center']"
-                                 data-paddingtop="[0,0,0,0]"
-                                 data-paddingright="[0,0,0,0]"
-                                 data-paddingbottom="[0,0,0,0]"
-                                 data-paddingleft="[0,0,0,0]" style="z-index: 5; text-transform: capitalize; white-space: nowrap; font-family: 'Lora', serif; font-weight: 700;">
+                            <div class="tp-caption  tp-resizeme" id="slide-2947-layer-8"
+                                data-x="['middle','middle','middle','middle']" data-hoffset="['-544','-422',0,'0']"
+                                data-y="['middle','middle','middle','middle']" data-voffset="['140','140','140','140']"
+                                data-width="['48','48','150','150']" data-height="['48','48','48','48']"
+                                data-whitespace="nowrap" data-type="text"
+                                data-actions='[{"event":"click","action":"jumptoslide","slide":"rs-2947","delay":""}]'
+                                data-responsive_offset="on" data-responsive="off"
+                                data-frames='[{"from":"x:-50px;opacity:0;","speed":1000,"to":"o:1;","delay":1750,"ease":"Power2.easeOut"},{"delay":"wait","speed":1500,"to":"opacity:0;","ease":"Power4.easeIn"},{"frame":"hover","speed":"300","ease":"Linear.easeNone","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgba(51, 51, 51, 1.00);bw:2px 2px 2px 2px;"}]'
+                                data-textAlign="['center','center','center','center']" data-paddingtop="[0,0,0,0]"
+                                data-paddingright="[0,0,0,0]" data-paddingbottom="[0,0,0,0]"
+                                data-paddingleft="[0,0,0,0]"
+                                style="z-index: 5; text-transform: capitalize; white-space: nowrap; font-family: 'Lora', serif; font-weight: 700;">
                                 <a style="color: #222;" href="#" class="cryptod-button-warning">了解更多</a>
                             </div>
-                    </li>
-                </ul>
-                <div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;">
+                        </li>
+                    </ul>
+                    <div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;">
+                    </div>
                 </div>
             </div>
-        </div><!--/.container-->
-    </div><!-- END REVOLUTION SLIDER -->
+            <!--/.container-->
+        </div><!-- END REVOLUTION SLIDER -->
 
-   <!-- 商品价格滚动条 -->
-   <section class="cryptocurrency-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div id="token" class="cryptocurrency-slide custom-nav owl-carousel owl-theme boxshadow wow fadeInUp" data-wow-duration="0.3s" data-wow-delay="0.2s">
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/gold.png" alt="">
+        <!-- 商品价格滚动条 -->
+        <section class="cryptocurrency-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="token"
+                            class="cryptocurrency-slide custom-nav owl-carousel owl-theme boxshadow wow fadeInUp"
+                            data-wow-duration="0.3s" data-wow-delay="0.2s">
+                            <div class="currency-price pr">
+                                <div class="image">
+                                    <img src="../public/images/icon/gold.png" alt="">
+                                </div>
+                                <div class="text-content">
+                                    <h4><a href="">Gold</a></h4>
+                                    <p class="dolar">{[priceList['Gold'].price]}</p>
+                                    <p v-if="priceList['Gold'].isup==true" class="price-up">
+                                        <span>%{[priceList['Gold'].rate]}</span>
+                                    </p>
+                                    <p v-else class="price-down"><span>%{[priceList['Gold'].rate]}</span></p>
+                                </div>
                             </div>
-                            <div class="text-content">
-                                <h4><a href="">Gold</a></h4>
-                                <p class="dolar">{[priceList['Gold'].price]}</p>
-                                <p v-if="priceList['Gold'].isup==true" class="price-up"><span>%{[priceList['Gold'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Gold'].rate]}</span></p>
+                            <div class="currency-price pr">
+                                <div class="image">
+                                    <img src="../public/images/icon/sliver.png" alt="">
+                                </div>
+                                <div class="text-content">
+                                    <h4><a href="">Sliver</a></h4>
+                                    <p class="dolar">{[priceList['Sliver'].price]}</p>
+                                    <p v-if="priceList['Sliver'].isup==true" class="price-up">
+                                        <span>%{[priceList['Sliver'].rate]}</span>
+                                    </p>
+                                    <p v-else class="price-down"><span>%{[priceList['Sliver'].rate]}</span></p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/sliver.png" alt="">
+                            <div class="currency-price pr">
+                                <div class="image">
+                                    <img src="../public/images/icon/iron.png" alt="">
+                                </div>
+                                <div class="text-content">
+                                    <h4><a href="">Iron</a></h4>
+                                    <p class="dolar">{[priceList['Iron'].price]}</p>
+                                    <p v-if="priceList['Iron'].isup==true" class="price-up">
+                                        <span>%{[priceList['Iron'].rate]}</span>
+                                    </p>
+                                    <p v-else class="price-down"><span>%{[priceList['Iron'].rate]}</span></p>
+                                </div>
                             </div>
-                            <div class="text-content">
-                                <h4><a href="">Sliver</a></h4>
-                                <p class="dolar">{[priceList['Sliver'].price]}</p>
-                                <p v-if="priceList['Sliver'].isup==true" class="price-up"><span>%{[priceList['Sliver'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Sliver'].rate]}</span></p>
+                            <div class="currency-price pr">
+                                <div class="image">
+                                    <img src="../public/images/icon/oil.png" alt="">
+                                </div>
+                                <div class="text-content">
+                                    <h4><a href="">Oil</a></h4>
+                                    <p class="dolar">{[priceList['Oil'].price]}</p>
+                                    <p v-if="priceList['Oil'].isup==true" class="price-up">
+                                        <span>%{[priceList['Oil'].rate]}</span>
+                                    </p>
+                                    <p v-else class="price-down"><span>%{[priceList['Oil'].rate]}</span></p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/iron.png" alt="">
+                            <div class="currency-price pr">
+                                <div class="image">
+                                    <img src="../public/images/icon/carbon.png" alt="">
+                                </div>
+                                <div class="text-content">
+                                    <h4><a href="">Carbon</a></h4>
+                                    <p class="dolar">{[priceList['Carbon'].price]}</p>
+                                    <p v-if="priceList['Carbon'].isup==true" class="price-up">
+                                        <span>%{[priceList['Carbon'].rate]}</span>
+                                    </p>
+                                    <p v-else class="price-down"><span>%{[priceList['Carbon'].rate]}</span></p>
+                                </div>
                             </div>
-                            <div class="text-content">
-                                <h4><a href="">Iron</a></h4>
-                                <p class="dolar">{[priceList['Iron'].price]}</p>
-                                <p v-if="priceList['Iron'].isup==true" class="price-up"><span>%{[priceList['Iron'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Iron'].rate]}</span></p>
-                            </div>
-                        </div>
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/oil.png" alt="">
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="">Oil</a></h4>
-                                <p class="dolar">{[priceList['Oil'].price]}</p>
-                                <p v-if="priceList['Oil'].isup==true" class="price-up"><span>%{[priceList['Oil'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Oil'].rate]}</span></p>
-                            </div>
-                        </div>
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/carbon.png" alt="">
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="">Carbon</a></h4>
-                                <p class="dolar">{[priceList['Carbon'].price]}</p>
-                                <p v-if="priceList['Carbon'].isup==true" class="price-up"><span>%{[priceList['Carbon'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Carbon'].rate]}</span></p>
-                            </div>
-                        </div>
-                        <div class="currency-price pr">
-                            <div class="image">
-                                <img src="../public/images/icon/moutai.png" alt="">
-                            </div>
-                            <div class="text-content">
-                                <h4><a href="">Moutai</a></h4>
-                                <p class="dolar">{[priceList['Moutai'].price]}</p>
-                                <p v-if="priceList['Moutai'].isup==true" class="price-up"><span>%{[priceList['Moutai'].rate]}</span></p>
-                                <p v-else class="price-down"><span>%{[priceList['Moutai'].rate]}</span></p>
+                            <div class="currency-price pr">
+                                <div class="image">
+                                    <img src="../public/images/icon/moutai.png" alt="">
+                                </div>
+                                <div class="text-content">
+                                    <h4><a href="">Moutai</a></h4>
+                                    <p class="dolar">{[priceList['Moutai'].price]}</p>
+                                    <p v-if="priceList['Moutai'].isup==true" class="price-up">
+                                        <span>%{[priceList['Moutai'].rate]}</span>
+                                    </p>
+                                    <p v-else class="price-down"><span>%{[priceList['Moutai'].rate]}</span></p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div><!--/.row-->
-        </div><!--/.container-->
-    </section><!-- 商品价格滚动条 -->
-    
-    <!-- 转账查询 
+                <!--/.row-->
+            </div>
+            <!--/.container-->
+        </section><!-- 商品价格滚动条 -->
+
+        <!-- 转账查询 
     <a href="#" name="transfer_query"></a>
     <section class="bg-deep about-section">
         <div class="container">
@@ -443,7 +445,7 @@
         </div>
     </section> -->
 
-    <!-- 发起转账 
+        <!-- 发起转账 
     <a href="#" name="transfer"></a>
     <div id="counter" class="counter-section section-padding">
         <div class="container">
@@ -477,223 +479,222 @@
         </div>
     </div> -->
 
-    <!-- 订单查询 -->
-    <a href="#" name="order_query"></a>
-    <section class="section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="section-head text-center">
-                        <h2>订单查询</h2>
-                        <el-button @click="get_order()">查询订单的详细信息</el-button>
+        <!-- 订单查询 -->
+        <a href="#" name="order_query"></a>
+        <section class="section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-head text-center">
+                            <h2>订单查询</h2>
+                            <el-button @click="get_order()">查询订单的详细信息</el-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <el-table :data="order_list.slice((currentOrderPage-1)*pageSize,currentOrderPage*pageSize)"
+                            style="width: 100%">
+                            <el-table-column prop="order_id" label="订单编号"></el-table-column>
+                            <el-table-column prop="creator" label="创建者"
+                                :filters="[{text: '仅显示自己的订单', value: 'only_mine'}]" :filter-method="filterHandler">
+                            </el-table-column>
+                            <el-table-column prop="create_time" label="创建时间"></el-table-column>
+                            <el-table-column prop="type" label="订单类型"></el-table-column>
+                            <el-table-column prop="item" label="交易物品"></el-table-column>
+                            <el-table-column prop="amount" label="交易数量"></el-table-column>
+                            <el-table-column label="订单碎片">
+                                <template slot-scope="scope">
+                                    <el-button icon="el-icon-document" type="text"
+                                        @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
+                                    <el-dialog title="订单碎片信息" :append-to-body="true"
+                                        :visible.sync="scope.row.share_info_visible" center>
+                                        <div>{[order_list[scope.$index].shares]}</div>
+                                        <span slot="footer" class="dialog-footer" center>
+                                            <el-button type="primary" @click="scope.row.share_info_visible = false">确 定
+                                            </el-button>
+                                        </span>
+                                    </el-dialog>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="deal" label="是否成交"></el-table-column>
+                            <el-table-column prop="deal_price" label="成交价格"></el-table-column>
+                            <el-table-column prop="deal_time" label="成交时间"></el-table-column>
+                        </el-table>
+                        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                            :current-page="currentOrderPage" :page-sizes="[10, 20, 30, 50, 100]" :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper" :total="order_list.length">
+                        </el-pagination>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <el-table :data="order_list.slice((currentOrderPage-1)*pageSize,currentOrderPage*pageSize)" style="width: 100%">
-                        <el-table-column prop="order_id" label="订单编号"></el-table-column>
-                        <el-table-column prop="creator" label="创建者"
-                        :filters="[{text: '仅显示自己的订单', value: 'only_mine'}]"
-                        :filter-method="filterHandler"
-                        ></el-table-column>
-                        <el-table-column prop="create_time" label="创建时间"></el-table-column>
-                        <el-table-column prop="type" label="订单类型"></el-table-column>
-                        <el-table-column prop="item" label="交易物品"></el-table-column>
-                        <el-table-column prop="amount" label="交易数量"></el-table-column>
-                        <el-table-column label="订单碎片">
-                            <template slot-scope="scope">
-                                <el-button icon="el-icon-document" type="text"
-                                    @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
-                                <el-dialog title="订单碎片信息" :append-to-body="true"
-                                    :visible.sync="scope.row.share_info_visible" center>
-                                    <div>{[order_list[scope.$index].shares]}</div>
-                                    <span slot="footer" class="dialog-footer" center>
-                                        <el-button type="primary" @click="scope.row.share_info_visible = false">确 定</el-button>
+        </section>
+        <!--/.section-padding-->
+
+        <!-- 创建订单 -->
+        <a href="#" name="create_order"></a>
+        <section class="parallax-section section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-head text-center">
+                            <h2 class="title-white" @click="create_order()">创建订单</h2>
+                        </div>
+                        <el-form :model="order_form" style="margin-top: 20px; margin-bottom: 20px; margin-left: 25%;">
+                            <el-form-item label="订单类型">
+                                <el-radio v-model="order_form.type" label="buy" style="color: white">买单</el-radio>
+                                <el-radio v-model="order_form.type" label="sell" style="color: white">卖单</el-radio>
+                            </el-form-item>
+                            <el-form-item label="交易物品" class="item">
+                                <el-select v-model="order_form.item" placeholder="请选择">
+                                    <el-option v-for="item in itemoptions_order" :key="item.value" :label="item.label"
+                                        :value="item.value" :disabled="item.disabled" style="width: 400px;">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="交易数量" class="item">
+                                <el-input v-model="order_form.amount" style="width: 400px;"></el-input>
+                            </el-form-item>
+                            <el-form-item label="交易价格" class="item">
+                                <el-input v-model="order_form.price" style="width: 400px;"></el-input>
+                            </el-form-item>
+                        </el-form>
+                        <div class="text-center">
+                            <el-button type="primary" @click="create_order()">确 定</el-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/.container-->
+        </section>
+        <!--/.parallax section-->
+
+        <!-- 查询匹配交易 -->
+        <a href="#" name='dealed_order_query'></a>
+        <section class="section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-head text-center">
+                            <h2>查询匹配交易</h2>
+                            <el-button @click="get_dealed_order()">查询</el-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-eq-height">
+                    <el-table
+                        :data="dealed_order_list.slice((currentDealedOrderPage-1)*pageSize,currentDealedOrderPage*pageSize)"
+                        style="width: 100%">
+                        <el-table-column type="expand">
+                            <template slot-scope="props">
+                                <el-form label-position="left" inline class="demo-table-expand">
+                                    <el-form-item label="买单序号">
+                                        <span>{[ props.row.buy_order.order_id ]}</span>
+                                    </el-form-item>
+                                    <el-form-item label="卖单序号">
+                                        <span>{[ props.row.sell_order.order_id ]}</span>
+                                    </el-form-item>
+                                    <el-form-item label="买单交易物品">
+                                        <span>{[ props.row.buy_order.item ]}</span>
+                                    </el-form-item>
+                                    <el-form-item label="卖单交易物品">
+                                        <span>{[ props.row.sell_order.item ]}</span>
+                                    </el-form-item>
+                                    <el-form-item label="买单交易数量">
+                                        <span>{[ props.row.buy_order.amount ]}</span>
+                                    </el-form-item>
+                                    <el-form-item label="卖单交易数量">
+                                        <span>{[ props.row.sell_order.amount ]}</span>
+                                    </el-form-item>
+                                    <el-form-item label="买单创建时间">
+                                        <span>{[ props.row.buy_order.create_time ]}</span>
+                                    </el-form-item>
+                                    <el-form-item label="卖单创建时间">
+                                        <span>{[ props.row.sell_order.create_time ]}</span>
+                                    </el-form-item>
+                                    <el-form-item label="买单价格碎片">
+                                        <el-button icon="el-icon-document" type="text"
+                                            @click="props.row.buy_order.share_info_visible = true;">查看订单碎片</el-button>
+                                        <el-dialog title="订单碎片信息" :append-to-body="true"
+                                            :visible.sync="props.row.buy_order.share_info_visible" center>
+                                            <div>{[props.row.buy_order.shares]}</div>
+                                            <span slot="footer" class="dialog-footer" center>
+                                                <el-button type="primary"
+                                                    @click="props.row.buy_order.share_info_visible = false">确 定
+                                                </el-button>
+                                            </span>
+                                        </el-dialog>
+                                    </el-form-item>
+                                    <el-form-item label="卖单价格碎片">
+                                        <el-button icon="el-icon-document" type="text"
+                                            @click="props.row.sell_order.share_info_visible = true;">查看订单碎片</el-button>
+                                        <el-dialog title="订单碎片信息" :append-to-body="true"
+                                            :visible.sync="props.row.sell_order.share_info_visible" center>
+                                            <div>{[props.row.sell_order.shares]}</div>
+                                            <span slot="footer" class="dialog-footer" center>
+                                                <el-button type="primary"
+                                                    @click="props.row.sell_order.share_info_visible = false">确 定
+                                                </el-button>
+                                            </span>
+                                        </el-dialog>
+                                    </el-form-item>
+                                </el-form>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="交易序号" prop="deal_id"></el-table-column>
+                        <el-table-column label="成交价格" prop="deal_price"></el-table-column>
+                        <el-table-column label="成交时间" prop="deal_time"></el-table-column>
+                        <el-table-column label="买家" prop="buyer"></el-table-column>
+                        <el-table-column label="卖家" prop="seller"></el-table-column>
+                        <el-table-column label="相关委员">
+                            <template slot-scope="props">
+                                <div v-for="comm in props.row.related_comm" style="display:inline">
+                                    {[ comm ]}
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="举报">
+                            <template slot-scope="props">
+                                <el-button type="danger" @click="props.row.report_visible = true">点击举报</el-button>
+                                <el-dialog title="确认举报" :visible.sync="props.row.report_visible" width="30%"
+                                    :append-to-body="true" center>
+                                    <span slot="footer" class="dialog-footer">
+                                        <el-button @click="props.row.report_visible = false">取 消</el-button>
+                                        <el-button type="primary" @click="props.row.report_visible = false">确 定
+                                        </el-button>
                                     </span>
                                 </el-dialog>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="deal" label="是否成交"></el-table-column>
-                        <el-table-column prop="deal_price" label="成交价格"></el-table-column>
-                        <el-table-column prop="deal_time" label="成交时间"></el-table-column>
                     </el-table>
-                    <el-pagination
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="currentOrderPage"
-                        :page-sizes="[10, 20, 30, 50, 100]"
-                        :page-size="pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
-                        :total="order_list.length">
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                        :current-page="currentDealedOrderPage" :page-sizes="[10, 20, 30, 50, 100]" :page-size="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper" :total="dealed_order_list.length">
                     </el-pagination>
                 </div>
+                <!--/.row-->
             </div>
-        </div>
-    </section><!--/.section-padding-->
+            <!--/.container-->
+        </section>
+        <!--/.team-section-->
 
-    <!-- 创建订单 -->
-    <a href="#" name="create_order"></a>
-    <section class="parallax-section section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="section-head text-center">
-                        <h2 class="title-white" @click="create_order()">创建订单</h2>
-                    </div>
-                    <el-form :model="order_form" style="margin-top: 20px; margin-bottom: 20px; margin-left: 25%;">
-                        <el-form-item label="订单类型">
-                            <el-radio v-model="order_form.type" label="buy" style="color: white">买单</el-radio>
-                            <el-radio v-model="order_form.type" label="sell" style="color: white">卖单</el-radio>
-                        </el-form-item>
-                        <el-form-item label="交易物品">
-                            <el-select v-model="order_form.item" placeholder="请选择">
-                                <el-option v-for="item in itemoptions_order" :key="item.value" :label="item.label"
-                                    :value="item.value" :disabled="item.disabled" style="width: 400px;">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="交易数量">
-                            <el-input v-model="order_form.amount" style="width: 400px;"></el-input>
-                        </el-form-item>
-                        <el-form-item label="交易价格">
-                            <el-input v-model="order_form.price" style="width: 400px;"></el-input>
-                        </el-form-item>
-                    </el-form>
-                    <div class="text-center">
-                        <el-button type="primary" @click="create_order()">确 定</el-button>
-                    </div>
-                </div>        
-            </div>
-        </div><!--/.container-->
-    </section><!--/.parallax section-->
+        <!-- 竞选委员 -->
+        <a href="#" name="elect_committee"></a>
+        <section class="testimonial-section section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-head text-center">
+                            <h2 style="color: white;">竞选委员</h2>
+                            <p class="item-text" style="color: white;">抵押一部分账户余额竞选委员</p>
+                            <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">
+                                我要竞选</el-button>
+                            <p class="item-text" style="color: white;">下表将显示委员会候选人名单，若有已存在的委员会，则同时显示委员会成员</p>
+                        </div>
 
-    <!-- 查询匹配交易 -->
-    <a href="#" name='dealed_order_query'></a>
-    <section class="section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="section-head text-center">
-                        <h2>查询匹配交易</h2>
-                        <el-button @click="get_dealed_order()">查询</el-button>
-                    </div>
-                </div>
-            </div>
-            <div class="row row-eq-height">
-                <el-table
-                    :data="dealed_order_list.slice((currentDealedOrderPage-1)*pageSize,currentDealedOrderPage*pageSize)"
-                    style="width: 100%">
-                    <el-table-column type="expand">
-                        <template slot-scope="props">
-                            <el-form label-position="left" inline class="demo-table-expand">
-                                <el-form-item label="买单序号">
-                                    <span>{[ props.row.buy_order.order_id ]}</span>
-                                </el-form-item>
-                                <el-form-item label="卖单序号">
-                                    <span>{[ props.row.sell_order.order_id ]}</span>
-                                </el-form-item>
-                                <el-form-item label="买单交易物品">
-                                    <span>{[ props.row.buy_order.item ]}</span>
-                                </el-form-item>
-                                <el-form-item label="卖单交易物品">
-                                    <span>{[ props.row.sell_order.item ]}</span>
-                                </el-form-item>
-                                <el-form-item label="买单交易数量">
-                                    <span>{[ props.row.buy_order.amount ]}</span>
-                                </el-form-item>
-                                <el-form-item label="卖单交易数量">
-                                    <span>{[ props.row.sell_order.amount ]}</span>
-                                </el-form-item>
-                                <el-form-item label="买单创建时间">
-                                    <span>{[ props.row.buy_order.create_time ]}</span>
-                                </el-form-item>
-                                <el-form-item label="卖单创建时间">
-                                    <span>{[ props.row.sell_order.create_time ]}</span>
-                                </el-form-item>
-                                <el-form-item label="买单价格碎片">
-                                    <el-button icon="el-icon-document" type="text"
-                                        @click="props.row.buy_order.share_info_visible = true;">查看订单碎片</el-button>
-                                    <el-dialog title="订单碎片信息" :append-to-body="true"
-                                        :visible.sync="props.row.buy_order.share_info_visible" center>
-                                        <div>{[props.row.buy_order.shares]}</div>
-                                        <span slot="footer" class="dialog-footer" center>
-                                            <el-button type="primary" @click="props.row.buy_order.share_info_visible = false">确 定</el-button>
-                                        </span>
-                                    </el-dialog>
-                                </el-form-item>
-                                <el-form-item label="卖单价格碎片">
-                                    <el-button icon="el-icon-document" type="text"
-                                        @click="props.row.sell_order.share_info_visible = true;">查看订单碎片</el-button>
-                                    <el-dialog title="订单碎片信息" :append-to-body="true"
-                                        :visible.sync="props.row.sell_order.share_info_visible" center>
-                                        <div>{[props.row.sell_order.shares]}</div>
-                                        <span slot="footer" class="dialog-footer" center>
-                                            <el-button type="primary" @click="props.row.sell_order.share_info_visible = false">确 定</el-button>
-                                        </span>
-                                    </el-dialog>
-                                </el-form-item>
-                            </el-form>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="交易序号" prop="deal_id"></el-table-column>
-                    <el-table-column label="成交价格" prop="deal_price"></el-table-column>
-                    <el-table-column label="成交时间" prop="deal_time"></el-table-column>
-                    <el-table-column label="买家" prop="buyer"></el-table-column>
-                    <el-table-column label="卖家" prop="seller"></el-table-column>
-                    <el-table-column label="相关委员">
-                        <template slot-scope="props">
-                            <div v-for="comm in props.row.related_comm" style="display:inline">
-                                {[ comm ]}
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="举报">
-                        <template slot-scope="props">
-                            <el-button type="danger" @click="props.row.report_visible = true">点击举报</el-button>
-                            <el-dialog
-                                title="确认举报"
-                                :visible.sync="props.row.report_visible"
-                                width="30%"
-                                :append-to-body="true"
-                                center>
-                                <span slot="footer" class="dialog-footer">
-                                    <el-button @click="props.row.report_visible = false">取 消</el-button>
-                                    <el-button type="primary" @click="props.row.report_visible = false">确 定</el-button>
-                                </span>
-                                </el-dialog>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentDealedOrderPage"
-                    :page-sizes="[10, 20, 30, 50, 100]"
-                    :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="dealed_order_list.length">
-                </el-pagination>
-            </div><!--/.row-->
-        </div><!--/.container-->
-    </section><!--/.team-section-->
-
-    <!-- 竞选委员 -->
-    <a href="#" name="elect_committee"></a>
-    <section class="testimonial-section section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="section-head text-center">
-                        <h2 style="color: white;">竞选委员</h2>
-                        <p class="item-text" style="color: white;">抵押一部分账户余额竞选委员</p>
-                        <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">我要竞选</el-button>
-                        <p class="item-text" style="color: white;">下表将显示委员会候选人名单，若有已存在的委员会，则同时显示委员会成员</p>    
-                    </div>
-
-                    <!-- 抵押代币竞选委员 -->
-                    <el-dialog title="抵押金额" :append-to-body="true" :visible.sync="elect_visible" width="50%">
-                        <!--
+                        <!-- 抵押代币竞选委员 -->
+                        <el-dialog title="抵押金额" :append-to-body="true" :visible.sync="elect_visible" width="50%">
+                            <!--
                         <el-form :model="elect_form">
                             
                             <el-form-item label="代币种类">
@@ -707,89 +708,105 @@
                                 <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>
                             </el-form-item>
                         </el-form>-->
-                        <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>           
-                        <el-button type="primary" @click="elect_committee();elect_visible = false">确 定</el-button>
-                        <el-button @click="elect_visible = false">取 消</el-button>
-                    </el-dialog>
+                            <el-input v-model="elect_form.amount" style="width: 20%;"></el-input>
+                            <el-button type="primary" @click="elect_committee();elect_visible = false">确 定</el-button>
+                            <el-button @click="elect_visible = false">取 消</el-button>
+                        </el-dialog>
 
-                    <!-- 显示候选人信息 -->
-                    <el-table :data="candidates" style="width: 100%">
-                        <el-table-column prop="name" label="候选人名称" width="450"></el-table-column>
-                        <el-table-column prop="amount" label="抵押金额"></el-table-column>
-                    </el-table>
-                    
-                    <!-- 显示委员会成员信息 -->
-                    <el-table :data="committee" style="width: 100%">
-                        <el-table-column prop="name" label="委员名称" width="450"></el-table-column>
-                        <el-table-column prop="amount" label="抵押金额" width="180"></el-table-column>
-                        <el-table-column prop="pub" label="公钥信息"></el-table-column>
-                    </el-table>
-                </div>
-            </div>
-        </div>
-    </section><!--/.testimonial-section-->
-    
-    <section class="footer-area">
-        <div class="container">
-            <div class="row footer-banner row-eq-height">
-                <div class="col-md-6 col-sm-6">
-                    <div class="footer-content">
-                        <div class="footer-logo">
-                            <a href="../public/index.html"><img src="../public/images/footer-logo.png" alt=""></a>
-                        </div>
-                        <div class="text-content">
-                            <p>本平台致力于打造全球规模最大的暗池交易系统</p>
-                            <p>加入CryptoPool，成为我们的一员</p>
-                        </div>
-                    </div><!--/.footer-content-->
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="footer-content">
-                        <h4><a href="#">最近要闻</a></h4>
-                        <ul>
-                            <li><a href="#">平台动态</a></li>
-                            <li><a href="#">市场快报</a></li>
-                            <li><a href="#">投资建议</a></li>
-                            <li><a href="#">商业合作</a></li>
-                        </ul>
-                    </div><!--/.footer-content-->
-                </div>
-                <div class="col-md-3 col-sm-6 col-xs-6">
-                    <div class="footer-content">
-                        <h4><a href="#">友情链接</a></h4>
-                        <ul>
-                            <li><a href="../public/tutorial.html">快速入门</a></li>
-                            <li><a href="../public/kline/basic.html">查看行情</a></li>
-                            <li><a href="../public/block_explorer.html">区块浏览</a></li>
-                            <li><a href="#">联系我们</a></li>
-                        </ul>
-                    </div><!--/.footer-content-->
-                </div>
-            </div><!--/.rwo footer-banner-->
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 col-sm-6">
-                        <div class="copyright-info">
-                            <p>Copyright &copy; 2021.CryptoPool All rights reserved.</p>
-                        </div>
-                    </div><!--/.copyright-info-->
-                    <div class="col-md-6 col-sm-6">
-                        <div class="social text-right content-align">
-                            <ul>
-                                <li><a href="#"><i><img src="../public/images/footer/wechat.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/alipay.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/weibo.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/facebook.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/twitter.png" style="height: 18px; width: 18px;"></i></a></li>
-                                <li><a href="#"><i><img src="../public/images/footer/ins.png" style="height: 18px; width: 18px;"></i></a></li>
-                            </ul>
-                        </div><!--/.social-->
+                        <!-- 显示候选人信息 -->
+                        <el-table :data="candidates" style="width: 100%">
+                            <el-table-column prop="name" label="候选人名称" width="450"></el-table-column>
+                            <el-table-column prop="amount" label="抵押金额"></el-table-column>
+                        </el-table>
+
+                        <!-- 显示委员会成员信息 -->
+                        <el-table :data="committee" style="width: 100%">
+                            <el-table-column prop="name" label="委员名称" width="450"></el-table-column>
+                            <el-table-column prop="amount" label="抵押金额" width="180"></el-table-column>
+                            <el-table-column prop="pub" label="公钥信息"></el-table-column>
+                        </el-table>
                     </div>
                 </div>
-            </div><!--/.copyright-->
-        </div><!--/.contianer-->
-    </section><!--/.footer area-->
-</div><!-- vue darkpool -->
+            </div>
+        </section>
+        <!--/.testimonial-section-->
+
+        <section class="footer-area">
+            <div class="container">
+                <div class="row footer-banner row-eq-height">
+                    <div class="col-md-6 col-sm-6">
+                        <div class="footer-content">
+                            <div class="footer-logo">
+                                <a href="../public/index.html"><img src="../public/images/footer-logo.png" alt=""></a>
+                            </div>
+                            <div class="text-content">
+                                <p>本平台致力于打造全球规模最大的暗池交易系统</p>
+                                <p>加入CryptoPool，成为我们的一员</p>
+                            </div>
+                        </div>
+                        <!--/.footer-content-->
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="footer-content">
+                            <h4><a href="#">最近要闻</a></h4>
+                            <ul>
+                                <li><a href="#">平台动态</a></li>
+                                <li><a href="#">市场快报</a></li>
+                                <li><a href="#">投资建议</a></li>
+                                <li><a href="#">商业合作</a></li>
+                            </ul>
+                        </div>
+                        <!--/.footer-content-->
+                    </div>
+                    <div class="col-md-3 col-sm-6 col-xs-6">
+                        <div class="footer-content">
+                            <h4><a href="#">友情链接</a></h4>
+                            <ul>
+                                <li><a href="../public/tutorial.html">快速入门</a></li>
+                                <li><a href="../public/kline/basic.html">查看行情</a></li>
+                                <li><a href="../public/block_explorer.html">区块浏览</a></li>
+                                <li><a href="#">联系我们</a></li>
+                            </ul>
+                        </div>
+                        <!--/.footer-content-->
+                    </div>
+                </div>
+                <!--/.rwo footer-banner-->
+                <div class="copyright">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6">
+                            <div class="copyright-info">
+                                <p>Copyright &copy; 2021.CryptoPool All rights reserved.</p>
+                            </div>
+                        </div>
+                        <!--/.copyright-info-->
+                        <div class="col-md-6 col-sm-6">
+                            <div class="social text-right content-align">
+                                <ul>
+                                    <li><a href="#"><i><img src="../public/images/footer/wechat.png"
+                                                    style="height: 18px; width: 18px;"></i></a></li>
+                                    <li><a href="#"><i><img src="../public/images/footer/alipay.png"
+                                                    style="height: 18px; width: 18px;"></i></a></li>
+                                    <li><a href="#"><i><img src="../public/images/footer/weibo.png"
+                                                    style="height: 18px; width: 18px;"></i></a></li>
+                                    <li><a href="#"><i><img src="../public/images/footer/facebook.png"
+                                                    style="height: 18px; width: 18px;"></i></a></li>
+                                    <li><a href="#"><i><img src="../public/images/footer/twitter.png"
+                                                    style="height: 18px; width: 18px;"></i></a></li>
+                                    <li><a href="#"><i><img src="../public/images/footer/ins.png"
+                                                    style="height: 18px; width: 18px;"></i></a></li>
+                                </ul>
+                            </div>
+                            <!--/.social-->
+                        </div>
+                    </div>
+                </div>
+                <!--/.copyright-->
+            </div>
+            <!--/.contianer-->
+        </section>
+        <!--/.footer area-->
+    </div><!-- vue darkpool -->
 
     <!-- Vue -->
     <script>
@@ -802,38 +819,38 @@
                 tokenList: ['Gold', 'Sliver', 'Iron', 'Oil', 'Carbon', 'Moutai'],
                 priceList: {
                     'Gold': {
-                        oldprice: (Math.random()*10000).toFixed(2),
-                        price: (Math.random()*10000).toFixed(2),
+                        oldprice: (Math.random() * 10000).toFixed(2),
+                        price: (Math.random() * 10000).toFixed(2),
                         isup: true,
                         rate: Math.random().toFixed(2),
                     },
                     'Sliver': {
-                        oldprice: (Math.random()*10000).toFixed(2),
-                        price: (Math.random()*10000).toFixed(2),
+                        oldprice: (Math.random() * 10000).toFixed(2),
+                        price: (Math.random() * 10000).toFixed(2),
                         isup: false,
                         rate: Math.random().toFixed(2),
                     },
                     'Iron': {
-                        oldprice: (Math.random()*10000).toFixed(2),
-                        price: (Math.random()*10000).toFixed(2),
+                        oldprice: (Math.random() * 10000).toFixed(2),
+                        price: (Math.random() * 10000).toFixed(2),
                         isup: true,
                         rate: Math.random().toFixed(2),
                     },
                     'Oil': {
-                        oldprice: (Math.random()*10000).toFixed(2),
-                        price: (Math.random()*10000).toFixed(2),
+                        oldprice: (Math.random() * 10000).toFixed(2),
+                        price: (Math.random() * 10000).toFixed(2),
                         isup: false,
                         rate: Math.random().toFixed(2),
                     },
                     'Carbon': {
-                        oldprice: (Math.random()*10000).toFixed(2),
-                        price: (Math.random()*10000).toFixed(2),
+                        oldprice: (Math.random() * 10000).toFixed(2),
+                        price: (Math.random() * 10000).toFixed(2),
                         isup: true,
                         rate: Math.random().toFixed(2),
                     },
                     'Moutai': {
-                        oldprice: (Math.random()*10000).toFixed(2),
-                        price: (Math.random()*10000).toFixed(2),
+                        oldprice: (Math.random() * 10000).toFixed(2),
+                        price: (Math.random() * 10000).toFixed(2),
                         isup: true,
                         rate: Math.random().toFixed(2),
                     },
@@ -842,37 +859,37 @@
                 userinfo: [], // 当前用户信息
                 infoFormVisible: false,  // 查看用户信息对话框
                 formLabelWidth: '150px',
-                username: document.getElementById("cur_un").innerHTML,  // 用户名
-    
+                username: $("#cur_un").attr('value'),  // 用户名
+
                 transfer_list: [],  // 转账查询
                 transfer_info: {
-                    'from': document.getElementById("cur_un").innerHTML,
+                    'from': $("#cur_un").attr('value'),
                     'to': '',
                     'item': '',
                     'amount': null,
                 },  // 发起转账的转账信息
-    
+
                 dealed_order_list: [],  // 匹配订单信息
                 order_list: [],  // 订单信息
-    
+
                 // 创建的订单信息
                 order_form: {
-                    'username': document.getElementById("cur_un").innerHTML,
+                    'username': $("#cur_un").attr('value'),
                     'type': '',
                     'item': '',
                     'amount': null,
                     'price': null,
                 },
-    
+
                 // 竞选委员抵押信息
                 elect_form: {
-                    'username': document.getElementById("cur_un").innerHTML,
+                    'username': $("#cur_un").attr('value'),
                     'item': 'USDT',
                     'amount': null,
                 },
                 candidates: [],  // 候选人列表
                 committee: [],  // 委员会列表
-    
+
                 // 币种选择
                 itemoptions: [{
                     'value': 'Tether',
@@ -884,7 +901,7 @@
                     'value': 'Dogecoin',
                     'label': 'DOGE',
                 }],
-    
+
                 // 币种选择-创建订单
                 itemoptions_order: [{
                     'value': 'Bitcoin',
@@ -893,7 +910,7 @@
                     'value': 'Dogecoin',
                     'label': 'Carbon',
                 }],
-    
+
                 // 控制参数
                 currentPage: 1, // 查询结果当前页
                 currentOrderPage: 1,
@@ -904,13 +921,13 @@
             methods: {
                 // 退出登录，跳转
                 exitlogin() {
-                    window.location.href = "http://localhost:9000/"
+                    window.location.href = "/"
                 },
-                
+
                 // 获得当前用户信息
                 get_userinfo() {
-                    axios.post('http://localhost:9000/getinfo', {
-                        'username': document.getElementById("cur_un").innerHTML,
+                    axios.post('/getinfo', {
+                        'username': $("#cur_un").attr('value'),
                     }).then(Response => {
                         this.userinfo = Response['data']['userinfo']
                         this.infoFormVisible = true
@@ -920,7 +937,7 @@
                 },
                 // 形成委员会
                 form_committee() {
-                    axios.post('http://localhost:9000/formcommittee').then(Response => {
+                    axios.post('/formcommittee').then(Response => {
                         //console.log(Response['data']['status']);
                         if (Response['data']['status']) {
                             this.$notify({
@@ -942,7 +959,7 @@
                 },
                 // 查询转账信息
                 get_transfer() {
-                    axios.get('http://localhost:9000/transfer')
+                    axios.get('/transfer')
                         .then(Response => {
                             //console.log(Response['data']['transfer_list'])
                             this.transfer_list = Response['data']['transfer_list']
@@ -953,7 +970,7 @@
                 },
                 // 发起转账
                 transfer() {
-                    axios.post('http://localhost:9000/transfer', {
+                    axios.post('/transfer', {
                         'from': this.transfer_info.from,
                         'to': this.transfer_info.to,
                         'item': this.transfer_info.item,
@@ -964,7 +981,7 @@
                 },
                 // 创建订单
                 create_order() {
-                    axios.post('http://localhost:9000/createorder', {
+                    axios.post('/createorder', {
                         'username': this.order_form.username,
                         'type': this.order_form.type,
                         'item': this.order_form.item,
@@ -972,7 +989,7 @@
                         'price': this.order_form.price,
                     }).then(Response => {
                         //console.log(Response['data'])
-                        if (Response['data']['status']=='NoCommittee') {
+                        if (Response['data']['status'] == 'NoCommittee') {
                             this.$notify({
                                 title: '失败',
                                 message: '委员会未创建',
@@ -980,7 +997,7 @@
                                 offset: 100
                             });
                         }
-                        else if (Response['data']['status']=='NotAvailable') {
+                        else if (Response['data']['status'] == 'NotAvailable') {
                             this.$notify({
                                 title: '失败',
                                 message: '账户余额不足',
@@ -1005,15 +1022,15 @@
                 },
                 // 查询订单信息
                 get_order() {
-                    axios.post('http://localhost:9000/getorder', {
+                    axios.post('/getorder', {
                         'username': this.username,
                     }).then(Response => {
                         this.order_list = Response['data']['OrderList']
                     })
                 },
                 // 查询匹配交易信息
-                get_dealed_order(){
-                    axios.post('http://localhost:9000/getdealedorder', {
+                get_dealed_order() {
+                    axios.post('/getdealedorder', {
                         'username': this.username,
                     }).then(Response => {
                         //console.log(Response['data']['DealedOrderList'])
@@ -1022,7 +1039,7 @@
                 },
                 // 查询委员会情况
                 query_committee() {
-                    axios.post('http://localhost:9000/queryCommittee', {
+                    axios.post('/queryCommittee', {
                         'username': this.username,
                     }).then(Response => {
                         //console.log(Response['data'])
@@ -1032,7 +1049,7 @@
                 },
                 // 竞选委员
                 elect_committee() {
-                    axios.post('http://localhost:9000/electCommittee', {
+                    axios.post('/electCommittee', {
                         'username': this.elect_form.username,
                         'item': this.elect_form.item,
                         'amount': this.elect_form.amount,
@@ -1064,7 +1081,7 @@
                     this.currentPage = val;
                 },
             },
-            created: function() {
+            created: function () {
                 this.get_transfer();
                 this.get_order();
                 this.get_dealed_order();
@@ -1073,19 +1090,19 @@
                 // setInterval不会清除定时器队列，每重复执行1次都会导致定时器叠加 \
                 window.setInterval(() => {
                     // setTimeout是自带清除定时器
-                    setTimeout(function() {
-                        for(var index=0; index<that.tokenList.length; index++){
+                    setTimeout(function () {
+                        for (var index = 0; index < that.tokenList.length; index++) {
                             that.priceList[that.tokenList[index]].oldprice = that.priceList[that.tokenList[index]].price;
                         }
-                        axios.post('http://localhost:9000/update_priceList',{
+                        axios.post('/update_priceList', {
                             'priceList': that.priceList,
-                        }).then(function(res) {
+                        }).then(function (res) {
                             var data = res.data;
                             that.priceList = data['priceList'];
                         })
-                        .catch(function(err) {
-                            console.log("=err====" + err);
-                        })
+                            .catch(function (err) {
+                                console.log("=err====" + err);
+                            })
                     }, 600)
                 }, 5000)
             }
@@ -1109,17 +1126,17 @@
     <!-- == Owl Carousel  == -->
     <script src="../public/js/owl.carousel.min.js"></script>
     <!-- == Revolution Slider JS == -->
-   <script src="../public/js/revolution/jquery.themepunch.tools.min.js"></script>
-   <script src="../public/js/revolution/jquery.themepunch.revolution.min.js"></script>
-   <script src="../public/js/revolution/extensions/revolution.extension.actions.min.js"></script>
-   <script src="../public/js/revolution/extensions/revolution.extension.layeranimation.min.js"></script>
-   <script src="../public/js/revolution/extensions/revolution.extension.navigation.min.js"></script>
-   <script src="../public/js/revolution/extensions/revolution.extension.parallax.min.js"></script>
-   <script src="../public/js/revolution/extensions/revolution.extension.slideanims.min.js"></script>
-   <script src="../public/js/revolution-active.js"></script>
+    <script src="../public/js/revolution/jquery.themepunch.tools.min.js"></script>
+    <script src="../public/js/revolution/jquery.themepunch.revolution.min.js"></script>
+    <script src="../public/js/revolution/extensions/revolution.extension.actions.min.js"></script>
+    <script src="../public/js/revolution/extensions/revolution.extension.layeranimation.min.js"></script>
+    <script src="../public/js/revolution/extensions/revolution.extension.navigation.min.js"></script>
+    <script src="../public/js/revolution/extensions/revolution.extension.parallax.min.js"></script>
+    <script src="../public/js/revolution/extensions/revolution.extension.slideanims.min.js"></script>
+    <script src="../public/js/revolution-active.js"></script>
     <!-- == Custom js  == -->
-   <script src="../public/js/custom.js"></script>
+    <script src="../public/js/custom.js"></script>
 
 </body>
-</html>
 
+</html>

@@ -56,9 +56,7 @@ exports.electCommittee = async function (username, amount){
         console.log(queryResponse.toString());
         console.log('\n  apply query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
-
-        console.log('\n  GetCandidates query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
+        
         return true;
 
     } catch (error) {

@@ -10,9 +10,9 @@ const orderKey = 'Order'
 const dealOrderKey = 'Dealed'
 const matchingOrderKey = 'Matching'
 const orderIDKey = 'OrderID'
+const dealOrderPrice = 'DealOrderPrice'
 const dealOrderIDKey = 'DealOrderID'
 const contextKey = 'OrderContextKey'
-
 
 class Order extends Contract {
   constructor() {
@@ -30,6 +30,22 @@ class Order extends Contract {
       return "0";
     }
     return id.toString();
+  }
+
+  /**
+   * GetDealOrderPrice
+   * 
+   * @param {Context} ctx 
+   * @returns price in string form
+   */
+  async GetDealOrderPrice(ctx) {
+    let id = this.GetOrderID(ctx, dealOrderIDKey);
+    let priceKey = await ctx.stub.createCompositeKey(dealOrderPrice, [id]);
+    let price = await ctx.stub.getState(priceKey);
+    if (!price || price.length === 0) {
+      return "0";
+    }
+    return price.toString();
   }
 
   /*
@@ -78,14 +94,15 @@ class Order extends Contract {
       creator: creator,
       type: type,
       item: itemname,
-      amount: amount,
+      amount: parseInt(amount),
       price: null,
       shares: json_shares,
       deal: false,
       deal_price: null,
       deal_time: null,
       deal_order_id: null,
-      deal_with: null
+      deal_with: null,
+      deal_amount: 0
     }
 
     // Add the order to database.
@@ -94,92 +111,135 @@ class Order extends Contract {
     ctx.stub.setEvent('NewOrder', Buffer.from(JSON.stringify(newOrder)));
   }
 
+  async _deal_order(ctx, price, doid, order_id, order_content) {
+    let orderContentKey = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order_id]);
+    let orderContent = JSON.parse(await ctx.stub.getState(orderContentKey));
+    // let dealContent = JSON.parse(order_content);
+
+    if (orderContent.deal === true) {
+      throw new Error('The order already deal.');
+    }
+
+    if (order_content.deal_amount === orderContent.amount) {
+      orderContent.deal = true;
+    }
+    orderContent.deal_price = parseInt(price);
+    orderContent.deal_time = ctx.stub.getTxTimestamp();
+    orderContent.deal_amount = order_content.deal_amount;
+    orderContent.deal_order_id = doid;
+
+    if (orderContent.deal) {
+      await ctx.stub.deleteState(orderContentKey);
+      orderContentKey = await ctx.stub.createCompositeKey(orderKey, [dealOrderKey, order_id]);
+      await ctx.stub.putState(orderContentKey, JSON.stringify(orderContent));
+    }
+
+    return orderContent;
+  }
+
   /**
    * OrderDeal deal an order
-   * @param {Context} ctx 
-   * @param {string} order1_id 
-   * @param {string} order2_id 
-   * @param {string} price 
-   * @param {Object} context 
+   * 
+   * `order_id`
+   * `price`
+   * `amount`
+   * `context`: everyone's price and amount and orders.
    */
-  async OrderDeal(ctx, order1_id, order2_id, price, context) {
+  async OrderDeal(ctx, result) {
     // Restrict privilege
     // const clientMSPID = await ctx.clientIdentity.getMSPID();
     /*
     if (clientMSPID !== 'Org1MSP') {
       throw new Error('client is not authorized to deal order');
     }*/
+    let doid = await this.IncreaseAndGetOrderID(ctx, dealOrderIDKey);
 
-    // Buyer should pay first.
-    // ....
+    let result_json = JSON.parse(result);
 
-    let order1Key = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order1_id]);
-    let order2Key = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order2_id]);
-    let contextCompositeKey = await ctx.stub.createCompositeKey(contextKey, [order1_id, order2_id]);
-
-    let order1Content = JSON.parse(await ctx.stub.getState(order1Key));
-    let order2Content = JSON.parse(await ctx.stub.getState(order2Key));
-
-    if (order1Content.deal === true || order2Content.deal === true || order1Content.item !== order2Content.item) {
-      throw new Error('The order already deal.');
+    let dealOrder = {
+      deal_id: doid,
+      buy: [],
+      sell: [],
+      context: result_json
     }
+
+    for (let order of result_json.content[0].matchResult.deal_orders.buy) {
+      dealOrder.buy.push(await this._deal_order(ctx, result_json.content[0].matchResult.price, doid, order.id, order));
+    }
+
+    for (let order of result_json.content[0].matchResult.deal_orders.sell) {
+      dealOrder.sell.push(await this._deal_order(ctx, result_json.content[0].matchResult.price, doid, order.id, order));
+    }
+
+    // let order1Key = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order1_id]);
+    // let order2Key = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order2_id]);
+    let contextCompositeKey = await ctx.stub.createCompositeKey(contextKey, [doid]);
+
+    // let order1Content = JSON.parse(await ctx.stub.getState(order1Key));
+    // let order2Content = JSON.parse(await ctx.stub.getState(order2Key));
+
+    // if (order1Content.deal === true || order2Content.deal === true || order1Content.item !== order2Content.item) {
+    //  throw new Error('The order already deal.');
+    // }
     // Now let's transfer first.
     // order1 -> to buy -> transfer USDT to the seller
     // order2 -> to sell -> transfer item to the buyer
     // 2 transfer + 2 unfreeze
-    let tasks = [
-      {
-        type: 'transfer',
-        item: 'Tether',
-        from: order1Content.creator,
-        to: order2Content.creator,
-        value: parseInt(price) * parseInt(order1Content.amount)
-      },
-      {
-        type: 'transfer',
-        item: order1Content.item,
-        from: order2Content.creator,
-        to: order1Content.creator,
-        value: parseInt(order1Content.amount)
-      }
-    ]
-    let binding = await ctx.stub.getBinding();
-    let taskString = JSON.stringify(tasks);
-    console.log(tasks, binding);
-    // await this.SetTask(ctx, tasks);
-    await ctx.stub.invokeChaincode("tokenContract", ["Tether:OrderTransfer", taskString, binding]);
-    await ctx.stub.invokeChaincode("tokenContract", [order1Content.item + ":OrderTransfer", taskString, binding]);
-
-    // Get a dealed order ID.
-    let doid = await this.IncreaseAndGetOrderID(ctx, dealOrderIDKey);
-
-    order1Content.deal = order2Content.deal = true;
-    order1Content.deal_time = order2Content.deal_time = ctx.stub.getTxTimestamp();
-    order1Content.deal_order_id = order2Content.deal_order_id = doid;
-    order1Content.deal_price = order2Content.deal_price = price;
-    order1Content.deal_with = order2_id;
-    order2Content.deal_with = order1_id;
-
-    await ctx.stub.deleteState(order1Key);
-    await ctx.stub.deleteState(order2Key);
-
+    /*
+        let tasks = [
+          {
+            type: 'transfer',
+            item: 'Tether',
+            from: order1Content.creator,
+            to: order2Content.creator,
+            value: parseInt(price) * parseInt(order1Content.amount)
+          },
+          {
+            type: 'transfer',
+            item: order1Content.item,
+            from: order2Content.creator,
+            to: order1Content.creator,
+            value: parseInt(order1Content.amount)
+          }
+        ]
+        let binding = await ctx.stub.getBinding();
+        let taskString = JSON.stringify(tasks);
+        console.log(tasks, binding);
+        // await this.SetTask(ctx, tasks);
+        await ctx.stub.invokeChaincode("tokenContract", ["Tether:OrderTransfer", taskString, binding]);
+        await ctx.stub.invokeChaincode("tokenContract", [order1Content.item + ":OrderTransfer", taskString, binding]);
+    
+        // Get a dealed order ID.
+        let doid = await this.IncreaseAndGetOrderID(ctx, dealOrderIDKey);
+    
+        order1Content.deal = order2Content.deal = true;
+        order1Content.deal_time = order2Content.deal_time = ctx.stub.getTxTimestamp();
+        order1Content.deal_order_id = order2Content.deal_order_id = doid;
+        order1Content.deal_price = order2Content.deal_price = price;
+        order1Content.deal_with = order2_id;
+        order2Content.deal_with = order1_id;
+    
+        await ctx.stub.deleteState(order1Key);
+        await ctx.stub.deleteState(order2Key);
+    */
     let dealKey = await ctx.stub.createCompositeKey(dealOrderKey, [doid]);
     // Form a deal struct to store the deal information.
     // To be filled if needed.
+    /*
     let dealOrder = {
       deal_id: doid,
       order: [order1Content, order2Content],
       context: JSON.parse(context)
-    }
+    }*/
     await ctx.stub.putState(dealKey, JSON.stringify(dealOrder));
 
     // Update the key to dealed key.
-    order1Key = await ctx.stub.createCompositeKey(orderKey, [dealOrderKey, order1_id]);
-    order2Key = await ctx.stub.createCompositeKey(orderKey, [dealOrderKey, order2_id]);
+    // order1Key = await ctx.stub.createCompositeKey(orderKey, [dealOrderKey, order1_id]);
+    // order2Key = await ctx.stub.createCompositeKey(orderKey, [dealOrderKey, order2_id]);
 
-    await ctx.stub.putState(order1Key, JSON.stringify(order1Content));
-    await ctx.stub.putState(order2Key, JSON.stringify(order2Content));
-    await ctx.stub.putState(contextCompositeKey, JSON.stringify(context));
+    // await ctx.stub.putState(order1Key, JSON.stringify(order1Content));
+    // await ctx.stub.putState(order2Key, JSON.stringify(order2Content));
+    await ctx.stub.putState(contextCompositeKey, JSON.stringify(result_json));
 
     ctx.stub.setEvent('OrderDeal', Buffer.from(JSON.stringify(dealOrder)));
   }

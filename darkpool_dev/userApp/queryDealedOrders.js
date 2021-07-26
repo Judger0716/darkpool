@@ -6,6 +6,34 @@ const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
+function transfer_item(item) {
+    switch (item) {
+        case 'Bitcoin':
+            return 'Gold';
+        case 'Dogecoin':
+            return 'Silver';
+        default:
+            return 'Moutai';
+    }
+}
+
+function transfer_order(json_order) {
+    let user_start = json_order['creator'].search('CN=') + 3;
+    let user_end = json_order['creator'].search('C=') - 3;
+    json_order['creator'] = json_order['creator'].substring(user_start, user_end);
+
+    let date = new Date();
+    date.setTime(parseInt(json_order['create_time']['seconds']) * 1000);
+    json_order['create_time'] = date.toLocaleString();
+    date.setTime(parseInt(json_order['deal_time']['seconds']) * 1000);
+    json_order['deal_time'] = date.toLocaleString();
+    json_order['item'] = transfer_item(json_order['item']);
+    json_order['deal'] = json_order['deal'].toString();
+    json_order['share_info_visible'] = false;
+
+    return json_order;
+}
+
 // Main program function
 exports.queryDealedOrder = async function (username) {
 
@@ -53,36 +81,35 @@ exports.queryDealedOrder = async function (username) {
 
         // Query DealOrders
         let queryResponse = await contract.evaluateTransaction('GetDealedOrders');
-        var queryResult = JSON.parse(queryResponse);
-        
-        var DealedOrderList = [];
+        let queryResult = JSON.parse(queryResponse);
+
+        let DealedOrderList = [];
         // Extract Userful Infomation from raw JSON data
-        var index = 0;
-        while(queryResult[index]!=undefined){
-            var deal_id = queryResult[index]['Record']['deal_id'];
-            var related_comm = [];
-            for(var i=0; i<queryResult[index]['Record']['context']['content'].length; i++){
-                related_comm.push(queryResult[index]['Record']['context']['content'][i]['name']);
+        // var index = 0;
+        // console.log('------------- Result ---------------', queryResult);
+        for (let result of queryResult) {
+            let record = result['Record'];
+            let deal_id = record['deal_id'];
+            let related_comm = [];
+
+            for (let c of record['context']['content']) {
+                related_comm.push(c.name);
             }
-            var deal_price = queryResult[index]['Record']['context']['price'];
-            var deal_time;
-            for(var i=0;i<2;i++){
-                var user_start = queryResult[index]['Record']['order'][i]['creator'].search('CN=')+3;
-                var user_end = queryResult[index]['Record']['order'][i]['creator'].search('C=')-3;
-                queryResult[index]['Record']['order'][i]['creator'] = queryResult[index]['Record']['order'][i]['creator'].substring(user_start,user_end);
-                var date = new Date();
-                date.setTime(parseInt(queryResult[index]['Record']['order'][i]['create_time']['seconds'])*1000);
-                queryResult[index]['Record']['order'][i]['create_time'] = date.toUTCString();
-                date.setTime(parseInt(queryResult[index]['Record']['order'][i]['deal_time']['seconds'])*1000);
-                queryResult[index]['Record']['order'][i]['deal_time'] = date.toUTCString();
-                deal_time = date.toUTCString();
-                queryResult[index]['Record']['order'][i]['deal'] = queryResult[index]['Record']['order'][i]['deal'].toString();
-                queryResult[index]['Record']['order'][i]['share_info_visible'] = false;
+            let deal_price = record['context']['content'][0]['matchResult']['price']
+
+            let buy_orders = [], sell_orders = [];
+            for (let order of record['buy']) {
+                buy_orders.push(transfer_order(order));
             }
-            var buyer = queryResult[index]['Record']['order'][0]['creator'];
-            var seller = queryResult[index]['Record']['order'][1]['creator'];
-            var buy_order = queryResult[index]['Record']['order'][0];
-            var sell_order = queryResult[index]['Record']['order'][1];
+            for (let order of record['sell']) {
+                sell_orders.push(transfer_order(order));
+            }
+            let deal_time = buy_orders[0]['deal_time'];
+            let buyer = buy_orders[0]['creator'];
+            let seller = sell_orders[0]['creator'];
+
+            let buy_order = buy_orders[0];
+            let sell_order = sell_orders[0];
             DealedOrderList.push({
                 'deal_id': deal_id,
                 'buyer': buyer,
@@ -94,9 +121,47 @@ exports.queryDealedOrder = async function (username) {
                 'sell_order': sell_order,
                 'report_visible': false,
             });
-            index += 1
         }
-        
+        /*
+                while (queryResult[index] != undefined) {
+                    var deal_id = queryResult[index]['Record']['deal_id'];
+                    var related_comm = [];
+                    for (var i = 0; i < queryResult[index]['Record']['context']['content'].length; i++) {
+                        related_comm.push(queryResult[index]['Record']['context']['content'][i]['name']);
+                    }
+                    var deal_price = queryResult[index]['Record']['context']['price'];
+                    var deal_time;
+                    for (var i = 0; i < 2; i++) {
+                        var user_start = queryResult[index]['Record']['order'][i]['creator'].search('CN=') + 3;
+                        var user_end = queryResult[index]['Record']['order'][i]['creator'].search('C=') - 3;
+                        queryResult[index]['Record']['order'][i]['creator'] = queryResult[index]['Record']['order'][i]['creator'].substring(user_start, user_end);
+                        var date = new Date();
+                        date.setTime(parseInt(queryResult[index]['Record']['order'][i]['create_time']['seconds']) * 1000);
+                        queryResult[index]['Record']['order'][i]['create_time'] = date.toUTCString();
+                        date.setTime(parseInt(queryResult[index]['Record']['order'][i]['deal_time']['seconds']) * 1000);
+                        queryResult[index]['Record']['order'][i]['deal_time'] = date.toUTCString();
+                        deal_time = date.toUTCString();
+                        queryResult[index]['Record']['order'][i]['deal'] = queryResult[index]['Record']['order'][i]['deal'].toString();
+                        queryResult[index]['Record']['order'][i]['share_info_visible'] = false;
+                    }
+                    var buyer = queryResult[index]['Record']['order'][0]['creator'];
+                    var seller = queryResult[index]['Record']['order'][1]['creator'];
+                    var buy_order = queryResult[index]['Record']['order'][0];
+                    var sell_order = queryResult[index]['Record']['order'][1];
+                    DealedOrderList.push({
+                        'deal_id': deal_id,
+                        'buyer': buyer,
+                        'seller': seller,
+                        'related_comm': related_comm,
+                        'deal_price': deal_price,
+                        'deal_time': deal_time,
+                        'buy_order': buy_order,
+                        'sell_order': sell_order,
+                        'report_visible': false,
+                    });
+                    index += 1
+                }
+        */
         console.log(DealedOrderList);
         return {
             'DealedOrderList': DealedOrderList,

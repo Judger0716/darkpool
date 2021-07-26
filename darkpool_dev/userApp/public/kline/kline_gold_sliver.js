@@ -8002,4 +8002,4 @@ var kLineDataList = [
         "2.27093332"
     ]
 ]
-module.exports.init_kline_chart = kLineDataList;
+// module.exports.init_kline_chart = kLineDataList;

@@ -51,23 +51,39 @@ exports.queryCommittee = async function (username) {
         console.log('-----------------------------------------------------------------------------------------');
         console.log('****** Submitting Committee queries ****** \n\n ');
 
-        
+
         let queryResponse = await contract.evaluateTransaction('GetCandidates');
         var candidates = queryResponse.toString();
-        console.log(candidates);
-        console.log('\n  GetCandidates query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
+        // console.log(candidates);
+        // console.log('\n  GetCandidates query complete.');
+        // console.log('-----------------------------------------------------------------------------------------\n\n');
 
         queryResponse = await contract.evaluateTransaction('GetCommittee');
         var committee = queryResponse.toString();
-        console.log('\n  GetCommittee query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
+        // console.log('\n  GetCommittee query complete.');
+        // console.log('-----------------------------------------------------------------------------------------\n\n');
+
+        // console.log(candidates, committee);
+
+        candidates = JSON.parse(candidates);
+        for (let c of candidates) {
+            let user_start = c.name.search('CN=') + 3;
+            let user_end = c.name.search('C=') - 3;
+            c.name = c.name.substring(user_start, user_end);
+        }
+
+        committee = JSON.parse(committee);
+        for (let c of committee) {
+            let user_start = c.name.search('CN=') + 3;
+            let user_end = c.name.search('C=') - 3;
+            c.name = c.name.substring(user_start, user_end);
+        }
 
         return {
-            'candidates': JSON.parse(candidates),
-            'committee': JSON.parse(committee),
+            'candidates': candidates,
+            'committee': committee
         };
- 
+
     } catch (error) {
 
         console.log(`Error processing transaction. ${error}`);

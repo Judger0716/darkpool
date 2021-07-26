@@ -45,3 +45,5 @@ cd ${DIR}/userApp ; node enrollAdmin.js ; for i in {1..5} ; do node regUser.js u
 cd ${DIR}/tokenApp ; node enrollAdmin.js ; for i in {1..5} ; do node queryToken.js usr$i Tether 100 ; done ;
 for i in {1..5} ; do node queryToken.js usr$i Dogecoin 100 ; done 
 for i in {1..5} ; do node queryToken.js usr$i Bitcoin 100 ; done 
+cd ${DIR}/userApp
+for i in {1..3} ; do node applyForCommittee.js usr$i ${i}0 ; done 

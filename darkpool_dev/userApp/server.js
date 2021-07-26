@@ -32,8 +32,10 @@ const QueryCommittee = require('./queryCommittee');
 const ElectCommittee = require('./electCommittee');
 const FormCommittee = require('./formCommittee');
 const QueryDealedOrder = require('./queryDealedOrders');
-const GOLD_SLIVER = require('./public/kline/kline_gold_sliver');
-const GOLD_CARBON = require('./public/kline/kline_gold_carbon');
+// import { kLineDataList as GOLD_SLIVER } from '@/public/kline/kline_gold_sliver'
+// import { kLineDataList as GOLD_CARBON } from '@/public/kline/kline_gold_carbon'
+// const GOLD_SLIVER = require('./public/kline/kline_gold_sliver');
+// const GOLD_CARBON = require('./public/kline/kline_gold_carbon');
 
 // Shamir Secret Sharing
 const sss = require('shamirs-secret-sharing')
@@ -48,16 +50,16 @@ app.get('/', function (req, res) {
 })
 
 // Update TokenPriceList
-app.post('/update_priceList', function (req, res){
+app.post('/update_priceList', function (req, res) {
     var tokenList = ['Gold', 'Sliver', 'Iron', 'Oil', 'Carbon', 'Moutai'];
     var priceList = req.body.priceList;
-    for(var index=0; index<tokenList.length; index++){
-        var random_price = Math.random()*10000;
+    for (var index = 0; index < tokenList.length; index++) {
+        var random_price = Math.random() * 10000;
         priceList[tokenList[index]].price = random_price.toFixed(2);
-        var gap =  priceList[tokenList[index]].price - priceList[tokenList[index]].oldprice;
-        if(gap>=0) priceList[tokenList[index]].isup = true;
+        var gap = priceList[tokenList[index]].price - priceList[tokenList[index]].oldprice;
+        if (gap >= 0) priceList[tokenList[index]].isup = true;
         else priceList[tokenList[index]].isup = false;
-        priceList[tokenList[index]].rate = (Math.abs(gap)/priceList[tokenList[index]].oldprice).toFixed(2);
+        priceList[tokenList[index]].rate = (Math.abs(gap) / priceList[tokenList[index]].oldprice).toFixed(2);
     }
     res.json({
         'priceList': priceList,
@@ -65,18 +67,18 @@ app.post('/update_priceList', function (req, res){
 })
 
 // 初始化k线图
-app.post('/init_kline', function (req, res){
-    if(req.body.GOLD_SLIVER){
+app.post('/init_kline', function (req, res) {
+    if (req.body.GOLD_SLIVER) {
         var ret_klineList = [];
         var ret_klineList_rev = [];
         var init_klineList = GOLD_SLIVER.init_kline_chart;
-        for(var index=0;index<init_klineList.length;index++){
+        for (var index = 0; index < init_klineList.length; index++) {
             var cur_k = {};
             cur_k['timestamp'] = new Date(init_klineList[index][0]).getTime();
-            cur_k['timestr'] = new Date(init_klineList[index][0]).toUTCString();
+            cur_k['timestr'] = new Date(init_klineList[index][0]).toLocaleString();
             cur_k['open'] = +init_klineList[index][1];
             cur_k['high'] = +init_klineList[index][2];
-            cur_k['low'] =  +init_klineList[index][3];
+            cur_k['low'] = +init_klineList[index][3];
             cur_k['close'] = +init_klineList[index][4];
             cur_k['volume'] = Math.ceil(+init_klineList[index][5]);
             ret_klineList.push(cur_k);
@@ -87,17 +89,17 @@ app.post('/init_kline', function (req, res){
             'init_klineList_rev': ret_klineList_rev,
         })
     }
-    else if(req.body.GOLD_CARBON){
+    else if (req.body.GOLD_CARBON) {
         var ret_klineList = [];
         var ret_klineList_rev = [];
         var init_klineList = GOLD_CARBON.init_kline_chart;
-        for(var index=0;index<init_klineList.length;index++){
+        for (var index = 0; index < init_klineList.length; index++) {
             var cur_k = {};
             cur_k['timestamp'] = new Date(init_klineList[index][0]).getTime();
-            cur_k['timestr'] = new Date(init_klineList[index][0]).toUTCString();
+            cur_k['timestr'] = new Date(init_klineList[index][0]).toLocaleString();
             cur_k['open'] = +init_klineList[index][1];
             cur_k['high'] = +init_klineList[index][2];
-            cur_k['low'] =  +init_klineList[index][3];
+            cur_k['low'] = +init_klineList[index][3];
             cur_k['close'] = +init_klineList[index][4];
             cur_k['volume'] = Math.ceil(+init_klineList[index][5]);
             ret_klineList.push(cur_k);
@@ -106,42 +108,42 @@ app.post('/init_kline', function (req, res){
         res.json({
             'init_klineList': ret_klineList,
             'init_klineList_rev': ret_klineList_rev,
-        }) 
+        })
     }
 })
 
 // 更新k线图
-app.post('/query_new_value', function (req, res){
+app.post('/query_new_value', function (req, res) {
     var old_value = req.body.old_value;
 
-    var flag1 = (Math.random()-0.5) >= 0;
-    if(flag1) var open = old_value.open + Math.random()*10;
-    else var open = old_value.open - Math.random()*10;
+    var flag1 = (Math.random() - 0.5) >= 0;
+    if (flag1) var open = old_value.open + Math.random() * 10;
+    else var open = old_value.open - Math.random() * 10;
 
-    var flag2 = (Math.random()-0.5) >= 0;
-    if(flag2) var close = open + Math.random()*10;
-    else var close = open - Math.random()*10;
+    var flag2 = (Math.random() - 0.5) >= 0;
+    if (flag2) var close = open + Math.random() * 10;
+    else var close = open - Math.random() * 10;
 
-    var high = Math.max(open,close) + Math.random()*5;
-    var low = Math.min(open,close) - Math.random()*5;
+    var high = Math.max(open, close) + Math.random() * 5;
+    var low = Math.min(open, close) - Math.random() * 5;
 
     res.json({
         'new_value': {
             timestamp: new Date().getTime(),
-            timestr: new Date().toUTCString(),
+            timestr: new Date().toLocaleString(),
             open: parseFloat(open.toFixed(2)),
             high: parseFloat(high.toFixed(2)),
             low: parseFloat(low.toFixed(2)),
             close: parseFloat(close.toFixed(2)),
-            volume: Math.ceil(Math.random()*10),
+            volume: Math.ceil(Math.random() * 10),
         }
     })
 })
 
 // Query Block
-app.post('/query_block', function (req, res){
+app.post('/query_block', function (req, res) {
     res.json({
-        'block_list': block_list.sort(function(a, b){return b.blockNumber - a.blockNumber}),
+        'block_list': block_list.sort(function (a, b) { return b.blockNumber - a.blockNumber }),
     })
 })
 
@@ -182,7 +184,7 @@ app.post('/register', async function (req, res) {
 
 // Query Account Info
 app.post('/getinfo', async function (req, res) {
-    console.log('req:',req.body.username);
+    console.log('req:', req.body.username);
     await QueryToken.QueryBalance(req.body.username).then(result => {
         console.log('Queryapp program complete.');
         res.json({
@@ -221,16 +223,16 @@ app.post('/transfer', async function (req, res) {
 
 // Create Order
 app.post('/createorder', async function (req, res) {
-    var username = req.body.username;
-    var type = req.body.type;
-    var amount = req.body.amount;
-    var price = req.body.price;
-    var item = req.body.item;
-    var json_shares = {};
+    let username = req.body.username;
+    let type = req.body.type;
+    let amount = req.body.amount;
+    let price = req.body.price;
+    let item = req.body.item;
+    let json_shares = {};
     // Get committees' PubKey
-    var PubKeys = await QueryCommittee.queryCommittee(username);
+    let PubKeys = await QueryCommittee.queryCommittee(username);
     // console.log('PubKey:',PubKeys);
-    var n = PubKeys['committee'].length;
+    let n = PubKeys['committee'].length;
     if (n === 0 || item === 'Tether') {
         res.json({
             'status': 'NoCommittee',
@@ -238,25 +240,27 @@ app.post('/createorder', async function (req, res) {
         return;
     }
     else {
-        var t = 3;
+        let t = 3;
         // Shamir Secret Sharing
-        const secret = Buffer.from(price.toString());
+        console.log(price);
+        let secret = Buffer.from(price.toString());
         //console.log(secret)
-        const shares = sss.split(secret, { shares: n, threshold: t })
-        for (var i = 0; i < n; i++) {
-            var share_i = shares[i].toJSON()['data'].toString();
-            var blocknum = Math.ceil(share_i.length / 32);
+        let shares = sss.split(secret, { shares: n, threshold: t })
+        for (let i = 0; i < n; i++) {
+            let share_i = shares[i].toJSON()['data'].toString();
+            let blocknum = Math.ceil(share_i.length / 32);
             // Encrypt with committees' public keys
-            var start = PubKeys['committee'][i]['name'].search('CN=') + 3;
-            var end = PubKeys['committee'][i]['name'].search('C=') - 3;
-            var cmt_name = PubKeys['committee'][i]['name'].substring(start, end);
-            var pub_i = PubKeys['committee'][i]['pub'];
-            var enc_i = {};
-            for (var j = 0; j < blocknum - 1; j++) {
+            // let start = PubKeys['committee'][i]['name'].search('CN=') + 3;
+            // let end = PubKeys['committee'][i]['name'].search('C=') - 3;
+            let cmt_name = PubKeys['committee'][i]['name']
+            let pub_i = PubKeys['committee'][i]['pub'];
+            let enc_i = {};
+            for (let j = 0; j < blocknum - 1; j++) {
                 enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j * 32, (j + 1) * 32), jsrsasign.KEYUTIL.getKey(pub_i));
                 jsrsasign.hextob64(enc_i[j]);
             }
             enc_i[blocknum - 1] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring((blocknum - 1) * 32, share_i.length), jsrsasign.KEYUTIL.getKey(pub_i));
+            jsrsasign.hextob64(enc_i[blocknum - 1]);
             json_shares[cmt_name] = enc_i;
         }
     }
@@ -283,7 +287,7 @@ app.post('/getorder', async function (req, res) {
 
 // Query Dealed Order Info
 app.post('/getdealedorder', async function (req, res) {
-    await QueryDealedOrder.queryDealedOrder(req.body.username).then(result =>{
+    await QueryDealedOrder.queryDealedOrder(req.body.username).then(result => {
         res.json(result);
     }).catch((e) => {
         console.log('Queryapp program exception.');
@@ -375,9 +379,9 @@ var server = app.listen(9000, async function () {
         //    network.removeBlockListener(listener);
         //}
         //console.log(cur_block['data']['payload']['data']['actions'][0]['payload']['action']['proposal_response_payload']['extension'])
-        if(cur_block['data']['payload']['data']['actions'] != undefined){
+        if (cur_block['data']['payload']['data']['actions'] != undefined) {
             cur_block['endorser'] = [];
-            for(var i=0;i<cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'].length;i++){
+            for (var i = 0; i < cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'].length; i++) {
                 cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'][i]['signature'] = cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'][i]['signature'].toString('hex');
                 cur_block['endorser'].push({
                     'mspid': cur_block['data']['payload']['data']['actions'][0]['payload']['action']['endorsements'][i]['endorser']['mspid'],

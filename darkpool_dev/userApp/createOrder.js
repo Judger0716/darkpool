@@ -5,7 +5,7 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
-const tokenlist = ['Bitcoin','Dogecoin','Tether'];
+const tokenlist = ['Bitcoin', 'Dogecoin', 'Tether'];
 
 // Main program function
 exports.createOrder = async function (username, type, amount, itemname, shares) {
@@ -44,8 +44,9 @@ exports.createOrder = async function (username, type, amount, itemname, shares) 
         const network = await gateway.getNetwork('mychannel');
 
         // Check the available
+        /*
         var res = {};  // Account Info
-        for(var t=0;t<tokenlist.length;t++){
+        for (var t = 0; t < tokenlist.length; t++) {
             // Get addressability to commercial paper contract
             console.log('Use Token smart contract.');
             const contract = await network.getContract('tokenContract', tokenlist[t]);
@@ -69,14 +70,14 @@ exports.createOrder = async function (username, type, amount, itemname, shares) 
             console.log('-----------------------------------------------------------------------------------------\n\n');
             queryResponse = await contract.evaluateTransaction('GetFreezedBalance', ID);
             var freezedtoken = queryResponse.toString();
-            res[tokenlist[t]]=balance-freezedtoken;
+            res[tokenlist[t]] = balance - freezedtoken;
         }
 
         // If not available, error
-        if(res[itemname]<amount){
+        if (res[itemname] < amount) {
             return 'NotAvailable';
         }
-
+        */
         // Get addressability to commercial paper contract
         console.log('Use Order smart contract.');
 
@@ -91,7 +92,7 @@ exports.createOrder = async function (username, type, amount, itemname, shares) 
         console.log('\n  CreateOrder query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
         return true;
-        
+
     } catch (error) {
 
         console.log(`Error processing transaction. ${error}`);

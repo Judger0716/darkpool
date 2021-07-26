@@ -2,6 +2,7 @@
 /** =====================================
  *  Counter up
  * ===================================== **/
+/*
 var a = 0;
 $(window).scroll(function() {
     var oTop = $('#counter').offset().top - window.innerHeight;
@@ -32,4 +33,4 @@ $(window).scroll(function() {
         a = 1;
     }
 
-});
+});*/

@@ -1,3 +1,4 @@
+/*
 new Chart(document.getElementById("mixed-chart"), {
     type: 'bar',
     data: {
@@ -30,4 +31,4 @@ new Chart(document.getElementById("mixed-chart"), {
         }
       }
     }
-});
+});*/

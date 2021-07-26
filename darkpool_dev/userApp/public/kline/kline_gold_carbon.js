@@ -505,4 +505,5 @@ var kLineDataList = [
         "10.02346732"
     ],
 ]
-module.exports.init_kline_chart = kLineDataList;
+// export { kLineDataList }
+// module.exports.init_kline_chart = kLineDataList;
