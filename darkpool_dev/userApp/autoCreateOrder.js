@@ -63,7 +63,7 @@ async function createOrder() {
 }
 
 async function main() {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 20; i++) {
     await createOrder();
   }
 }

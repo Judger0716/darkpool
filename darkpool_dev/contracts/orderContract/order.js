@@ -131,8 +131,8 @@ class Order extends Contract {
     if (orderContent.deal) {
       await ctx.stub.deleteState(orderContentKey);
       orderContentKey = await ctx.stub.createCompositeKey(orderKey, [dealOrderKey, order_id]);
-      await ctx.stub.putState(orderContentKey, JSON.stringify(orderContent));
     }
+    await ctx.stub.putState(orderContentKey, JSON.stringify(orderContent));
 
     return orderContent;
   }

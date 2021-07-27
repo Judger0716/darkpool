@@ -257,10 +257,10 @@ app.post('/createorder', async function (req, res) {
             let enc_i = {};
             for (let j = 0; j < blocknum - 1; j++) {
                 enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j * 32, (j + 1) * 32), jsrsasign.KEYUTIL.getKey(pub_i));
-                jsrsasign.hextob64(enc_i[j]);
+                // jsrsasign.hextob64(enc_i[j]);
             }
             enc_i[blocknum - 1] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring((blocknum - 1) * 32, share_i.length), jsrsasign.KEYUTIL.getKey(pub_i));
-            jsrsasign.hextob64(enc_i[blocknum - 1]);
+            // jsrsasign.hextob64(enc_i[blocknum - 1]);
             json_shares[cmt_name] = enc_i;
         }
     }

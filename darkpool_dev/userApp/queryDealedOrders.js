@@ -23,6 +23,7 @@ function transfer_order(json_order) {
     json_order['creator'] = json_order['creator'].substring(user_start, user_end);
 
     json_order['order_id'] = parseInt(json_order['order_id']);
+    json_order['deal_order_id'] = parseInt(json_order['deal_order_id']);
 
     let date = new Date();
     date.setTime(parseInt(json_order['create_time']['seconds']) * 1000);
@@ -91,7 +92,7 @@ exports.queryDealedOrder = async function (username) {
         // console.log('------------- Result ---------------', queryResult);
         for (let result of queryResult) {
             let record = result['Record'];
-            let deal_id = record['deal_id'];
+            let deal_id = parseInt(record['deal_id']);
             let related_comm = [];
 
             for (let c of record['context']['content']) {
@@ -106,6 +107,11 @@ exports.queryDealedOrder = async function (username) {
             for (let order of record['sell']) {
                 sell_orders.push(transfer_order(order));
             }
+
+            if (buy_orders.length === 0 || sell_orders.length === 0) {
+                continue;
+            }
+
             let deal_time = buy_orders[0]['deal_time'];
             let buyer = buy_orders[0]['creator'];
             let seller = sell_orders[0]['creator'];
@@ -164,7 +170,8 @@ exports.queryDealedOrder = async function (username) {
                     index += 1
                 }
         */
-        console.log(DealedOrderList);
+        // console.log(DealedOrderList);
+        DealedOrderList.sort(function (a, b) { return parseInt(a.deal_id) - parseInt(b.deal_id); });
         return {
             'DealedOrderList': DealedOrderList,
         }

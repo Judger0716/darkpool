@@ -16,6 +16,7 @@ const pipe = require('it-pipe');
 const lp = require('it-length-prefixed')
 const path = require('path');
 const match = require('./match')
+const crypto = require('crypto');
 
 const PREPARING = 0, MATCHING = 1, WAITING = 2;
 const ec = new jsrsasign.KJUR.crypto.ECDSA({ 'curve': 'secp256r1' });
@@ -150,6 +151,9 @@ async function initConnection() {
   orderContract = network.getContract('orderContract', 'Order');
   committeeContract = network.getContract('committeeContract', 'Committee');
 
+  await fetchCommittee();
+  await fetchOrders();
+
   await committeeContract.addContractListener(committeeEventHandler, { startBlock: 0 });
   /*
     await tokenContract.addContractListener((event) => {
@@ -161,9 +165,6 @@ async function initConnection() {
     }, { startBlock: 0 });
   */
   await orderContract.addContractListener(orderEventHandler, { startBlock: 0 });
-
-  await fetchCommittee();
-  await fetchOrders();
 
   if (username === masterName) {
     heartbeats();
@@ -192,7 +193,7 @@ async function heartbeats() {
     }
   }
   // lastPrice = price;
-
+  // console.log(`Sending heartbeats, current state: ${currentState}...`);
   for (let [peerString, peerId] of peerList) {
     nodeSendAndClose(peerId, JSON.stringify({ type: 'heartbeats', content: { version: currentVersion } }));
   }
@@ -226,30 +227,73 @@ async function combineOrders() {
         itemPool.get(order_body.type).set(order_body.order_id, {
           id: order_body.order_id,
           type: order_body.type,
+          // item: order_body.item,
           price: parseInt(order_body.price),
           amount: parseInt(order_body.amount),
           deal_amount: parseInt(order_body.deal_amount),
           // time: order_body.create_time.seconds
         });
+
+        // combiningOrders.delete();
       }
     }
   }
   setTimeout(combineOrders, 1000);
 }
 
-async function formMatchResult(buyOrders, sellOrders, matchResult) {
+function formMatchResult(buyOrders, sellOrders, matchResult) {
   let price = matchResult.price;
   let amount = matchResult.amount;
 
   let context = {
-    buy: Array.from(buyOrders, x => x.id),
-    sell: Array.from(sellOrders, x => x.id)
+    buy: Array.from(buyOrders, (x) => x.id),
+    sell: Array.from(sellOrders, (x) => x.id)
   }
 
   let deal_buy_orders = [], deal_sell_orders = [];
   let buy_amount = amount, sell_amount = amount;
 
   for (let order of buyOrders) {
+    if (buy_amount === 0) break;
+
+    if (order.price >= price && buy_amount > 0) {
+      let remaining_amount = order.amount - order.deal_amount;
+      if (remaining_amount <= buy_amount) {
+        // order.deal_amount = order.amount;
+        buy_amount -= remaining_amount;
+      } else {
+        // order.deal_amount += buy_amount;
+        buy_amount = 0;
+      }
+      // deal_buy_orders.push(order);
+    }
+  }
+
+  for (let order of sellOrders) {
+    if (sell_amount === 0) break;
+
+    if (order.price <= price && sell_amount > 0) {
+      let remaining_amount = order.amount - order.deal_amount;
+      if (remaining_amount <= sell_amount) {
+        // order.deal_amount = order.amount;
+        sell_amount -= remaining_amount;
+      } else {
+        // order.deal_amount += sell_amount;
+        sell_amount = 0;
+      }
+      // deal_sell_orders.push(order);
+    }
+  }
+
+  amount = Math.min(amount - sell_amount, amount - buy_amount);
+  buy_amount = amount, sell_amount = amount;
+
+  if (amount <= 0)
+    return null;
+
+  for (let order of buyOrders) {
+    if (buy_amount === 0) break;
+
     if (order.price >= price && buy_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= buy_amount) {
@@ -264,6 +308,8 @@ async function formMatchResult(buyOrders, sellOrders, matchResult) {
   }
 
   for (let order of sellOrders) {
+    if (sell_amount === 0) break;
+
     if (order.price <= price && sell_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= sell_amount) {
@@ -288,10 +334,19 @@ async function formMatchResult(buyOrders, sellOrders, matchResult) {
     context: context
   }
 
-  return item_result;
+  console.log(amount, buy_amount, sell_amount);
+  console.log(deal_buy_orders);
+  console.log(deal_sell_orders);
+
+  if (buy_amount === sell_amount && deal_buy_orders.length > 0 && deal_sell_orders.length > 0) {
+    return item_result;
+  } else {
+    return null;
+  }
 }
 
 async function matchOrders() {
+  console.log('New match instance starts....');
   let matchSuccess = false;
   let msg = {
     type: "matchResult",
@@ -304,17 +359,22 @@ async function matchOrders() {
     for (let [item, pool] of matchingPool) {
       let buyOrders = Array.from(pool.get('buy').values());
       let sellOrders = Array.from(pool.get('sell').values());
-      // console.log(buyOrders, sellOrders);
+
+      let buyOrdersInMatch = buyOrders.map(function (v) { let u = { ...v }; u.amount = v.amount - v.deal_amount; return u; });
+      let sellOrdersInMatch = buyOrders.map(function (v) { let u = { ...v }; u.amount = v.amount - v.deal_amount; return u; });
 
       if (buyOrders.length > 0 && sellOrders.length > 0) {
-        let matchResult = match(buyOrders, sellOrders, lastPrice.get(item));
-        if (matchResult.price === 0 || matchResult.amount === 0) {
+        let matchResult = match(buyOrdersInMatch, sellOrdersInMatch, 0);
+        if (matchResult.price <= 0 || matchResult.amount <= 0) {
           continue;
-        } else {
-          matchSuccess = true;
         }
-        let itemResult = await formMatchResult(buyOrders, sellOrders, matchResult);
-        msg.content[item] = itemResult;
+        let itemResult = formMatchResult(buyOrders, sellOrders, matchResult);
+        if (itemResult) {
+          matchSuccess = true;
+          msg.content[item] = itemResult;
+        } else {
+          continue;
+        }
         // Wait for result.
         // stop = true;
       }
@@ -370,9 +430,19 @@ async function countOrders() {
     let result_body = sorted_result[0];
     // Result got, send to Fabric
     if (count >= 3) {
-      console.log("Final Result: ", JSON.stringify(result_body));
-      // console.log("Sending match result: ", result_body.result.split(":")[0], result_body.result.split(":")[1], result_body.price);
-      await orderContract.submitTransaction('OrderDeal', JSON.stringify(result_body));
+      if (result_body.num >= 3) {
+        console.log("Final Result: ", JSON.stringify(result_body));
+        // console.log("Sending match result: ", result_body.result.split(":")[0], result_body.result.split(":")[1], result_body.price);
+        await orderContract.submitTransaction('OrderDeal', JSON.stringify(result_body));
+      } else {
+        for (let [peerString, peerId] of peerList) {
+          nodeSendAndClose(peerId, JSON.stringify({ type: 'restart', content: {} }));
+        }
+        for (let [item, pool] of resultPool) {
+          pool.clear();
+        }
+        currentState = MATCHING;
+      }
       return;
     }
   }
@@ -391,12 +461,8 @@ async function orderEventHandler(event) {
       // Only decrypt and add undeal orders
       if (eventJson.deal === false) {
         eventJson.price = null;
-        try {
-          let share =  eventJson.shares[username];
-          eventJson.shares[username] = decryptShare(share);
-        } catch (e) {
-          console.log(e, eventJson.shares[username]);
-        }
+        let share = eventJson.shares[username];
+        eventJson.shares[username] = decryptShare(share);
 
         // console.log("Decrypt my share: ", eventJson.shares[username]);
         /*
@@ -415,42 +481,39 @@ async function orderEventHandler(event) {
     // console.log(eventJson, combiningOrders);
     for (let o of eventJson.buy) {
       let id = o.order_id;
+      let pool = matchingPool.get(o.item).get('buy');
       if (!o.deal) {
+        if (pool.get(id)) {
+          pool.get(id).deal_amount = o.deal_amount;
+        }
+        let old_order = combiningOrders.get(id);
+        o.shares = old_order.shares;
+        o.price = old_order.price;
+
         combiningOrders.set(id, o);
-        matchingPool.get(o.item).get('buy').get(id).deal_amount = o.deal_amount;
       } else {
+        pool.delete(id);
         combiningOrders.delete(id);
-        matchingPool.get(o.item).get('buy').delete(id);
-        /*
-        for (let [item, pool] of matchingPool) {
-          if (pool.get('buy').get(id))
-            pool.get('buy').delete(id);
-        }*/
       }
     }
 
     for (let o of eventJson.sell) {
       let id = o.order_id;
+      let pool = matchingPool.get(o.item).get('sell');
       if (!o.deal) {
+        if (pool.get(id)) {
+          pool.get(id).deal_amount = o.deal_amount;
+        }
+        let old_order = combiningOrders.get(id);
+        o.shares = old_order.shares;
+        o.price = old_order.price;
+
         combiningOrders.set(id, o);
-        matchingPool.get(o.item).get('sell').get(id).deal_amount = o.deal_amount;
       } else {
+        pool.delete(id);
         combiningOrders.delete(id);
-        matchingPool.get(o.item).get('sell').delete(id);
-        /*
-        for (let [item, pool] of matchingPool) {
-          if (pool.get('sell').get(id))
-            pool.get('sell').delete(id);
-        }*/
       }
     }
-    // let buy_id = eventJson.order[0].order_id;
-    // let sell_id = eventJson.order[1].order_id;
-    // matchingPool.get("buy").delete(buy_id);
-    // matchingPool.get("sell").delete(sell_id);
-    // combiningOrders.delete(buy_id);
-    // combiningOrders.delete(sell_id);
-    // console.log(combiningOrders);
 
     if (currentState === WAITING) {
       // Restart matching...
@@ -479,7 +542,7 @@ async function nodeEventHandler(stream) {
   switch (message.type) {
     case 'heartbeats':
       let version = message.content.version;
-      // console.log('Heartbeats got, version: ', version, ' currentVersion: ', currentVersion);
+      // console.log('Heartbeats got, version: ', version, ' currentVersion: ', currentVersion, ' currentState: ', currentState);
       if (currentVersion === undefined || version > currentVersion) {
         currentVersion = version;
         currentState = MATCHING;
@@ -492,6 +555,7 @@ async function nodeEventHandler(stream) {
     case 'shares':
       for (let order of message.content) {
         if (combiningOrders.get(order.order_id)) {
+          // console.log(`Receive share from ${order.name} for order ${order.order_id}, content: `, order.share);
           combiningOrders.get(order.order_id).shares[order.name] = Buffer.from(order.share);
           // console.log(`Receive share from ${order.name} for order ${order.order_id}, content: `, Buffer.from(order.share));
         }
@@ -532,6 +596,9 @@ async function nodeEventHandler(stream) {
           });
         }*/
       }
+      break;
+    case 'restart':
+      currentState = MATCHING;
       break;
 
   }
@@ -623,8 +690,15 @@ async function nodeHandshake(peerId) {
 
 function decryptShare(shares) {
   let len = Object.keys(shares).length;
-  let strres = Array.from([...Array(len).keys()],
-    x => jsrsasign.KJUR.crypto.Cipher.decrypt(shares[x], jsrsasign.KEYUTIL.getKey(prvKeyForDecryption))).join("");
+  // crypto.privateDecrypt({ key: prvKeyForDecryption, passphrase: '', padding: crypto.constants.RSA_PKCS1_PADDING }, Buffer.from(hex, 'hex')).toString()
+  // let strres = Array.from([...Array(len).keys()], function (x) {
+  //   return jsrsasign.KJUR.crypto.Cipher.decrypt(shares[x], jsrsasign.KEYUTIL.getKey(prvKeyForDecryption));
+  // }).join("");
+  let strres = Array.from(
+    [...Array(len).keys()],
+    x => crypto.privateDecrypt({ key: prvKeyForDecryption, padding: crypto.constants.RSA_PKCS1_PADDING }, Buffer.from(shares[x], 'hex')).toString()
+  ).join("");
+  // console.log(strres);
   return Buffer.from(strres.split(','));
 }
 
@@ -650,8 +724,10 @@ async function fetchOrders() {
   // console.log(orders);
   for (let order of orders) {
     let shares = order.shares[username];
-    // console.log(order);
+
     order.shares[username] = decryptShare(shares);
+
+    // console.log(order.shares[username]);
     order.price = null;
     // console.log("Decrypt my share: ", order.shares[username]);
     /*

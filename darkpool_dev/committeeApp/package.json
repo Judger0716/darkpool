@@ -11,6 +11,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@grpc/grpc-js": "0.6.9",
+    "crypto": "^1.0.1",
     "fabric-ca-client": "^2.2.4",
     "fabric-network": "^2.2.4",
     "js-yaml": "^3.12.0",
