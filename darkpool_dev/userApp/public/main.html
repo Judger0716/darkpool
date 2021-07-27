@@ -585,57 +585,40 @@
                     <el-table
                         :data="dealed_order_list.slice((currentDealedOrderPage-1)*pageSize,currentDealedOrderPage*pageSize)"
                         style="width: 100%">
-                        <el-table-column label="交易序号" prop="deal_id" width="50"></el-table-column>
-                        <el-table-column label="成交价格" prop="deal_price" width="50"></el-table-column>
+                        <el-table-column label="成交序号" prop="deal_id" width="100"></el-table-column>
+                        <el-table-column label="成交物品" prop="buy_order[0].item" width="100"></el-table-column>
+                        <el-table-column label="成交价格" prop="deal_price" width="100"></el-table-column>
                         <el-table-column label="成交时间" prop="deal_time" width="200"></el-table-column>
-                        <el-table-column label="买家" prop="buyer" width="100"></el-table-column>
                         <el-table-column label="买单信息" width="150">
                             <template slot-scope="scope">
                                 <el-popover
-                                placement="right"
-                                width="400"
+                                placement="top"
+                                width="600"
                                 trigger="click">
-                                    买单序号：{[ scope.row.buy_order.order_id ]}<br>
-                                    买单交易物品：{[ scope.row.buy_order.item ]}<br>
-                                    买单交易数量：{[ scope.row.buy_order.amount ]}<br>
-                                    买单创建时间：{[ scope.row.buy_order.create_time ]}<br>
-                                    <el-button icon="el-icon-document" type="text"
-                                        @click="scope.row.buy_order.share_info_visible = true;">查看订单碎片</el-button>
-                                        <el-dialog title="订单碎片信息" :append-to-body="true"
-                                            :visible.sync="scope.row.buy_order.share_info_visible" center>
-                                            <div>{[scope.row.buy_order.shares]}</div>
-                                            <span slot="footer" class="dialog-footer" center>
-                                                <el-button type="primary"
-                                                    @click="scope.row.buy_order.share_info_visible = false">确 定
-                                                </el-button>
-                                            </span>
-                                        </el-dialog>
+                                    <el-table :data="scope.row.buy_order" stripe style="width: 100%">
+                                        <el-table-column prop="order_id" label="订单序号" width="50"></el-table-column>
+                                        <el-table-column prop="creator" label="买家" width="100"></el-table-column>
+                                        <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
+                                        <el-table-column prop="amount" label="交易数量" width="100"></el-table-column>
+                                        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+                                    </el-table>
                                     <el-button slot="reference">点击查看</el-button>
                                 </el-popover>
                             </template>
                         </el-table-column>
-                        <el-table-column label="卖家" prop="seller" width="100"></el-table-column>
                         <el-table-column label="卖单信息" width="150">
                             <template slot-scope="scope">
                                 <el-popover
-                                placement="right"
-                                width="400"
+                                placement="top"
+                                width="600"
                                 trigger="click">
-                                    买单序号：{[ scope.row.sell_order.order_id ]}<br>
-                                    买单交易物品：{[ scope.row.sell_order.item ]}<br>
-                                    买单交易数量：{[ scope.row.sell_order.amount ]}<br>
-                                    买单创建时间：{[ scope.row.sell_order.create_time ]}<br>
-                                    <el-button icon="el-icon-document" type="text"
-                                        @click="scope.row.sell_order.share_info_visible = true;">查看订单碎片</el-button>
-                                        <el-dialog title="订单碎片信息" :append-to-body="true"
-                                            :visible.sync="scope.row.sell_order.share_info_visible" center>
-                                            <div>{[scope.row.sell_order.shares]}</div>
-                                            <span slot="footer" class="dialog-footer" center>
-                                                <el-button type="primary"
-                                                    @click="scope.row.sell_order.share_info_visible = false">确 定
-                                                </el-button>
-                                            </span>
-                                        </el-dialog>
+                                    <el-table :data="scope.row.sell_order" stripe style="width: 100%">
+                                        <el-table-column prop="order_id" label="订单序号" width="50"></el-table-column>
+                                        <el-table-column prop="creator" label="买家" width="100"></el-table-column>
+                                        <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
+                                        <el-table-column prop="amount" label="交易数量" width="100"></el-table-column>
+                                        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+                                    </el-table>
                                     <el-button slot="reference">点击查看</el-button>
                                 </el-popover>
                             </template>
@@ -653,8 +636,10 @@
                                 <el-dialog title="确认举报" :visible.sync="props.row.report_visible" width="30%"
                                     :append-to-body="true" center>
                                     <span slot="footer" class="dialog-footer">
+                                        <el-input v-model="report_form.order_id" style="margin-top: 10px; margin-bottom: 10px;" placeholder="请输入您的订单序号"></el-input>
+                                        <el-input v-model="report_form.price" style="margin-top: 10px; margin-bottom: 10px;" placeholder="请输入您的订单明文报价"></el-input>
                                         <el-button @click="props.row.report_visible = false">取 消</el-button>
-                                        <el-button type="primary" @click="props.row.report_visible = false">确 定
+                                        <el-button type="primary" @click="props.row.report_visible = false; report();">确 定
                                         </el-button>
                                     </span>
                                 </el-dialog>
@@ -881,6 +866,14 @@
                     'item': 'USDT',
                     'amount': null,
                 },
+
+                // 举报表单
+                report_form: {
+                    'username': $("#cur_un").attr('value'),
+                    'order_id': null,
+                    'price': null,
+                },
+
                 candidates: [],  // 候选人列表
                 committee: [],  // 委员会列表
 
@@ -1064,6 +1057,14 @@
                                 offset: 100,
                             });
                         }
+                    })
+                },
+                // 举报
+                report() {
+                    axios.post('/report',{
+                        'report_form': this.report_form,
+                    }).then(Response =>{
+
                     })
                 },
                 // 每页多少条

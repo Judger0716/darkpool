@@ -316,6 +316,11 @@ app.post('/electCommittee', async function (req, res) {
     })
 })
 
+// Report
+app.post('/report', async function (req, res){
+    console.log(req.body.report_form);
+})
+
 // SERVER LISTENING
 var server = app.listen(9000, async function () {
 

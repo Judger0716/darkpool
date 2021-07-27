@@ -116,8 +116,8 @@ exports.queryDealedOrder = async function (username) {
             let buyer = buy_orders[0]['creator'];
             let seller = sell_orders[0]['creator'];
 
-            let buy_order = buy_orders[0];
-            let sell_order = sell_orders[0];
+            let buy_order = buy_orders;
+            let sell_order = sell_orders;
             DealedOrderList.push({
                 'deal_id': deal_id,
                 'buyer': buyer,
