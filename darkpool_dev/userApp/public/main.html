@@ -521,7 +521,7 @@
                             <el-table-column prop="deal_price" label="成交价格"></el-table-column>
                             <el-table-column prop="deal_time" label="成交时间"></el-table-column>
                         </el-table>
-                        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange_order"
                             :current-page="currentOrderPage" :page-sizes="[10, 20, 30, 50, 100]" :page-size="pageSize"
                             layout="total, sizes, prev, pager, next, jumper" :total="order_list.length">
                         </el-pagination>
@@ -585,68 +585,62 @@
                     <el-table
                         :data="dealed_order_list.slice((currentDealedOrderPage-1)*pageSize,currentDealedOrderPage*pageSize)"
                         style="width: 100%">
-                        <el-table-column type="expand">
-                            <template slot-scope="props">
-                                <el-form label-position="left" inline class="demo-table-expand">
-                                    <el-form-item label="买单序号">
-                                        <span>{[ props.row.buy_order.order_id ]}</span>
-                                    </el-form-item>
-                                    <el-form-item label="卖单序号">
-                                        <span>{[ props.row.sell_order.order_id ]}</span>
-                                    </el-form-item>
-                                    <el-form-item label="买单交易物品">
-                                        <span>{[ props.row.buy_order.item ]}</span>
-                                    </el-form-item>
-                                    <el-form-item label="卖单交易物品">
-                                        <span>{[ props.row.sell_order.item ]}</span>
-                                    </el-form-item>
-                                    <el-form-item label="买单交易数量">
-                                        <span>{[ props.row.buy_order.amount ]}</span>
-                                    </el-form-item>
-                                    <el-form-item label="卖单交易数量">
-                                        <span>{[ props.row.sell_order.amount ]}</span>
-                                    </el-form-item>
-                                    <el-form-item label="买单创建时间">
-                                        <span>{[ props.row.buy_order.create_time ]}</span>
-                                    </el-form-item>
-                                    <el-form-item label="卖单创建时间">
-                                        <span>{[ props.row.sell_order.create_time ]}</span>
-                                    </el-form-item>
-                                    <el-form-item label="买单价格碎片">
-                                        <el-button icon="el-icon-document" type="text"
-                                            @click="props.row.buy_order.share_info_visible = true;">查看订单碎片</el-button>
+                        <el-table-column label="交易序号" prop="deal_id" width="50"></el-table-column>
+                        <el-table-column label="成交价格" prop="deal_price" width="50"></el-table-column>
+                        <el-table-column label="成交时间" prop="deal_time" width="200"></el-table-column>
+                        <el-table-column label="买家" prop="buyer" width="100"></el-table-column>
+                        <el-table-column label="买单信息" width="150">
+                            <template slot-scope="scope">
+                                <el-popover
+                                placement="right"
+                                width="400"
+                                trigger="click">
+                                    买单序号：{[ scope.row.buy_order.order_id ]}<br>
+                                    买单交易物品：{[ scope.row.buy_order.item ]}<br>
+                                    买单交易数量：{[ scope.row.buy_order.amount ]}<br>
+                                    买单创建时间：{[ scope.row.buy_order.create_time ]}<br>
+                                    <el-button icon="el-icon-document" type="text"
+                                        @click="scope.row.buy_order.share_info_visible = true;">查看订单碎片</el-button>
                                         <el-dialog title="订单碎片信息" :append-to-body="true"
-                                            :visible.sync="props.row.buy_order.share_info_visible" center>
-                                            <div>{[props.row.buy_order.shares]}</div>
+                                            :visible.sync="scope.row.buy_order.share_info_visible" center>
+                                            <div>{[scope.row.buy_order.shares]}</div>
                                             <span slot="footer" class="dialog-footer" center>
                                                 <el-button type="primary"
-                                                    @click="props.row.buy_order.share_info_visible = false">确 定
+                                                    @click="scope.row.buy_order.share_info_visible = false">确 定
                                                 </el-button>
                                             </span>
                                         </el-dialog>
-                                    </el-form-item>
-                                    <el-form-item label="卖单价格碎片">
-                                        <el-button icon="el-icon-document" type="text"
-                                            @click="props.row.sell_order.share_info_visible = true;">查看订单碎片</el-button>
-                                        <el-dialog title="订单碎片信息" :append-to-body="true"
-                                            :visible.sync="props.row.sell_order.share_info_visible" center>
-                                            <div>{[props.row.sell_order.shares]}</div>
-                                            <span slot="footer" class="dialog-footer" center>
-                                                <el-button type="primary"
-                                                    @click="props.row.sell_order.share_info_visible = false">确 定
-                                                </el-button>
-                                            </span>
-                                        </el-dialog>
-                                    </el-form-item>
-                                </el-form>
+                                    <el-button slot="reference">点击查看</el-button>
+                                </el-popover>
                             </template>
                         </el-table-column>
-                        <el-table-column label="交易序号" prop="deal_id"></el-table-column>
-                        <el-table-column label="成交价格" prop="deal_price"></el-table-column>
-                        <el-table-column label="成交时间" prop="deal_time"></el-table-column>
-                        <el-table-column label="买家" prop="buyer"></el-table-column>
-                        <el-table-column label="卖家" prop="seller"></el-table-column>
-                        <el-table-column label="相关委员">
+                        <el-table-column label="卖家" prop="seller" width="100"></el-table-column>
+                        <el-table-column label="卖单信息" width="150">
+                            <template slot-scope="scope">
+                                <el-popover
+                                placement="right"
+                                width="400"
+                                trigger="click">
+                                    买单序号：{[ scope.row.sell_order.order_id ]}<br>
+                                    买单交易物品：{[ scope.row.sell_order.item ]}<br>
+                                    买单交易数量：{[ scope.row.sell_order.amount ]}<br>
+                                    买单创建时间：{[ scope.row.sell_order.create_time ]}<br>
+                                    <el-button icon="el-icon-document" type="text"
+                                        @click="scope.row.sell_order.share_info_visible = true;">查看订单碎片</el-button>
+                                        <el-dialog title="订单碎片信息" :append-to-body="true"
+                                            :visible.sync="scope.row.sell_order.share_info_visible" center>
+                                            <div>{[scope.row.sell_order.shares]}</div>
+                                            <span slot="footer" class="dialog-footer" center>
+                                                <el-button type="primary"
+                                                    @click="scope.row.sell_order.share_info_visible = false">确 定
+                                                </el-button>
+                                            </span>
+                                        </el-dialog>
+                                    <el-button slot="reference">点击查看</el-button>
+                                </el-popover>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="相关委员" width="200">
                             <template slot-scope="props">
                                 <div v-for="comm in props.row.related_comm" style="display:inline">
                                     {[ comm ]}
@@ -667,7 +661,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange_dealed_order"
                         :current-page="currentDealedOrderPage" :page-sizes="[10, 20, 30, 50, 100]" :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper" :total="dealed_order_list.length">
                     </el-pagination>
@@ -1079,6 +1073,14 @@
                 // 当前页
                 handleCurrentChange(val) {
                     this.currentPage = val;
+                },
+                // 当前页
+                handleCurrentChange_order(val) {
+                    this.currentOrderPage = val;
+                },
+                // 当前页
+                handleCurrentChange_dealed_order(val) {
+                    this.currentDealedOrderPage = val;
                 },
             },
             created: function () {
