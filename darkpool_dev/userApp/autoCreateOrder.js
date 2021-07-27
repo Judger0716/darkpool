@@ -10,7 +10,7 @@ async function createOrder() {
   if (Math.random() > 0.5) {
     type = 'sell';
   } else {
-    type = 'sell';
+    type = 'buy';
   }
 
   let username = 'usr4';
@@ -22,7 +22,7 @@ async function createOrder() {
   if (Math.random() > 0.5) {
     item = 'Bitcoin';
   } else {
-    item = 'Dogecoin';
+    item = 'Bitcoin';
   }
 
   let json_shares = {};

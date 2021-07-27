@@ -22,6 +22,8 @@ function transfer_order(json_order) {
     let user_end = json_order['creator'].search('C=') - 3;
     json_order['creator'] = json_order['creator'].substring(user_start, user_end);
 
+    json_order['order_id'] = parseInt(json_order['order_id']);
+
     let date = new Date();
     date.setTime(parseInt(json_order['create_time']['seconds']) * 1000);
     json_order['create_time'] = date.toLocaleString();
@@ -112,6 +114,8 @@ exports.queryOrder = async function (username) {
             let order = record['Record'];
             OrderList.push(transfer_order(order));
         }
+
+        OrderList.sort(function (a, b) { return parseInt(a.order_id) - parseInt(b.order_id); });
 
         /*
         // Extract Userful Infomation from raw JSON data

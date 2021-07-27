@@ -22,6 +22,8 @@ function transfer_order(json_order) {
     let user_end = json_order['creator'].search('C=') - 3;
     json_order['creator'] = json_order['creator'].substring(user_start, user_end);
 
+    json_order['order_id'] = parseInt(json_order['order_id']);
+
     let date = new Date();
     date.setTime(parseInt(json_order['create_time']['seconds']) * 1000);
     json_order['create_time'] = date.toLocaleString();
