@@ -32,7 +32,6 @@ var committeeContract, tokenContract, orderContract;
 var committeeMembers = new Map();
 var combiningOrders = new Map();
 let lastSet = new Set(), peerList = new Map();
-var stop = false;
 let lastPrice = new Map(
   [['Bitcoin', 0],
   ['Dogecoin', 0]]
@@ -184,8 +183,15 @@ async function heartbeats() {
   // currentState = MATCHING;
   let response = await orderContract.evaluateTransaction('GetOrderID', 'DealOrderID');
   let version = JSON.parse(response.toString());
-  // response = await orderContract.evaluateTransaction('GetDealOrderPrice');
-  // let price = JSON.parse(response.toString());
+  response = await orderContract.evaluateTransaction('GetDealOrderPrice');
+  let queryResult = JSON.parse(response.toString());
+  for (let result of queryResult) {
+    let record = result['Record'];
+    let item = result['Key'].split('\x00')[2];
+    lastPrice.set(item, record);
+  }
+  // console.log('Last price', lastPrice);
+
   if (currentVersion === undefined || currentVersion < version) {
     currentVersion = version;
     if (currentState !== WAITING) {
@@ -195,10 +201,10 @@ async function heartbeats() {
   // lastPrice = price;
   // console.log(`Sending heartbeats, current state: ${currentState}...`);
   for (let [peerString, peerId] of peerList) {
-    nodeSendAndClose(peerId, JSON.stringify({ type: 'heartbeats', content: { version: currentVersion } }));
+    nodeSendAndClose(peerId, JSON.stringify({ type: 'heartbeats', content: { version: currentVersion, price: queryResult } }));
   }
 
-  setTimeout(heartbeats, 500);
+  setTimeout(heartbeats, 1000);
 }
 
 async function combineOrders() {
@@ -324,9 +330,9 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
   }
 
   let item_result = {
-    result: JSON.stringify(matchResult.price) + ":" + JSON.stringify(matchResult.amount),
+    result: JSON.stringify(matchResult.price) + ":" + JSON.stringify(amount),
     price: matchResult.price,
-    amount: matchResult.amount,
+    amount: amount,
     deal_orders: {
       buy: deal_buy_orders,
       sell: deal_sell_orders
@@ -357,14 +363,15 @@ async function matchOrders() {
   // console.log(matchingPool);
   if (currentState === MATCHING) {
     for (let [item, pool] of matchingPool) {
-      let buyOrders = Array.from(pool.get('buy').values());
-      let sellOrders = Array.from(pool.get('sell').values());
+      // Deep Copy
+      let buyOrders = JSON.parse(JSON.stringify(Array.from(pool.get('buy').values())));
+      let sellOrders = JSON.parse(JSON.stringify(Array.from(pool.get('sell').values())));
 
       let buyOrdersInMatch = buyOrders.map(function (v) { let u = { ...v }; u.amount = v.amount - v.deal_amount; return u; });
       let sellOrdersInMatch = buyOrders.map(function (v) { let u = { ...v }; u.amount = v.amount - v.deal_amount; return u; });
 
       if (buyOrders.length > 0 && sellOrders.length > 0) {
-        let matchResult = match(buyOrdersInMatch, sellOrdersInMatch, 0);
+        let matchResult = match(buyOrdersInMatch, sellOrdersInMatch, lastPrice.get(item));
         if (matchResult.price <= 0 || matchResult.amount <= 0) {
           continue;
         }
@@ -394,6 +401,9 @@ async function matchOrders() {
           } else {
             pool.set(str_result, {
               num: 1,
+              item: item,
+              price: msg.content[item].price,
+              amount: msg.content[item].amount,
               content: [{ name: username, matchResult: msg.content[item] }]
             });
           }
@@ -410,15 +420,15 @@ async function matchOrders() {
     }
 
     if (masterName && masterName === username) {
-      await countOrders();
+      await countOrders(0);
     }
   }
   setTimeout(matchOrders, 10000);
 }
 
-async function countOrders() {
+async function countOrders(times) {
   console.log('Master counting....');
-  console.log(JSON.stringify(resultPool));
+  // console.log(JSON.stringify(resultPool));
   for (let [item, pool] of resultPool) {
     let count = 0;
 
@@ -429,7 +439,7 @@ async function countOrders() {
     let sorted_result = Array.from(pool.values()).sort(function (a, b) { return parseInt(b.num) - parseInt(a.num); });
     let result_body = sorted_result[0];
     // Result got, send to Fabric
-    if (count >= 3) {
+    if (count >= 3 || times >= 20) {
       if (result_body.num >= 3) {
         console.log("Final Result: ", JSON.stringify(result_body));
         // console.log("Sending match result: ", result_body.result.split(":")[0], result_body.result.split(":")[1], result_body.price);
@@ -446,7 +456,7 @@ async function countOrders() {
       return;
     }
   }
-  setTimeout(countOrders, 500);
+  setTimeout(countOrders, 500, times + 1);
 }
 
 async function committeeEventHandler(event) {
@@ -547,6 +557,12 @@ async function nodeEventHandler(stream) {
         currentVersion = version;
         currentState = MATCHING;
       }
+      for (let result of message.content.price) {
+        let record = result['Record'];
+        let item = result['Key'].split('\x00')[2];
+        lastPrice.set(item, record);
+      }
+      // console.log(lastPrice);
       break;
     case 'handshake':
       let signture = ec.signHex(message.content, prvKey.prvKeyHex);
@@ -578,6 +594,9 @@ async function nodeEventHandler(stream) {
             } else {
               pool.set(str_result, {
                 num: 1,
+                item: item,
+                price: message.content[item].price,
+                amount: message.content[item].amount,
                 content: [{ name: message.content.name, matchResult: message.content[item] }]
               });
             }

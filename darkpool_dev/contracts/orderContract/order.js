@@ -13,6 +13,7 @@ const orderIDKey = 'OrderID'
 const dealOrderPrice = 'DealOrderPrice'
 const dealOrderIDKey = 'DealOrderID'
 const contextKey = 'OrderContextKey'
+const lastPriceKey = 'lastPriceKey'
 
 class Order extends Contract {
   constructor() {
@@ -39,13 +40,10 @@ class Order extends Contract {
    * @returns price in string form
    */
   async GetDealOrderPrice(ctx) {
-    let id = this.GetOrderID(ctx, dealOrderIDKey);
-    let priceKey = await ctx.stub.createCompositeKey(dealOrderPrice, [id]);
-    let price = await ctx.stub.getState(priceKey);
-    if (!price || price.length === 0) {
-      return "0";
-    }
-    return price.toString();
+    // let id = this.GetOrderID(ctx, dealOrderIDKey);
+    // let priceKey = await ctx.stub.createCompositeKey(dealOrderPrice, [id]);
+    const result = await ctx.stub.getStateByPartialCompositeKey(lastPriceKey, []);
+    return this.QueryAllResult(result);
   }
 
   /*
@@ -164,11 +162,11 @@ class Order extends Contract {
     }
 
     for (let order of result_json.content[0].matchResult.deal_orders.buy) {
-      dealOrder.buy.push(await this._deal_order(ctx, result_json.content[0].matchResult.price, doid, order.id, order));
+      dealOrder.buy.push(await this._deal_order(ctx, result_json.price, doid, order.id, order));
     }
 
     for (let order of result_json.content[0].matchResult.deal_orders.sell) {
-      dealOrder.sell.push(await this._deal_order(ctx, result_json.content[0].matchResult.price, doid, order.id, order));
+      dealOrder.sell.push(await this._deal_order(ctx, result_json.price, doid, order.id, order));
     }
 
     // let order1Key = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, order1_id]);
@@ -240,6 +238,9 @@ class Order extends Contract {
     // await ctx.stub.putState(order1Key, JSON.stringify(order1Content));
     // await ctx.stub.putState(order2Key, JSON.stringify(order2Content));
     await ctx.stub.putState(contextCompositeKey, JSON.stringify(result_json));
+
+    let priceKey = await ctx.stub.createCompositeKey(lastPriceKey, [result_json.item]);
+    await ctx.stub.putState(priceKey, JSON.stringify(result_json.price));
 
     ctx.stub.setEvent('OrderDeal', Buffer.from(JSON.stringify(dealOrder)));
   }
