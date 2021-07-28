@@ -283,6 +283,7 @@
                     axios.post('/query_new_value', {
                         'old_value': this.old_value,
                     }).then(Response => {
+                        // console.log(this.new_value);
                         this.new_value = Response['data']['new_value'];
                         if (this.new_value) {
                             this.klineList.push(this.new_value);
