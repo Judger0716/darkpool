@@ -72,7 +72,7 @@ app.post('/update_priceList', function (req, res) {
 
 // 初始化k线图
 app.post('/init_kline', function (req, res) {
-    let ret_klineList = init_klineList.init_kline_chart;// Array.from(klineData.values());
+    let ret_klineList = init_klineList.init_kline_chart.concat(Array.from(klineData.values()));// Array.from(klineData.values());
     // ret_klineList.sort(function (a, b) { return a.timestamp - b.timestamp; });
     let ret_klineList_rev = [...ret_klineList];
     ret_klineList_rev.reverse();
@@ -132,14 +132,16 @@ app.post('/query_new_value', function (req, res) {
     if (!old_value) {
         res.json({
             'new_value': null
-        })
+        });
+        return;
     } else {
         let timeStamp = old_value.timestamp;
         for (let v of klineData.values()) {
             if (v.timestamp > timeStamp) {
                 res.json({
                     'new_value': v
-                })
+                });
+                return;
             }
         }
         res.json({
