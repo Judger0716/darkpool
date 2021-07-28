@@ -655,10 +655,18 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="举报结果">
-                            <template slot-scope="scope">
-                                <div v-for="item in scope.row.report_result">
-                                    <p>{[item.name]}: {[item.success]}</p>
-                                </div>
+                            <template slot-scope="scope">
+                                <el-popover
+                                placement="top"
+                                title="委员举报结果"
+                                width="200"
+                                trigger="click">
+                                    <el-table :data="scope.row.report_result">
+                                        <el-table-column label="委员名称" width="50" prop="name"></el-table-column>
+                                        <el-table-column v-if="scope.row.report_result.success" label="是否成功" width="100">成功</el-table-column>
+                                        <el-table-column v-else label="是否成功" width="100">失败</el-table-column>
+                                    </el-table>
+                                <el-button slot="reference">点击查看</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
