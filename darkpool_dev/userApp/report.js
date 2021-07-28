@@ -56,7 +56,7 @@ exports.report = async function (username, type, order_id, price, deal_order_id)
     let report_result = []
     let queryResponse = await contract.evaluateTransaction('Report', deal_order_id);
     let dealed_order_event = JSON.parse(Buffer.from(JSON.parse(queryResponse.toString())).toString());
-    console.log(dealed_order_event);
+    // console.log(dealed_order_event);
 
     price = parseInt(price);
 

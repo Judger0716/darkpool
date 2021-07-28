@@ -248,6 +248,7 @@ async function combineOrders() {
 }
 
 function formMatchResult(buyOrders, sellOrders, matchResult) {
+  let skip = "x509::/OU=client/OU=org2/OU=department1/CN=will::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server";
   let price = matchResult.price;
   let amount = matchResult.amount;
 
@@ -261,6 +262,8 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 
   for (let order of buyOrders) {
     if (buy_amount === 0) break;
+    if (order.creator === skip)
+      continue;
 
     if (order.price >= price && buy_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
@@ -277,6 +280,8 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 
   for (let order of sellOrders) {
     if (sell_amount === 0) break;
+    if (order.creator === skip)
+      continue;
 
     if (order.price <= price && sell_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
@@ -299,6 +304,8 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 
   for (let order of buyOrders) {
     if (buy_amount === 0) break;
+    if (order.creator === skip)
+      continue;
 
     if (order.price >= price && buy_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
@@ -315,6 +322,8 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 
   for (let order of sellOrders) {
     if (sell_amount === 0) break;
+    if (order.creator === skip)
+      continue;
 
     if (order.price <= price && sell_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;

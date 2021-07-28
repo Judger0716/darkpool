@@ -11,6 +11,7 @@ const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
 
 // Express Framework
+const init_klineList = require('./origin_data');
 const express = require('express');
 var app = express();
 const bodyParser = require('body-parser');
@@ -71,7 +72,7 @@ app.post('/update_priceList', function (req, res) {
 
 // 初始化k线图
 app.post('/init_kline', function (req, res) {
-    let ret_klineList = Array.from(klineData.values());
+    let ret_klineList = init_klineList.init_kline_chart;// Array.from(klineData.values());
     // ret_klineList.sort(function (a, b) { return a.timestamp - b.timestamp; });
     let ret_klineList_rev = [...ret_klineList];
     ret_klineList_rev.reverse();

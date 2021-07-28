@@ -657,12 +657,12 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="举报结果">
-                            <template slot-scope="props">
-                                <div v-for="item in props.row.report_result">
-                                    <p>{[item.name]}: {[item.success]}</p>
-                                </div>
-                            </template>
-                        </el-table-column>
+                                                        <template slot-scope="props">
+                                                                <div v-for="item in props.row.report_result">
+                                                                        <p>{[item.name]}: {[item.success]}</p>
+                                                                    </div>
+                                                            </template>
+                                                    </el-table-column>
                     </el-table>
                     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange_dealed_order"
                         :current-page="currentDealedOrderPage" :page-sizes="[10, 20, 30, 50, 100]" :page-size="pageSize"
@@ -1049,7 +1049,7 @@
                     axios.post('/queryCommittee', {
                         'username': this.username,
                     }).then(Response => {
-                        //console.log(Response['data'])
+                        // console.log(Response['data'])
                         this.candidates = Response['data']['candidates']
                         this.committee = Response['data']['committee']
                     })
@@ -1092,11 +1092,11 @@
                                 { name: 'usr3', success: false }
                                 ]
                         */
-                        row.report_result =  [
-                                { name: 'usr1', success: false },
-                                { name: 'usr2', success: false },
-                                { name: 'usr3', success: false }
-                                ]
+                        row.report_result = [
+                            { name: 'usr1', success: false },
+                            { name: 'usr2', success: false },
+                            { name: 'usr3', success: false }
+                        ]
                         // Clear last data.
                         this.report_form = {
                             'username': $("#cur_un").attr('value'),
