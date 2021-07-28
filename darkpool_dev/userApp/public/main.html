@@ -1077,6 +1077,16 @@
                     axios.post('/report', {
                         'report_form': this.report_form,
                     }).then(Response => {
+                        /*
+                        如果三个用户均没有违规行为：
+                        Response = [
+                                { name: 'usr1', success: false },
+                                { name: 'usr2', success: false },
+                                { name: 'usr3', success: false }
+                                ]
+                        */
+
+                        // Clear last data.
                         this.report_form = {
                             'username': $("#cur_un").attr('value'),
                             'order_id': null,
