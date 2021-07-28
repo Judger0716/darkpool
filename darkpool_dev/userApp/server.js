@@ -399,7 +399,7 @@ async function orderEventHandler(event) {
 }
 
 // SERVER LISTENING
-var server = app.listen(9000, async function () {
+var server = app.listen(80, async function () {
 
     // Get history transfer record and listen on new transfer
     const wallet = await Wallets.newFileSystemWallet(process.cwd() + '/wallet');
