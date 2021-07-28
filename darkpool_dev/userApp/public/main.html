@@ -70,7 +70,7 @@
             width: 200px;
         }
 
-        .item  .el-form-item__label {
+        .item .el-form-item__label {
             margin-top: 4px;
         }
     </style>
@@ -503,7 +503,8 @@
                             <el-table-column prop="type" label="订单类型"></el-table-column>
                             <el-table-column prop="item" label="交易物品"></el-table-column>
                             <el-table-column prop="amount" label="交易数量"></el-table-column>
-                            <el-table-column label="订单碎片">
+                            <el-table-column prop="deal_amount" label="已成交数量"></el-table-column>
+                            <el-table-column label="订单碎片" width="150%">
                                 <template slot-scope="scope">
                                     <el-button icon="el-icon-document" type="text"
                                         @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
@@ -591,15 +592,13 @@
                         <el-table-column label="成交时间" prop="deal_time" width="200"></el-table-column>
                         <el-table-column label="买单信息" width="150">
                             <template slot-scope="scope">
-                                <el-popover
-                                placement="top"
-                                width="600"
-                                trigger="click">
+                                <el-popover placement="top" width="600" trigger="click">
                                     <el-table :data="scope.row.buy_order" stripe style="width: 100%">
                                         <el-table-column prop="order_id" label="订单序号" width="50"></el-table-column>
                                         <el-table-column prop="creator" label="买家" width="100"></el-table-column>
                                         <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
                                         <el-table-column prop="amount" label="交易数量" width="100"></el-table-column>
+                                        <el-table-column prop="deal_amount" label="已成交数量" width="100"></el-table-column>
                                         <el-table-column prop="create_time" label="创建时间"></el-table-column>
                                     </el-table>
                                     <el-button slot="reference">点击查看</el-button>
@@ -608,15 +607,13 @@
                         </el-table-column>
                         <el-table-column label="卖单信息" width="150">
                             <template slot-scope="scope">
-                                <el-popover
-                                placement="top"
-                                width="600"
-                                trigger="click">
+                                <el-popover placement="top" width="600" trigger="click">
                                     <el-table :data="scope.row.sell_order" stripe style="width: 100%">
                                         <el-table-column prop="order_id" label="订单序号" width="50"></el-table-column>
                                         <el-table-column prop="creator" label="买家" width="100"></el-table-column>
                                         <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
                                         <el-table-column prop="amount" label="交易数量" width="100"></el-table-column>
+                                        <el-table-column prop="deal_amount" label="已成交数量" width="100"></el-table-column>
                                         <el-table-column prop="create_time" label="创建时间"></el-table-column>
                                     </el-table>
                                     <el-button slot="reference">点击查看</el-button>
@@ -636,10 +633,24 @@
                                 <el-dialog title="确认举报" :visible.sync="props.row.report_visible" width="30%"
                                     :append-to-body="true" center>
                                     <span slot="footer" class="dialog-footer">
-                                        <el-input v-model="report_form.order_id" style="margin-top: 10px; margin-bottom: 10px;" placeholder="请输入您的订单序号"></el-input>
-                                        <el-input v-model="report_form.price" style="margin-top: 10px; margin-bottom: 10px;" placeholder="请输入您的订单明文报价"></el-input>
+                                        <el-select v-model="report_form.type" placeholder="请选择订单类型"
+                                            style="margin-top: 10px; margin-bottom: 10px;">
+                                            <el-option key="buy" label="buy" value="buy">
+                                            </el-option>
+                                            <el-option key="sell" label="sell" value="sell">
+                                            </el-option>
+                                        </el-select>
+                                        <el-input v-model="report_form.order_id"
+                                            style="margin-top: 10px; margin-bottom: 10px;" placeholder="请输入您的订单序号">
+                                        </el-input>
+                                        <el-input v-model="report_form.price"
+                                            style="margin-top: 10px; margin-bottom: 10px;" placeholder="请输入您的订单明文报价">
+                                        </el-input>
                                         <el-button @click="props.row.report_visible = false">取 消</el-button>
-                                        <el-button type="primary" @click="props.row.report_visible = false; report();">确 定
+                                        <el-button type="primary"
+                                            @click="report_form.deal_order_id = JSON.stringify(props.row.deal_id); props.row.report_visible = false; report();">
+                                            确
+                                            定
                                         </el-button>
                                     </span>
                                 </el-dialog>
@@ -872,6 +883,8 @@
                     'username': $("#cur_un").attr('value'),
                     'order_id': null,
                     'price': null,
+                    'type': null,
+                    'deal_order_id': null
                 },
 
                 candidates: [],  // 候选人列表
@@ -1061,10 +1074,16 @@
                 },
                 // 举报
                 report() {
-                    axios.post('/report',{
+                    axios.post('/report', {
                         'report_form': this.report_form,
-                    }).then(Response =>{
-
+                    }).then(Response => {
+                        this.report_form = {
+                            'username': $("#cur_un").attr('value'),
+                            'order_id': null,
+                            'price': null,
+                            'type': null,
+                            'deal_order_id': null
+                        }
                     })
                 },
                 // 每页多少条
@@ -1102,10 +1121,9 @@
                         }).then(function (res) {
                             var data = res.data;
                             that.priceList = data['priceList'];
+                        }).catch(function (err) {
+                            console.log("=err====" + err);
                         })
-                            .catch(function (err) {
-                                console.log("=err====" + err);
-                            })
                     }, 600)
                 }, 5000)
             }

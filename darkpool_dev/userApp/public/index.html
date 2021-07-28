@@ -266,7 +266,8 @@
                                 <h4><a href="">Gold</a></h4>
                                 <p class="dolar">{[priceList['Gold'].price]}</p>
                                 <p v-if="priceList['Gold'].isup==true" class="price-up">
-                                    <span>%{[priceList['Gold'].rate]}</span></p>
+                                    <span>%{[priceList['Gold'].rate]}</span>
+                                </p>
                                 <p v-else class="price-down"><span>%{[priceList['Gold'].rate]}</span></p>
                             </div>
                         </div>
@@ -278,7 +279,8 @@
                                 <h4><a href="">Sliver</a></h4>
                                 <p class="dolar">{[priceList['Sliver'].price]}</p>
                                 <p v-if="priceList['Sliver'].isup==true" class="price-up">
-                                    <span>%{[priceList['Sliver'].rate]}</span></p>
+                                    <span>%{[priceList['Sliver'].rate]}</span>
+                                </p>
                                 <p v-else class="price-down"><span>%{[priceList['Sliver'].rate]}</span></p>
                             </div>
                         </div>
@@ -290,7 +292,8 @@
                                 <h4><a href="">Iron</a></h4>
                                 <p class="dolar">{[priceList['Iron'].price]}</p>
                                 <p v-if="priceList['Iron'].isup==true" class="price-up">
-                                    <span>%{[priceList['Iron'].rate]}</span></p>
+                                    <span>%{[priceList['Iron'].rate]}</span>
+                                </p>
                                 <p v-else class="price-down"><span>%{[priceList['Iron'].rate]}</span></p>
                             </div>
                         </div>
@@ -302,7 +305,8 @@
                                 <h4><a href="">Oil</a></h4>
                                 <p class="dolar">{[priceList['Oil'].price]}</p>
                                 <p v-if="priceList['Oil'].isup==true" class="price-up">
-                                    <span>%{[priceList['Oil'].rate]}</span></p>
+                                    <span>%{[priceList['Oil'].rate]}</span>
+                                </p>
                                 <p v-else class="price-down"><span>%{[priceList['Oil'].rate]}</span></p>
                             </div>
                         </div>
@@ -314,7 +318,8 @@
                                 <h4><a href="">Carbon</a></h4>
                                 <p class="dolar">{[priceList['Carbon'].price]}</p>
                                 <p v-if="priceList['Carbon'].isup==true" class="price-up">
-                                    <span>%{[priceList['Carbon'].rate]}</span></p>
+                                    <span>%{[priceList['Carbon'].rate]}</span>
+                                </p>
                                 <p v-else class="price-down"><span>%{[priceList['Carbon'].rate]}</span></p>
                             </div>
                         </div>
@@ -326,7 +331,8 @@
                                 <h4><a href="">Moutai</a></h4>
                                 <p class="dolar">{[priceList['Moutai'].price]}</p>
                                 <p v-if="priceList['Moutai'].isup==true" class="price-up">
-                                    <span>%{[priceList['Moutai'].rate]}</span></p>
+                                    <span>%{[priceList['Moutai'].rate]}</span>
+                                </p>
                                 <p v-else class="price-down"><span>%{[priceList['Moutai'].rate]}</span></p>
                             </div>
                         </div>
@@ -661,14 +667,13 @@
                 },
             },
             created: function () {
-                /*
-                axios.post('/init_kline',{
+                axios.post('/init_kline', {
                     'GOLD_SLIVER': true,
-                }).then(Response =>{
+                }).then(Response => {
                     this.klineList = Response['data']['init_klineList'];
                     this.klineList_rev = Response['data']['init_klineList_rev'];
-                    this.old_value = this.klineList[this.klineList.length-1];
-                })*/
+                    this.old_value = this.klineList[this.klineList.length - 1];
+                })
             }
         })
         // kline绘图,页面加载时初始化
@@ -678,6 +683,13 @@
             chart.createTechnicalIndicator('MA', false, { id: 'candle_pane' })
             chart.createTechnicalIndicator('VOL')
             chart.createTechnicalIndicator('MACD')
+            axios.post('/init_kline', {
+                'GOLD_SLIVER': true,
+            }).then(Response => {
+                let klineList = Response['data']['init_klineList'];
+                chart.applyNewData(klineList);
+            })
+            /*
             chartDataList = kLineDataList.map(function (data) {
                 return {
                     timestamp: new Date(data[0]).getTime(),
@@ -688,7 +700,7 @@
                     volume: Math.ceil(+data[5]),
                 }
             })
-            chart.applyNewData(chartDataList)
+            chart.applyNewData(chartDataList)*/
         }
         // 随后按照间隔不断更新
         window.setInterval(() => {

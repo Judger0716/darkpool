@@ -15,8 +15,8 @@ async function createOrder() {
 
   let username = 'usr4';
   // = req.body.type;
-  let amount = Math.round(Math.random() * 10);
-  let price = Math.round(Math.random() * 10);
+  let amount = Math.round(Math.random() * 100);
+  let price = Math.round(Math.random() * 100);
   let item;
 
   if (Math.random() > 0.5) {
@@ -66,6 +66,7 @@ async function main() {
   for (let i = 0; i < 20; i++) {
     await createOrder();
   }
+  setTimeout(main, 1000);
 }
 
 main();

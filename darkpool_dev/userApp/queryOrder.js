@@ -100,7 +100,7 @@ exports.queryOrder = async function (username) {
 
         // Query DealOrders
         queryResponse = await contract.evaluateTransaction('GetDealedOrders');
-        var DealedOrderList = JSON.parse(queryResponse);
+        var DealedOrderList = JSON.parse(Buffer.from(queryResponse));
         console.log(DealedOrderList)
 
         var OrderList = [];

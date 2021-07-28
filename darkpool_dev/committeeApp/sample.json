@@ -1,120 +1,752 @@
 {
-  "num": 3,
-  "item": "price",
-  "content": [
+  "buy": [
     {
-      "name": "usr3",
-      "matchResult": {
-        "result": "1:1",
-        "price": 1,
-        "amount": 1,
-        "deal_orders": {
-          "buy": [
-            {
-              "id": "2",
-              "type": "buy",
-              "price": 1,
-              "amount": 1,
-              "deal_amount": null,
-              "time": "1627199632"
-            }
-          ],
-          "sell": [
-            {
-              "id": "1",
-              "type": "sell",
-              "price": 1,
-              "amount": 1,
-              "deal_amount": null,
-              "time": "1627199624"
-            }
-          ]
+      "amount": 7,
+      "create_time": {
+        "nanos": 851000000,
+        "seconds": "1627394881"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 7,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "11",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "5d63b4a8f1c656e3713f48bc870bd5be311d3bcedcdde578958bd1e6166fbb4c4683ca6cd6af88b3a954a6d3721ac1b8c2f0a5ab28cacdcacf69ffdce535dac3",
+          "1": "a9cf9086d7df5850740c31b7ab40599a90c981477737dd3c44db8e7db5bba97da94ac64af4921fe633e6b72cb38fd5f94dc1ba6fae626a29ccac1fde2c87a58c"
         },
-        "context": {
-          "buy": [
-            "2"
-          ],
-          "sell": [
-            "1"
-          ]
+        "usr2": {
+          "0": "6f0e84948e01c6e85e91d386a65fc9aa098a505da14f28187072b2d89298b8789a66b9c76f1674118bfc1399b9e14d75078e479b2561914d44cd503275f9e255",
+          "1": "c5a6cae569fab7d224a65c095326ef908f25c5a75e57140efd419bbb8e3968d6921d640dd30830b2f3e64c023539ac29701af058878073b9b81e6869bee29199"
+        },
+        "usr3": {
+          "0": "8db9f6ab3554d01240ba0fbfde93c3f7d0d58b01d1c292df7497edd5632d058b86ef384414bf0131fe45d8f677563cddadbcc394989a07313c6fc88f1ed5b77e",
+          "1": "0343e87659bf936499dc859c4771be67eac761b717bb64cdb0cf1eed28482880c9d1ae0c2d0542a1900b2b4f263d2deb8b38eadf36970efa2cd2bea24499f0f9"
         }
-      }
+      },
+      "type": "buy"
     },
     {
-      "name": "usr2",
-      "matchResult": {
-        "result": "1:1",
-        "price": 1,
-        "amount": 1,
-        "deal_orders": {
-          "buy": [
-            {
-              "id": "2",
-              "type": "buy",
-              "price": 1,
-              "amount": 1,
-              "deal_amount": null,
-              "time": "1627199632"
-            }
-          ],
-          "sell": [
-            {
-              "id": "1",
-              "type": "sell",
-              "price": 1,
-              "amount": 1,
-              "deal_amount": null,
-              "time": "1627199624"
-            }
-          ]
+      "amount": 2,
+      "create_time": {
+        "nanos": 452000000,
+        "seconds": "1627394884"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 2,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "12",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "08e1b8473561144b142d0ec2c5afc4fbf6a5057eddd11066941a4e27293a2e69943952f017310fb8bf97eac5d385256e79d91e376930c44bd8eeff556fa83693",
+          "1": "78b8da04b40ebdf0a852fd2fa5369b0e007946250d2d8b156fb68b8a5b15468d747874f94329cbaee625570ddc5b2b44cbe896c23286d671e1d4eb7799c124aa"
         },
-        "context": {
-          "buy": [
-            "2"
-          ],
-          "sell": [
-            "1"
-          ]
+        "usr2": {
+          "0": "bafb8b5eb366a5f76a8da1cfe7faf940f79a70d0812f65f025dee8277f5c7cebfea0fe39778d676ad5693ce2f3eb2679cde79d727172a1d66b27f28cb0ecd6de",
+          "1": "372a8a527220e53f1ef0a84ba25fc3350df12642c650eaf2733a48ed0e4ce26e56d52aaf22821a56fdc34c482d5a5bdad36c11bf1982b8936927883190aa82d3"
+        },
+        "usr3": {
+          "0": "98540850a87962636edd876910067b773eb3687d1304ac11d2fb7811198c7264cdef03e48cdc5b4796f9402dbf3b49a18514b61dbf4959617d4a03975cdddbe3",
+          "1": "6738775c7e0e07d8e11c7bfebbeade5bd4be0b81bd4044ececad16b09e1e7dfd19e5f7a467bfb2783f93d75f0aaa6d48467aea0f3dd56f8ebeb309d561af6324"
         }
-      }
+      },
+      "type": "buy"
     },
     {
-      "name": "usr1",
-      "matchResult": {
-        "result": "1:1",
-        "price": 1,
-        "amount": 1,
-        "deal_orders": {
-          "buy": [
-            {
-              "id": "2",
-              "type": "buy",
-              "price": 1,
-              "amount": 1,
-              "deal_amount": null,
-              "time": "1627199632"
-            }
-          ],
-          "sell": [
-            {
-              "id": "1",
-              "type": "sell",
-              "price": 1,
-              "amount": 1,
-              "deal_amount": null,
-              "time": "1627199624"
-            }
-          ]
+      "amount": 2,
+      "create_time": {
+        "nanos": 451000000,
+        "seconds": "1627394897"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 2,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "17",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "758c5a5944d10b96e0efd212e0d7f34a1e3d0dd5c6b591954f5dd8d1ddbd1d0c82f1f0f74fcf9e54997c2f04ad3d5cc4a2a83a3022aefc489a61d5e119fad8a6",
+          "1": "5ee79cf3fbfd11301d6fe0ff6fc5aff473b59a2777819dcef247d5af48e935daeabc3368223084d76cc956e80f7448ac4526e63b71fee83a169a7007bcf4fbdf"
         },
-        "context": {
-          "buy": [
-            "2"
-          ],
-          "sell": [
-            "1"
-          ]
+        "usr2": {
+          "0": "4929a614d2ab0c81c313d831d58510b9cdc07552f18cf66d5e83a82914b3ecd38490f56df336289fde7b9be35d35f5be98eb1a2ac21b5a642b31484aa3e57a6c",
+          "1": "251695d23a3553687272c42149df8dc8f3e6dc1c961262d685692ab258c898f8319937c7a69efa3b0f3f640efda7ad49771a6cbf57c888b84773da6594315217"
+        },
+        "usr3": {
+          "0": "216c03c3995ffc6f3f0b9cffed3f41eaa376f25493f8cdf6c7ee8a4e95cd4ee81a4952f4b8b7e02704d7c343b5067cb0de026f36d29668a1377c3bfff2d90e8e",
+          "1": "31259af8d1dc2418c735f8f8e094971f3051950ac086a8d52c7648889fe2f11cf57059a68b88a61bc7ba519f9351335b4a931d27910dab521d665194c628c288"
         }
+      },
+      "type": "buy"
+    },
+    {
+      "amount": 2,
+      "create_time": {
+        "nanos": 477000000,
+        "seconds": "1627394905"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 2,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "20",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "77f8da94393affbd619f3c12bb9ba5d4cc36b9cd12fc7c02afca6e79883bd87d1668db52fa19c7595c5c7f94f51a23f18227311074fb934e4fe3ce8de6cf2b81",
+          "1": "02a522e5953c136fe4d049e60570f16168b6e27431b6433ba7210ed8b9866beeeb1d7aa5f4d57b9a101e501e9c4ddc4c497fdda96f7079616aaff088416d74a5"
+        },
+        "usr2": {
+          "0": "c36c43c5b2d52f4b06bc9c99927ae19ffd9037bc79f2bade3d37d72b2226329ed3e4e60fbb55214869f467e92791a39565db5e7964d519c444dd36945d956919",
+          "1": "536a1dad20bd6d84d17e7e9d7821c6724c344c61df3fc8c7810e96a8cb456d610cbd80e41e545eeb8aa5092ddbec041166214c00bb1a2763f0519156f4e390a5"
+        },
+        "usr3": {
+          "0": "14b494c57e44ddc72ca2ae89fbbba52e11f43e47d3774aac9980c683f936c25fc62664ec3cf1a97bdc720e91db568840435ec49c8eb9f202a2963e1c54f96bb8",
+          "1": "5f18a8d3ae7ac6201735ca0698d17876c4a5c1910f836e1aa916ca5e7071b3e8aab35e9a227663f08e9f196b9f1a688648123b8905230a955538f27e5b5d49f6"
+        }
+      },
+      "type": "buy"
+    },
+    {
+      "amount": 10,
+      "create_time": {
+        "nanos": 502000000,
+        "seconds": "1627394863"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 10,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "4",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "ae7ad519fdc223f923931010ec83b2bfdcffb7f94d170ea2cd88e7719f5f00c6579543f245951559abbc5d6a6b13b048a14f2464fe58a1a9b92cc9cd6e37ce00",
+          "1": "6803ce6200c04410ea67a55b05638c464b4a0a84d44c06f14748af92fda51525571259dbfd4167346ea30e455fcc6ba33c775c9d6efee023f4daca6213397435"
+        },
+        "usr2": {
+          "0": "07c8923e1a7520830d9d343250d26d8cd86f35be8025a6175f1962ca047ad5d5b97737a43af83ca948d6c203c412cce441dd76827d5eeb3017a109c23fad7513",
+          "1": "66efb1b6b0b0095ee47c034c2b6abaf371e51aa5c6c49d84142c0e2c8405883658e58a161b8d787f978c5dbba322dae8cfa2a0cae0b1d3935acf79d1646be8f9"
+        },
+        "usr3": {
+          "0": "22037d54d976507b5dd908d2c110e6bef7cd53475c9376a6ab46a08eb8178f30838f48f241cda52c1872d5d65ebb5e824a4754e6ab8bb2168593258b4611eae9",
+          "1": "5f8e1a53b907d94a226d3c268901f3f67f356ff0be0d79fcf8fc1aa42a07416cae19f91e11faa3d7d7030f5eb6ddbbb1962a337c06691b803ab457a71aaa2b89"
+        }
+      },
+      "type": "buy"
+    },
+    {
+      "amount": 2,
+      "create_time": {
+        "nanos": 119000000,
+        "seconds": "1627394874"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 2,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "8",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "1d581ed55dd7a9eddf25c1b28963228a038b346df5f8fa430feec0034a5329b633f7a9f25035bcd8151a60f9d57606aa934eaffa0893175eaf922926a885f4ac",
+          "1": "5a2d9c457a919543881608e7978efbf56c1d767d1db6c1a421665fea35f29acefeb0a2c7bb56342bf3ba3b16b0c2bcb86d4de7a284dd59961ce60d6041f6fc28"
+        },
+        "usr2": {
+          "0": "9269ea908c0bd97108056558faa658b07a24476b8459e0033a65a0af99200ccee89465d1d5e73eccc6dde8fdb2879e8a934ae470ed9b2d1c447a6c9a4bbcf17f",
+          "1": "67fc798787eba8a5612db454c539dfa9724a7b5ef4b11a0fdcf9d9d0bb010578a095a1824b5a902f9d880924ce9bf5a417cd5c1915646e4b5aa2e2e496546657"
+        },
+        "usr3": {
+          "0": "681680384499c41c4ed73503bed80b080ca9d44c5cc7892bd639c5a70467e87762343f1d492fc45c028cdee10b182d7f9daca52c0b39255477625f4611b4f805",
+          "1": "61348a6077115b600551c0c1af7ddec8f6733351a962b7d8d871a4e7b4607fa6c3dfc59e2fc674ba3cb991aaf552af8eb9e47dd4b99c5e32242fd1a9c69036a7"
+        }
+      },
+      "type": "buy"
+    },
+    {
+      "amount": 9,
+      "create_time": {
+        "nanos": 672000000,
+        "seconds": "1627394876"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": false,
+      "deal_amount": 5,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "9",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "9de81a02ca3093170c83fe6dd5a90a2f6e42bdea4fb69a130e2c4da9fac5dfe86a06c64fc6fd0b7c98ab0166f321b2ecc9c49dcc423d643e769b6ea23e787fee",
+          "1": "9262ec5bfd6a45dc4a635cd2e723d986016b8c3c96050c2a716f0efd2f2505f4c6a55ee5688c8f2462750813e64ab55e077d38b1f001945e2f155c18ac375e83"
+        },
+        "usr2": {
+          "0": "86bf8284f36805c72a782d8966ddbe0848853e79aceb96f03ffb32287a1e2e094bb2927e3a7f5fae1bcffeefb489131ec4f01034552f352b425db29c228c349e",
+          "1": "6a8a40c099ee8e1edd140548b2ae44960f0f2c04a19b6967fa227fb22d738ee172dae233fb70ccc8dad025d33ee3c70b7cd12b0dd0fe194979b1facd39fc1708"
+        },
+        "usr3": {
+          "0": "68b215765d22764e9e0d09dc116ca751108dd906c081173620dccf1299aabf5cfeb5416ce3ea60a82751369ed6c515d5b5b40144dff9a4f14e7988e37fff0d40",
+          "1": "514dcc0097104543a5f212e06e262d0a497231511fd011d685a4811b52cb01e986d1b5c4ff1334c09392fe26b90abe7302f142c72a58587c119f43ae997156d1"
+        }
+      },
+      "type": "buy"
+    }
+  ],
+  "context": {
+    "amount": 30,
+    "content": [
+      {
+        "matchResult": {
+          "amount": 30,
+          "context": {
+            "buy": [
+              "11",
+              "12",
+              "17",
+              "20",
+              "4",
+              "5",
+              "7",
+              "8",
+              "9"
+            ],
+            "sell": [
+              "1",
+              "10",
+              "13",
+              "14",
+              "15",
+              "16",
+              "18",
+              "19",
+              "2",
+              "3",
+              "6"
+            ]
+          },
+          "deal_orders": {
+            "buy": [
+              {
+                "amount": 7,
+                "deal_amount": 7,
+                "id": "11",
+                "price": 4,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "12",
+                "price": 10,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "17",
+                "price": 5,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "20",
+                "price": 7,
+                "type": "buy"
+              },
+              {
+                "amount": 10,
+                "deal_amount": 10,
+                "id": "4",
+                "price": 4,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "8",
+                "price": 8,
+                "type": "buy"
+              },
+              {
+                "amount": 9,
+                "deal_amount": 5,
+                "id": "9",
+                "price": 4,
+                "type": "buy"
+              }
+            ],
+            "sell": [
+              {
+                "amount": 6,
+                "deal_amount": 6,
+                "id": "1",
+                "price": 0,
+                "type": "sell"
+              },
+              {
+                "amount": 5,
+                "deal_amount": 5,
+                "id": "10",
+                "price": 4,
+                "type": "sell"
+              },
+              {
+                "amount": 9,
+                "deal_amount": 9,
+                "id": "15",
+                "price": 2,
+                "type": "sell"
+              },
+              {
+                "amount": 10,
+                "deal_amount": 10,
+                "id": "2",
+                "price": 3,
+                "type": "sell"
+              }
+            ]
+          },
+          "price": 4,
+          "result": "4:30"
+        },
+        "name": "usr1"
+      },
+      {
+        "matchResult": {
+          "amount": 30,
+          "context": {
+            "buy": [
+              "11",
+              "12",
+              "17",
+              "20",
+              "4",
+              "5",
+              "7",
+              "8",
+              "9"
+            ],
+            "sell": [
+              "1",
+              "10",
+              "13",
+              "14",
+              "15",
+              "16",
+              "18",
+              "19",
+              "2",
+              "3",
+              "6"
+            ]
+          },
+          "deal_orders": {
+            "buy": [
+              {
+                "amount": 7,
+                "deal_amount": 7,
+                "id": "11",
+                "price": 4,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "12",
+                "price": 10,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "17",
+                "price": 5,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "20",
+                "price": 7,
+                "type": "buy"
+              },
+              {
+                "amount": 10,
+                "deal_amount": 10,
+                "id": "4",
+                "price": 4,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "8",
+                "price": 8,
+                "type": "buy"
+              },
+              {
+                "amount": 9,
+                "deal_amount": 5,
+                "id": "9",
+                "price": 4,
+                "type": "buy"
+              }
+            ],
+            "sell": [
+              {
+                "amount": 6,
+                "deal_amount": 6,
+                "id": "1",
+                "price": 0,
+                "type": "sell"
+              },
+              {
+                "amount": 5,
+                "deal_amount": 5,
+                "id": "10",
+                "price": 4,
+                "type": "sell"
+              },
+              {
+                "amount": 9,
+                "deal_amount": 9,
+                "id": "15",
+                "price": 2,
+                "type": "sell"
+              },
+              {
+                "amount": 10,
+                "deal_amount": 10,
+                "id": "2",
+                "price": 3,
+                "type": "sell"
+              }
+            ]
+          },
+          "price": 4,
+          "result": "4:30"
+        },
+        "name": "usr3"
+      },
+      {
+        "matchResult": {
+          "amount": 30,
+          "context": {
+            "buy": [
+              "11",
+              "12",
+              "17",
+              "20",
+              "4",
+              "5",
+              "7",
+              "8",
+              "9"
+            ],
+            "sell": [
+              "1",
+              "10",
+              "13",
+              "14",
+              "15",
+              "16",
+              "18",
+              "19",
+              "2",
+              "3",
+              "6"
+            ]
+          },
+          "deal_orders": {
+            "buy": [
+              {
+                "amount": 7,
+                "deal_amount": 7,
+                "id": "11",
+                "price": 4,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "12",
+                "price": 10,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "17",
+                "price": 5,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "20",
+                "price": 7,
+                "type": "buy"
+              },
+              {
+                "amount": 10,
+                "deal_amount": 10,
+                "id": "4",
+                "price": 4,
+                "type": "buy"
+              },
+              {
+                "amount": 2,
+                "deal_amount": 2,
+                "id": "8",
+                "price": 8,
+                "type": "buy"
+              },
+              {
+                "amount": 9,
+                "deal_amount": 5,
+                "id": "9",
+                "price": 4,
+                "type": "buy"
+              }
+            ],
+            "sell": [
+              {
+                "amount": 6,
+                "deal_amount": 6,
+                "id": "1",
+                "price": 0,
+                "type": "sell"
+              },
+              {
+                "amount": 5,
+                "deal_amount": 5,
+                "id": "10",
+                "price": 4,
+                "type": "sell"
+              },
+              {
+                "amount": 9,
+                "deal_amount": 9,
+                "id": "15",
+                "price": 2,
+                "type": "sell"
+              },
+              {
+                "amount": 10,
+                "deal_amount": 10,
+                "id": "2",
+                "price": 3,
+                "type": "sell"
+              }
+            ]
+          },
+          "price": 4,
+          "result": "4:30"
+        },
+        "name": "usr2"
       }
+    ],
+    "item": "Bitcoin",
+    "num": 3,
+    "price": 4
+  },
+  "deal_id": "1",
+  "sell": [
+    {
+      "amount": 6,
+      "create_time": {
+        "nanos": 263000000,
+        "seconds": "1627394855"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 6,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "1",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "1e2bd7f7c2f24105453373c9bf55ec69f77a3c2a499166b5c8cd8962dda0bfde3edc3dc51309aa2ac52f486510e2e838a137fb96640acc3da63a362fd5fea7da",
+          "1": "4715a1c488f369dde086c50cf7050980cd5061d8e614d8d92246703d8d2b89dd08dbc559e69d7f5f1bc2c3ecb012868a2624d90f09d68b893cf93b75a04f0c9a"
+        },
+        "usr2": {
+          "0": "ad5a79d527208775b079c1877d0a6bfe1e677cbabc11e1177a1ec79fae5324ab0df0d166c95f172c7a0fc6fd44e3954978036d5aa21731c3d76567b4c40a9378",
+          "1": "c2fbac483514313d81864158004e1995263dac7c81c924e38268ac5015d4f54f5a8d2e055c2565ea6116127f1ffa478bb0de02e5222f57bf61d8a090df87e1d4"
+        },
+        "usr3": {
+          "0": "6248d8e3be38c246576e27cc3640aa68a4297adb8a7a243bb84bd8799268f038c0ae6f8afb1fcca8c08b327c754c1ef3bf51aee2cc713aecccdaa2e97556ce34",
+          "1": "9ce078b008e4db6885454a1c725c1c863596f68388ceb5a637a9b6ebdce7e762b089eea4138367a84e1200d8a5bd36a4203137b32b707c6ad0deece6228667a0"
+        }
+      },
+      "type": "sell"
+    },
+    {
+      "amount": 5,
+      "create_time": {
+        "nanos": 293000000,
+        "seconds": "1627394879"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 5,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "10",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "1491e049a73a6a1981ae5d927226292c6fb580afa8316ac7ca94ff17fce5fb793f1437418584d883dba00ee860cacd3661903dbebde76ca83f69551d9f09d9b2",
+          "1": "248e045a070400634c0475031dcd851d91025f5838159aed2860cec80d24a912c4bf4ca0fe3907d34093355b64638b42bf77bb74481c37f849474525b4c4f1aa"
+        },
+        "usr2": {
+          "0": "bb16bf0359a30020ceaa5d244b380a884e7aa745e310dea186a74669fccd9e3ef17b2229aa44db6521bd3ea302854a7964c187038519bca0a87f2a2d64ee1661",
+          "1": "88876c60b754110271ae58ccd14a4ed20e5045b3fa90359225844ecf5a998bd1539d28d4319326ef438069bba4d87fe37f96c12ce51ac368aec39e37a048fe88"
+        },
+        "usr3": {
+          "0": "408fb046df165e6d11ccf5e4187d25a1176a00acdb68c16fa9ef6bf578477a2f514d8a8ac26722bf8c9d2dee7d97908ee3c753262b0395573ffd99c8e4143483",
+          "1": "2dacbcf6d81e84838a6eadb847def30c6cb379020f61ef90f4ad6f8f80fbf5fbd9bb975f1c9dfa0f0f5e45b436ad0721b4e09097695976fe0dcbcae7934bd552"
+        }
+      },
+      "type": "sell"
+    },
+    {
+      "amount": 9,
+      "create_time": {
+        "nanos": 200000000,
+        "seconds": "1627394892"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 9,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "15",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "a9860c3db6cc2310820b5ab688cbdfb1d156f5cd4a2e8c37cf9396a0aa3793f8674d19f4808d3d57c298fc2cd3676b0e314a9a3fe1d0101a643303e0dea9537f",
+          "1": "34368b7ae041b9cf4e4680e7cfb4e6e895118cc7612fc1a023e5ed683d08cb6d011958cccdc70f9d24bb0387b775cc509f7bebc04220840def58858039f5cbd9"
+        },
+        "usr2": {
+          "0": "bcf44b57a6c4826a129cca32912b9c384cbccff28dc9371ca7de0f3b7557f19040534246e1afb4cb3416345e5ef126095ea23a424e2c8519470d1ac091e820b6",
+          "1": "589388f34e10725e611caeb8df66e0d4423d53368a1b1241c4e679493f30583b88d83141e9050b09e368717125d45d24429cbe65022f2a1c611c941792cadd7b"
+        },
+        "usr3": {
+          "0": "98a495ba904e9afd47b095a604523938ce1a4df5198c7757b23068f541b6a054447d9bd840a9220717336282d42fabd636c8f3513d2c6297dfa79e32baf85669",
+          "1": "4f6555b1cfda0f46dfe13b7353146168c0a599783329e934cea33f57d87e7202c2888687812198d96cd2bc7663fd6fe0414d7f8c214e9601023c8c790f1e0b00"
+        }
+      },
+      "type": "sell"
+    },
+    {
+      "amount": 10,
+      "create_time": {
+        "nanos": 200000000,
+        "seconds": "1627394858"
+      },
+      "creator": "x509::/OU=client/OU=org2/OU=department1/CN=usr4::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server",
+      "deal": true,
+      "deal_amount": 10,
+      "deal_order_id": "1",
+      "deal_price": 4,
+      "deal_time": {
+        "nanos": 246000000,
+        "seconds": "1627395067"
+      },
+      "deal_with": null,
+      "item": "Bitcoin",
+      "order_id": "2",
+      "price": null,
+      "shares": {
+        "usr1": {
+          "0": "8c476fd10c0a6a07f73f763f3f1f686ba5c36dffdf448ad1db7ccf3c9f95093dab8a5d3ea213cecef4a92091384b52c343c459a9e4bf86c3ce76674dd9934fd1",
+          "1": "19c0c7fd4eaddf989fa0a28f56ca63bebae76816d18f16681d2161e7d80e142d1ff55d89bb01f04fb0047a9cbb330cfb9015abd5ec50b701d7b1e03673b5f830",
+          "2": "36a25d0d5eb546c2d84b35ef73a31610717757455195e6bef1dc4c2536a786904a8098105b7bdbd59b84e7d6af90fed9c1e24fa9a21747a1c62af754123211a4"
+        },
+        "usr2": {
+          "0": "ca4b4918b10414f3b56101530433427ae64684a417725f193bb861a99035e284692cd8d61d517e75c1b5ad0a58690ab03f5dbab5fba62c6010371e7fcf445144",
+          "1": "2929997b8789da16b4dbd5fb7596bfef839afb00489349ed574debca42beaab19c182c21bed1c32d6044505a935b6a6d5217d36449d33e911cedf0a038220829"
+        },
+        "usr3": {
+          "0": "2ea0e31b3d7d18f5db1ab0b30155086d7f1be0b203207b9d6562b33dfbabc13db35fa7c543b913255edd5fd7fff4cf73b78f8aee0a30f96295ea917c549ae9a3",
+          "1": "80945e4740f6e5c1d0df9a9238bd2fcfbdd078adeb83a5765479e679f7d0c402244013b4742b000babf3364af57abdf0ed34c1c38d3d6cd875d6853cb6f8c36b"
+        }
+      },
+      "type": "sell"
     }
   ]
 }

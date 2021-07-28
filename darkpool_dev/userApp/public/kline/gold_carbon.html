@@ -291,14 +291,13 @@
                 },
             },
             created: function () {
-                /*
-                axios.post('/init_kline',{
+                axios.post('/init_kline', {
                     'GOLD_CARBON': true,
-                }).then(Response =>{
+                }).then(Response => {
                     this.klineList = Response['data']['init_klineList'];
                     this.klineList_rev = Response['data']['init_klineList_rev'];
-                    this.old_value = this.klineList[this.klineList.length-1];
-                })*/
+                    this.old_value = this.klineList[this.klineList.length - 1];
+                })
             }
         })
         // kline绘图,页面加载时初始化
@@ -308,6 +307,13 @@
             chart.createTechnicalIndicator('MA', false, { id: 'candle_pane' })
             chart.createTechnicalIndicator('VOL')
             chart.createTechnicalIndicator('MACD')
+            axios.post('/init_kline', {
+                'GOLD_SLIVER': true,
+            }).then(Response => {
+                let klineList = Response['data']['init_klineList'];
+                chart.applyNewData(klineList);
+            })
+            /*
             chartDataList = kLineDataList.map(function (data) {
                 return {
                     timestamp: new Date(data[0]).getTime(),
@@ -319,6 +325,7 @@
                 }
             })
             chart.applyNewData(chartDataList)
+            */
         }
         // 随后按照间隔不断更新
         window.setInterval(() => {

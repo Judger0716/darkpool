@@ -158,6 +158,9 @@ class Order extends Contract {
       deal_id: doid,
       buy: [],
       sell: [],
+      price: result_json.price,
+      amount: result_json.amount,
+      time: ctx.stub.getTxTimestamp(),
       context: result_json
     }
 
@@ -251,8 +254,10 @@ class Order extends Contract {
   }
 
   async Report(ctx, dealed_order_id) {
-    // TODO
-    ctx.stub.setEvent('Report', Buffer.from(dealed_order_id));
+    let dealKey = await ctx.stub.createCompositeKey(dealOrderKey, [dealed_order_id]);
+    let dealed_order = await ctx.stub.getState(dealKey);
+    return dealed_order;
+    // ctx.stub.setEvent('Report', Buffer.from({ order_id: order_id, dealed_order: dealed_order }));
   }
 
   async GetDealOrder(ctx) {

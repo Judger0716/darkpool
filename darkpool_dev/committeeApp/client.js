@@ -423,7 +423,7 @@ async function matchOrders() {
       await countOrders(0);
     }
   }
-  setTimeout(matchOrders, 10000);
+  setTimeout(matchOrders, 5000);
 }
 
 async function countOrders(times) {
@@ -536,6 +536,12 @@ async function orderEventHandler(event) {
       // console.log(matchingPool);
     }
   }
+  /*
+  else if (event.eventName === "Report") {
+    // { order_id: order_id, dealed_order: dealed_order }
+    let id = eventJson.order_id;
+    let order = eventJson.dealed_order;
+  }*/
 }
 
 async function nodeEventHandler(stream) {

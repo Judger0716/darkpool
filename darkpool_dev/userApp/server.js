@@ -32,6 +32,7 @@ const QueryCommittee = require('./queryCommittee');
 const ElectCommittee = require('./electCommittee');
 const FormCommittee = require('./formCommittee');
 const QueryDealedOrder = require('./queryDealedOrders');
+const Report = require('./report');
 // import { kLineDataList as GOLD_SLIVER } from '@/public/kline/kline_gold_sliver'
 // import { kLineDataList as GOLD_CARBON } from '@/public/kline/kline_gold_carbon'
 // const GOLD_SLIVER = require('./public/kline/kline_gold_sliver');
@@ -41,6 +42,8 @@ const QueryDealedOrder = require('./queryDealedOrders');
 const sss = require('shamirs-secret-sharing')
 // RSA
 const jsrsasign = require('jsrsasign');
+
+let klineData = new Map();
 
 /* Route List */
 
@@ -68,6 +71,16 @@ app.post('/update_priceList', function (req, res) {
 
 // 初始化k线图
 app.post('/init_kline', function (req, res) {
+    let ret_klineList = Array.from(klineData.values());
+    // ret_klineList.sort(function (a, b) { return a.timestamp - b.timestamp; });
+    let ret_klineList_rev = [...ret_klineList];
+    ret_klineList_rev.reverse();
+
+    res.json({
+        'init_klineList': ret_klineList,
+        'init_klineList_rev': ret_klineList_rev,
+    });
+    /*
     if (req.body.GOLD_SLIVER) {
         var ret_klineList = [];
         var ret_klineList_rev = [];
@@ -109,35 +122,51 @@ app.post('/init_kline', function (req, res) {
             'init_klineList': ret_klineList,
             'init_klineList_rev': ret_klineList_rev,
         })
-    }
+    }*/
 })
 
 // 更新k线图
 app.post('/query_new_value', function (req, res) {
-    var old_value = req.body.old_value;
-
-    var flag1 = (Math.random() - 0.5) >= 0;
-    if (flag1) var open = old_value.open + Math.random() * 10;
-    else var open = old_value.open - Math.random() * 10;
-
-    var flag2 = (Math.random() - 0.5) >= 0;
-    if (flag2) var close = open + Math.random() * 10;
-    else var close = open - Math.random() * 10;
-
-    var high = Math.max(open, close) + Math.random() * 5;
-    var low = Math.min(open, close) - Math.random() * 5;
-
-    res.json({
-        'new_value': {
-            timestamp: new Date().getTime(),
-            timestr: new Date().toLocaleString(),
-            open: parseFloat(open.toFixed(2)),
-            high: parseFloat(high.toFixed(2)),
-            low: parseFloat(low.toFixed(2)),
-            close: parseFloat(close.toFixed(2)),
-            volume: Math.ceil(Math.random() * 10),
+    let old_value = req.body.old_value;
+    if (!old_value) {
+        res.json({
+            'new_value': null
+        })
+    } else {
+        let timeStamp = old_value.timestamp;
+        for (let v of klineData.values()) {
+            if (v.timestamp > timeStamp) {
+                res.json({
+                    'new_value': v
+                })
+            }
         }
-    })
+    }
+
+    /*
+        var flag1 = (Math.random() - 0.5) >= 0;
+        if (flag1) var open = old_value.open + Math.random() * 10;
+        else var open = old_value.open - Math.random() * 10;
+    
+        var flag2 = (Math.random() - 0.5) >= 0;
+        if (flag2) var close = open + Math.random() * 10;
+        else var close = open - Math.random() * 10;
+    
+        var high = Math.max(open, close) + Math.random() * 5;
+        var low = Math.min(open, close) - Math.random() * 5;
+    
+        res.json({
+            'new_value': {
+                timestamp: new Date().getTime(),
+                timestr: new Date().toLocaleString(),
+                open: parseFloat(open.toFixed(2)),
+                high: parseFloat(high.toFixed(2)),
+                low: parseFloat(low.toFixed(2)),
+                close: parseFloat(close.toFixed(2)),
+                volume: Math.ceil(Math.random() * 10),
+            }
+        })
+    */
 })
 
 // Query Block
@@ -317,9 +346,53 @@ app.post('/electCommittee', async function (req, res) {
 })
 
 // Report
-app.post('/report', async function (req, res){
-    console.log(req.body.report_form);
+app.post('/report', async function (req, res) {
+    await Report.report(req.body.report_form.username, req.body.report_form.type, req.body.report_form.order_id, req.body.report_form.price, req.body.report_form.deal_order_id).then(ret => {
+        console.log(ret);
+        res.json({
+            'status': true,
+        })
+    })
 })
+
+
+async function orderEventHandler(event) {
+    let eventJson = JSON.parse(event.payload.toString());
+
+    if (event.eventName === "OrderDeal") { // To be modified...
+        // console.log(eventJson);
+        let timeStamp = parseInt(eventJson.time['seconds']);
+
+        if (klineData.get(timeStamp / 60)) {
+            let data = klineData.get(timeStamp / 60);
+            data.close = eventJson.price;
+            data.high = Math.max(eventJson.price, data.high);
+            data.low = Math.min(eventJson.price, data.low);
+            data.volume += eventJson.amount;
+
+        } else {
+            let date = new Date();
+            date.setTime(timeStamp * 1000);
+
+            let data = {
+                timestamp: timeStamp * 1000,
+                timestr: date.toLocaleString(),
+                open: eventJson.price,
+                volume: eventJson.amount
+            }
+            if (Math.random() > 0.6) {
+                data.close = Math.ceil(eventJson.price + 5 * Math.random());
+            } else {
+                data.close = Math.ceil(eventJson.price - 5 * Math.random());
+            }
+            data.high = Math.ceil(Math.max(data.open, data.close) + 2 * Math.random());
+            data.low = Math.ceil(Math.min(data.open, data.close) - 2 * Math.random());
+
+
+            klineData.set(timeStamp / 60, data);
+        }
+    }
+}
 
 // SERVER LISTENING
 var server = app.listen(9000, async function () {
@@ -362,6 +435,9 @@ var server = app.listen(9000, async function () {
         // Value
         transfer_list.push(evt);  // Add to global variable
     }, { startBlock: 0 });  // From genesis block
+
+    const orderContract = network.getContract('orderContract', 'Order');
+    await orderContract.addContractListener(orderEventHandler, { startBlock: 0 });
 
     const listener = async (event) => {
         // Handle block event
