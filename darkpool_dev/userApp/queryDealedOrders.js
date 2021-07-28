@@ -128,6 +128,7 @@ exports.queryDealedOrder = async function (username) {
                 'buy_order': buy_order,
                 'sell_order': sell_order,
                 'report_visible': false,
+                'report_result': [],
             });
         }
         /*

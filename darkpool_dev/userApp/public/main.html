@@ -586,9 +586,9 @@
                     <el-table
                         :data="dealed_order_list.slice((currentDealedOrderPage-1)*pageSize,currentDealedOrderPage*pageSize)"
                         style="width: 100%">
-                        <el-table-column label="成交序号" prop="deal_id" width="100"></el-table-column>
+                        <el-table-column label="成交序号" prop="deal_id" width="50"></el-table-column>
                         <el-table-column label="成交物品" prop="buy_order[0].item" width="100"></el-table-column>
-                        <el-table-column label="成交价格" prop="deal_price" width="100"></el-table-column>
+                        <el-table-column label="成交价格" prop="deal_price" width="50"></el-table-column>
                         <el-table-column label="成交时间" prop="deal_time" width="200"></el-table-column>
                         <el-table-column label="买单信息" width="150">
                             <template slot-scope="scope">
@@ -620,14 +620,14 @@
                                 </el-popover>
                             </template>
                         </el-table-column>
-                        <el-table-column label="相关委员" width="200">
+                        <el-table-column label="相关委员" width="150">
                             <template slot-scope="props">
                                 <div v-for="comm in props.row.related_comm" style="display:inline">
                                     {[ comm ]}
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="举报">
+                        <el-table-column label="举报" width="150">
                             <template slot-scope="props">
                                 <el-button type="danger" @click="props.row.report_visible = true">点击举报</el-button>
                                 <el-dialog title="确认举报" :visible.sync="props.row.report_visible" width="30%"
@@ -648,7 +648,7 @@
                                         </el-input>
                                         <el-button @click="props.row.report_visible = false">取 消</el-button>
                                         <el-button type="primary"
-                                            @click="report_form.deal_order_id = JSON.stringify(props.row.deal_id); props.row.report_visible = false; report();">
+                                            @click="report_form.deal_order_id = JSON.stringify(props.row.deal_id); props.row.report_visible = false; report(props.row);">
                                             确
                                             定
                                         </el-button>
@@ -656,6 +656,13 @@
                                 </el-dialog>
                             </template>
                         </el-table-column>
+                        <el-table-column label="举报结果">
+                            <template slot-scope="props">
+                                <div v-for="item in props.row.report_result">
+                                    <p>{[item.name]}: {[item.success]}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
                     </el-table>
                     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange_dealed_order"
                         :current-page="currentDealedOrderPage" :page-sizes="[10, 20, 30, 50, 100]" :page-size="pageSize"
@@ -1073,7 +1080,7 @@
                     })
                 },
                 // 举报
-                report() {
+                report(row) {
                     axios.post('/report', {
                         'report_form': this.report_form,
                     }).then(Response => {
@@ -1085,7 +1092,11 @@
                                 { name: 'usr3', success: false }
                                 ]
                         */
-
+                        row.report_result =  [
+                                { name: 'usr1', success: false },
+                                { name: 'usr2', success: false },
+                                { name: 'usr3', success: false }
+                                ]
                         // Clear last data.
                         this.report_form = {
                             'username': $("#cur_un").attr('value'),
