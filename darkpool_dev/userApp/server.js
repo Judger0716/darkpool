@@ -354,9 +354,10 @@ app.post('/electCommittee', async function (req, res) {
 // Report
 app.post('/report', async function (req, res) {
     await Report.report(req.body.report_form.username, req.body.report_form.type, req.body.report_form.order_id, req.body.report_form.price, req.body.report_form.deal_order_id).then(ret => {
-        console.log(ret);
+        // console.log(ret);
         res.json({
             'status': true,
+            'result': ret
         })
     })
 })

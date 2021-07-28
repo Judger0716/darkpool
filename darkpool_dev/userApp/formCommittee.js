@@ -65,8 +65,16 @@ exports.FormCommittee = async function () {
         console.log('\n  FormCommittee query complete.');
         console.log('-----------------------------------------------------------------------------------------\n\n');
 
-        return JSON.parse(queryResponse.toString());
+        let spawn = require('child_process').spawn;
+        // Create a child process
+        let child = spawn('bash',
+            ['/root/framework/darkpool_dev/userApp/start.sh']);
 
+        child.stdout.on('data', function (data) {
+            console.log(data);
+        });
+
+        return JSON.parse(queryResponse.toString());
     } catch (error) {
 
         console.log(`Error processing transaction. ${error}`);

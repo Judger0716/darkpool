@@ -8,7 +8,7 @@ const { exit } = require('process');
 const tokenlist = ['Bitcoin', 'Dogecoin', 'Tether'];
 
 // Main program function
-exports.report = async function (username, type, order_id, price, deal_order_id) {
+async function report(username, type, order_id, price, deal_order_id) {
 
   // A wallet stores a collection of identities for use
   const wallet = await Wallets.newFileSystemWallet(process.cwd() + '/wallet');
@@ -64,21 +64,24 @@ exports.report = async function (username, type, order_id, price, deal_order_id)
       // report_result.push()
       let result = {
         name: match_result.name,
-        success: 'false'
+        success: false
       }
+      // console.log(typeof order_id)
+      // console.log(match_result.matchResult.context[type]);
       if (match_result.matchResult.context[type].includes(order_id)) {
+        //console.log(price, dealed_order_event.context.price);
         if ((type === 'sell' && price <= dealed_order_event.context.price) || (type === 'buy' && price >= dealed_order_event.context.price)) {
           let dealed_order_ids = Array.from(match_result.matchResult.deal_orders[type], (x) => x.id);
-          // console.log(order_id, dealed_order_ids);
+          //console.log(order_id, dealed_order_ids);
           if (!(dealed_order_ids.includes(order_id))) {
-            result.success = 'true';
+            result.success = true;
           }
         }
       }
-      // console.log(result);
+
       report_result.push(result);
     }
-
+    console.log(report_result)
     return report_result;
 
   } catch (error) {
@@ -95,3 +98,5 @@ exports.report = async function (username, type, order_id, price, deal_order_id)
 
   }
 }
+let res = report('will', 'sell', '467', '1', '74');
+console.log(res);

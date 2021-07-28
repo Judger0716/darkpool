@@ -656,17 +656,12 @@
                         </el-table-column>
                         <el-table-column label="举报结果">
                             <template slot-scope="scope">
-                                <el-popover
-                                placement="top"
-                                title="委员举报结果"
-                                width="200"
-                                trigger="click">
+                                <el-popover placement="top" title="委员举报结果" width="230" trigger="click">
                                     <el-table :data="scope.row.report_result">
-                                        <el-table-column label="委员名称" width="50" prop="name"></el-table-column>
-                                        <el-table-column v-if="scope.row.report_result.success" label="是否成功" width="100">成功</el-table-column>
-                                        <el-table-column v-else label="是否成功" width="100">失败</el-table-column>
+                                        <el-table-column label="委员名称" width="100" prop="name"></el-table-column>
+                                        <el-table-column label="是否成功" width="100" prop="success"></el-table-column>
                                     </el-table>
-                                <el-button slot="reference">点击查看</el-button>
+                                    <el-button slot="reference">点击查看</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -1098,11 +1093,8 @@
                                 { name: 'usr3', success: false }
                                 ]
                         */
-                        row.report_result = [
-                            { name: 'usr1', success: false },
-                            { name: 'usr2', success: false },
-                            { name: 'usr3', success: false }
-                        ]
+                        row.report_result = Response['data']['result'];
+                        // console.log(Response['data']['result']);
                         // Clear last data.
                         this.report_form = {
                             'username': $("#cur_un").attr('value'),
