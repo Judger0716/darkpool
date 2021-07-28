@@ -141,6 +141,9 @@ app.post('/query_new_value', function (req, res) {
                 })
             }
         }
+        res.json({
+            'new_value': klineData.get(old_value.timestamp / (1000 * 60))
+        })
     }
 
     /*

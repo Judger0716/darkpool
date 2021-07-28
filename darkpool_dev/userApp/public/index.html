@@ -660,9 +660,11 @@
                         'old_value': this.old_value,
                     }).then(Response => {
                         this.new_value = Response['data']['new_value'];
-                        this.klineList.push(this.new_value);
-                        this.klineList_rev.unshift(this.new_value);
-                        this.old_value = this.new_value;
+                        if (this.new_value) {
+                            this.klineList.push(this.new_value);
+                            this.klineList_rev.unshift(this.new_value);
+                            this.old_value = this.new_value;
+                        }
                     })
                 },
             },
