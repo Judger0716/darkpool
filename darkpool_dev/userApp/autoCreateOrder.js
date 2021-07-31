@@ -13,10 +13,10 @@ async function createOrder() {
     type = 'buy';
   }
 
-  let username = 'usr4';
+  let username = 'usr' + JSON.stringify(1 + Math.ceil(Math.random() * 4));
   // = req.body.type;
-  let amount = Math.round(Math.random() * 100);
-  let price = Math.round(Math.random() * 100);
+  let amount = Math.round(Math.random() * 10000);
+  let price = Math.round(Math.random() * 10000);
   let item;
 
   if (Math.random() > 0.5) {

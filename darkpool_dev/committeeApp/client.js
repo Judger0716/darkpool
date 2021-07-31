@@ -233,7 +233,7 @@ async function combineOrders() {
         itemPool.get(order_body.type).set(order_body.order_id, {
           id: order_body.order_id,
           type: order_body.type,
-          // item: order_body.item,
+          creator: order_body.creator,
           price: parseInt(order_body.price),
           amount: parseInt(order_body.amount),
           deal_amount: parseInt(order_body.deal_amount),
@@ -262,8 +262,9 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 
   for (let order of buyOrders) {
     if (buy_amount === 0) break;
-    if (order.creator === skip)
+    if (order.creator === skip) {
       continue;
+    }
 
     if (order.price >= price && buy_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
@@ -280,8 +281,9 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 
   for (let order of sellOrders) {
     if (sell_amount === 0) break;
-    if (order.creator === skip)
+    if (order.creator === skip) {
       continue;
+    }
 
     if (order.price <= price && sell_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
@@ -304,8 +306,9 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 
   for (let order of buyOrders) {
     if (buy_amount === 0) break;
-    if (order.creator === skip)
+    if (order.creator === skip) {
       continue;
+    }
 
     if (order.price >= price && buy_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
@@ -322,8 +325,10 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 
   for (let order of sellOrders) {
     if (sell_amount === 0) break;
-    if (order.creator === skip)
+    if (order.creator === skip) {
       continue;
+    }
+
 
     if (order.price <= price && sell_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;

@@ -107,6 +107,8 @@ class Order extends Contract {
     await ctx.stub.putState(orderCompositeKey, JSON.stringify(newOrder));
 
     ctx.stub.setEvent('NewOrder', Buffer.from(JSON.stringify(newOrder)));
+
+    return oid;
   }
 
   async _deal_order(ctx, price, doid, order_id, order_content) {

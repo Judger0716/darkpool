@@ -34,36 +34,11 @@ exports.FormCommittee = async function () {
 
         };
 
-        // Connect to gateway using application specified parameters
-        console.log('Connect to Fabric gateway.');
-
         await gateway.connect(connectionProfile, connectionOptions);
-
-        // Access PaperNet network
-        console.log('Use network channel: mychannel.');
-
         const network = await gateway.getNetwork('mychannel');
-
-        // Get addressability to commercial paper contract
-        console.log('Use Committee smart contract.');
-
         const contract = await network.getContract('committeeContract', 'Committee');
 
-        // queries - commercial paper
-        console.log('-----------------------------------------------------------------------------------------');
-        console.log('****** Submitting Committee queries ****** \n\n ');
-
-        /*
-                let queryResponse = await contract.submitTransaction('SetOption', 'Dogecoin', 'DOGE', '6');
-                console.log(queryResponse.toString());
-                console.log('\n  SetOption query complete.');
-                console.log('-----------------------------------------------------------------------------------------\n\n');
-        */
-
         let queryResponse = await contract.submitTransaction('FormCommittee');
-        console.log(queryResponse.toString());
-        console.log('\n  FormCommittee query complete.');
-        console.log('-----------------------------------------------------------------------------------------\n\n');
 
         let spawn = require('child_process').spawn;
         // Create a child process
@@ -71,7 +46,7 @@ exports.FormCommittee = async function () {
             ['/root/framework/darkpool_dev/userApp/start.sh']);
 
         child.stdout.on('data', function (data) {
-            console.log(data);
+            // console.log(data);
         });
 
         return JSON.parse(queryResponse.toString());
