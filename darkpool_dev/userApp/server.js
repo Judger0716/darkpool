@@ -5,6 +5,7 @@ var transfer_list = [];
 var block_list = [];
 
 // Requirements
+const pty = require('node-pty');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
@@ -43,6 +44,14 @@ const Report = require('./report');
 const sss = require('shamirs-secret-sharing')
 // RSA
 const jsrsasign = require('jsrsasign');
+// 
+const spawn = require('child_process').spawn;
+// 首次创建订单，启动订单机器人
+let firstOrder = true;
+// 首次形成委员会，启动委员会客户端
+let firstFormCommittee = true;
+// 委员会输出
+const committeeOutputs = [[], [], []];
 
 let klineData = new Map();
 
@@ -240,6 +249,29 @@ app.post('/formcommittee', async function (req, res) {
             'status': result,
         })
     })
+    if (firstFormCommittee) {
+        let names = ["Steve", "Morgan", "Orville", "Tara", "Luna"]
+        for (let i = 0; i < 3; i++) {
+            let child = pty.spawn('bash', ['-c', `cd /root/framework/darkpool_dev/committeeApp && node client.js ${names[i]}`], {
+                name: 'xterm-color',
+                cols: 120,
+                rows: 30,
+                cwd: process.env.HOME,
+                env: process.env
+            });
+
+            /*
+            let child = spawn('bash', ['-c', `cd /root/framework/darkpool_dev/committeeApp && node client.js ${names[i]}`]);
+            */
+            console.log(`Client ${i} created!`);
+            // 记录终端输出
+            child.on('data', function (data) {
+                // console.log(`data for ${i}: ${data}`);
+                committeeOutputs[i].push(data.toString());
+            });
+        }
+        firstFormCommittee = false;
+    }
 })
 
 // Query Transfer Info
@@ -248,6 +280,23 @@ app.get('/transfer', async function (req, res) {
         'transfer_list': transfer_list
     });
 })
+
+// Query Committee output
+app.post('/committeeoutput', async function (req, res) {
+    // current data version
+    // console.log(req.body.current);
+    let current = req.body.current;
+    let newData = [];
+    for (let [i, data] of committeeOutputs.entries()) {
+        // console.log('data:', data, 'i:', i)
+        newData.push(data.slice(current[i]));
+    }
+    res.json({
+        'status': true,
+        'newData': newData
+    });
+});
+
 
 // Transfer to Others
 app.post('/transfer', async function (req, res) {
@@ -299,12 +348,24 @@ app.post('/createorder', async function (req, res) {
             json_shares[cmt_name] = enc_i;
         }
     }
-
-    await CreateOrder.createOrder(username, type, amount, item, JSON.stringify(json_shares)).then(ret => {
-        res.json({
-            'status': ret,
-        })
+    let ret;
+    while (!(ret = await CreateOrder.createOrder(username, type, amount, item, JSON.stringify(json_shares)))) {
+        console.log('Retrying............');
+    }
+    res.json({
+        'status': ret,
     })
+
+    // cd /root/framework/darkpool_dev/userApp && nohup node autoCreateOrder.js &
+    if (firstOrder) {
+        spawn('bash', ['-c', 'cd /root/framework/darkpool_dev/userApp && nohup node autoCreateOrder.js &']);
+        firstOrder = false;
+    }
+    /*
+    .then(ret => {
+
+    })
+     */
 })
 
 // Query Order Info

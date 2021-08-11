@@ -66,7 +66,7 @@ async function main() {
   for (let i = 0; i < 20; i++) {
     await createOrder();
   }
-  setTimeout(main, 1000);
+  setTimeout(main, 1500);
 }
 
 main();

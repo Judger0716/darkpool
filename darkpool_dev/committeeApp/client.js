@@ -225,7 +225,8 @@ async function combineOrders() {
       // console.log(recover_shares.length);
       if (recover_shares.length >= 3) {
         order_body.price = sss.combine(recover_shares.slice(0, 3)).toString();
-        console.log(`Order ${order_id} has been decrypted, decrypted price: ${order_body.price}`);
+        // console.log(`Order ${order_id} has been decrypted, decrypted price: ${order_body.price}`);
+        console.log(`Order ${order_id} has been shared.`);
 
         // Add the decrypted order to the matching pool.
         let itemPool = matchingPool.get(order_body.item);
@@ -354,9 +355,9 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
     context: context
   }
 
-  console.log(amount, buy_amount, sell_amount);
-  console.log(deal_buy_orders);
-  console.log(deal_sell_orders);
+  // console.log(amount, buy_amount, sell_amount);
+  // console.log(deal_buy_orders);
+  // console.log(deal_sell_orders);
 
   if (buy_amount === sell_amount && deal_buy_orders.length > 0 && deal_sell_orders.length > 0) {
     return item_result;
@@ -366,7 +367,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 }
 
 async function matchOrders() {
-  console.log('New match instance starts....');
+  // console.log('New match instance starts....');
   let matchSuccess = false;
   let msg = {
     type: "matchResult",
@@ -427,7 +428,7 @@ async function matchOrders() {
       /*
        * Broadcast my result.
        */
-      console.log('Sending result...', JSON.stringify(msg));
+      // console.log('Sending result...', JSON.stringify(msg));
       for (let [peerString, peerId] of peerList) {
         nodeSendAndClose(peerId, JSON.stringify(msg));
       }
@@ -441,7 +442,7 @@ async function matchOrders() {
 }
 
 async function countOrders(times) {
-  console.log('Master counting....');
+  // console.log('Master counting....');
   // console.log(JSON.stringify(resultPool));
   for (let [item, pool] of resultPool) {
     let count = 0;
@@ -455,7 +456,7 @@ async function countOrders(times) {
     // Result got, send to Fabric
     if (count >= 3 || times >= 20) {
       if (result_body.num >= 3) {
-        console.log("Final Result: ", JSON.stringify(result_body));
+        // console.log("Final Result: ", JSON.stringify(result_body));
         // console.log("Sending match result: ", result_body.result.split(":")[0], result_body.result.split(":")[1], result_body.price);
         await orderContract.submitTransaction('OrderDeal', JSON.stringify(result_body));
       } else {
@@ -545,6 +546,10 @@ async function orderEventHandler(event) {
         pool.clear();
       }
       currentState = MATCHING;
+      eventJson.buy = eventJson.buy.map((v) => { return v.order_id; })
+      eventJson.sell = eventJson.sell.map((v) => { return v.order_id; })
+
+      eventJson.context.item = 'Gold';
       console.log("OrderDeal: ", eventJson);
     } else {
       // console.log(matchingPool);

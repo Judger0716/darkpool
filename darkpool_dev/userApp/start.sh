@@ -1,5 +1,5 @@
-cd /root/framework/darkpool_dev/userApp 
-nohup node autoCreateOrder.js &
+# cd /root/framework/darkpool_dev/userApp 
+# nohup node autoCreateOrder.js &
 
 userNames=("Steve" "Morgan" "Orville" "Tara" "Luna")
 

@@ -57,6 +57,9 @@
     <!-- Modernizr js-->
     <script src="/public/js/modernizr-2.8.3.min.js"></script>
 
+    <link rel="stylesheet" href="/public/css/xterm.css" />
+    <script src="/public/js/xterm.js"></script>
+
     <style>
         * {
             font-family: 'Roboto', serif;
@@ -72,6 +75,15 @@
 
         .item .el-form-item__label {
             margin-top: 4px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #919399;
+            border-radius: 8px;
         }
     </style>
 
@@ -746,6 +758,30 @@
                     </div>
                 </div>
             </div>
+
+            <div class="container" v-if="candidates.length > 0" style="margin-top: 2%;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-head text-center">
+                            <h2 style="color: white;">终端信息</h2>
+                            <p class="item-text" style="color: white;">委员会成员的客户端输出信息</p>
+                        </div>
+
+                        <el-tabs type="border-card">
+                            <el-tab-pane label="Steve">
+                                <div id="console-0"></div>
+                            </el-tab-pane>
+                            <el-tab-pane label="Morgan">
+                                <div id="console-1"></div>
+                            </el-tab-pane>
+                            <el-tab-pane label="Orville">
+                                <div id="console-2"></div>
+                            </el-tab-pane>
+                        </el-tabs>
+
+                    </div>
+                </div>
+            </div>
         </section>
         <!--/.testimonial-section-->
 
@@ -833,7 +869,6 @@
             el: "#darkpool",
             delimiters: ["{[", "]}"],
             data: {
-
                 tokenList: ['Gold', 'Sliver', 'Iron', 'Oil', 'Carbon', 'Moutai'],
                 priceList: {
                     'Gold': {
@@ -945,6 +980,38 @@
                 currentDealedOrderPage: 1,
                 pageSize: 10, // 查询结果每页多少条
                 elect_visible: false,
+                consoleShowed: false,
+                consoleData: [0, 0, 0],
+                consoles: [],
+                consoleTheme: {
+                    foreground: '#dcdfe4',
+                    background: '#282c34',
+                    cursor: '#a3b3cc',
+
+                    black: '#282c34',
+                    brightBlack: '#282c34',
+
+                    red: '#e06c75',
+                    brightRed: '#e06c75',
+
+                    green: '#98c379',
+                    brightGreen: '#98c379',
+
+                    yellow: '#e5c07b',
+                    brightYellow: '#e5c07b',
+
+                    blue: '#61afef',
+                    brightBlue: '#61afef',
+
+                    magenta: '#c678dd',
+                    brightMagenta: '#c678dd',
+
+                    cyan: '#56b6c2',
+                    brightCyan: '#56b6c2',
+
+                    white: '#dcdfe4',
+                    brightWhite: '#dcdfe4'
+                }
             },
             methods: {
                 // 退出登录，跳转
@@ -1038,7 +1105,7 @@
                                 type: 'warning',
                                 offset: 100
                             });
-                            this.create_order();
+                            // setTimeout(this.create_order, 1000);
                         } else {
                             this.$notify({
                                 title: '成功',
@@ -1147,6 +1214,38 @@
                 handleCurrentChange_dealed_order(val) {
                     this.currentDealedOrderPage = val;
                 },
+                // 更新控制台数据
+                updateConsole() {
+                    if (this.candidates.length > 0) {
+                        if (!this.consoleShowed) {
+                            this.consoleShowed = true;
+                            for (let i = 0; i < 3; i++) {
+                                let term = new Terminal({
+                                    rows: 30,
+                                    cols: 120,
+                                    scrollback: 65536,
+                                    theme: this.consoleTheme
+                                });
+                                this.consoles.push(term);
+                                term.open(document.getElementById(`console-${i}`));
+                            }
+                        }
+                        axios.post('/committeeoutput', {
+                            current: this.consoleData
+                        }).then(Response => {
+                            // console.log(Response['data']);
+                            for (let [i, data] of Response['data']['newData'].entries()) {
+                                if (data !== []) {
+                                    this.consoleData[i] += data.length;
+                                    for (let msg of data) {
+                                        this.consoles[i].write(msg);
+                                    }
+                                }
+                            }
+                        })
+                    }
+                    setTimeout(this.updateConsole, 1000);
+                },
                 // 碎片表格合并
                 objectSpanMethod({ row, column, rowIndex, columnIndex }) {
                     if (columnIndex === 0) {
@@ -1187,8 +1286,11 @@
                         })
                     }, 600)
                 }, 5000)
+                this.updateConsole();
             }
         });
+
+        //
     </script>
 
     <!-- == jQuery Librery == -->
