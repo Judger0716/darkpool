@@ -104,12 +104,13 @@
                             <div class="button"></div>
                             <!-- 顶部跳转按钮 -->
                             <ul class="pull-right header-list">
-                                <li><a href="/"><span class="glyphicon glyphicon-log-out">退出登录</span></a></li>
-                                <li><a href="/public/kline/basic.html"><span
-                                            class="glyphicon glyphicon glyphicon-stats">查看行情</span></a></li>
+                                <li><a href="/"><span class="glyphicon glyphicon-log-out"></span>退出登录</a></li>
+                                <li><a href=" /public/kline/basic.html"><span
+                                            class="glyphicon glyphicon glyphicon-stats"></span>查看行情</a></li>
                                 <li><a href="/public/block_explorer.html"><span
-                                            class="glyphicon glyphicon-globe">区块浏览</span></a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-th-list">个人中心</span></a>
+                                            class="glyphicon glyphicon-globe"></span>区块浏览</a></li>
+                                <li><a href="#" onclick="return false"><span
+                                            class="glyphicon glyphicon-th-list"></span>个人中心</a>
                                     <ul class="dropdown">
                                         <li><a href="/public/tutorial.html">快速入门<img
                                                     src="/public/images/footer/tutorial.png"
@@ -122,7 +123,7 @@
                                                     style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
                                         <li><a href="#">账户充值</a></li>
                                         <li>
-                                            <a href="#" @click="get_userinfo()">查看余额信息</a>
+                                            <a href="#" @click="get_userinfo()" onclick="return false">查看余额信息</a>
                                             <!-- 查看个人信息 -->
                                             <el-dialog title="余额信息" :visible.sync="infoFormVisible" width="50%"
                                                 :append-to-body="true">
@@ -146,14 +147,14 @@
                                         <li><a href="#dealed_order_query">查询匹配交易</a></li>
                                         <li><a href="#create_order">创建订单</a></li>
                                         <li><a href="#elect_committee">竞选委员</a></li>
-                                        <li><a href="#" @click="form_committee()"><span>形成委员会</span></a></li>
+                                        <li><a href="#" @click="form_committee()"
+                                                onclick="return false"><span>形成委员会</span></a></li>
                                     </ul>
                                     <!--/.dropdown-->
                                 </li>
-                                <li><a herf="#"><span class="glyphicon glyphicon-user">欢迎：</span>
-                                        <div id="cur_un" style="display: inline;" value="<%=username%>">
-                                            <%=username%>
-                                        </div>
+                                <li><a herf="#"><span class="glyphicon glyphicon-user"></span>欢迎：<%=username%>
+                                            <div id="cur_un" style="display: inline;" value="<%=username%>">
+                                            </div>
                                     </a></li>
                             </ul>
                             <!--/.pull-right-->
@@ -508,7 +509,23 @@
                                         @click="scope.row.share_info_visible = true;">查看订单碎片</el-button>
                                     <el-dialog title="订单碎片信息" :append-to-body="true"
                                         :visible.sync="scope.row.share_info_visible" center>
-                                        <div>{[order_list[scope.$index].shares]}</div>
+                                        <!--
+                                            <div> {[order_list[scope.$index].shares]} </div>
+                                            <pre> {[order_list[scope.$index].shares]} </pre>
+                                        -->
+
+                                        <el-table :data="order_list[scope.$index].shares"
+                                            :span-method="objectSpanMethod">
+                                            <el-table-column align="center" prop="name" label="用户名" width="80%">
+                                            </el-table-column>
+                                            <el-table-column align="center" label="碎片">
+                                                <el-table-column align="center" prop="seq" label="序号" width="60%">
+                                                </el-table-column>
+                                                <el-table-column align="center" prop="data" label="内容"
+                                                    show-overflow-tooltip></el-table-column>
+                                            </el-table-column>
+                                        </el-table>
+
                                         <span slot="footer" class="dialog-footer" center>
                                             <el-button type="primary" @click="scope.row.share_info_visible = false">确 定
                                             </el-button>
@@ -687,6 +704,9 @@
                             <p class="item-text" style="color: white;">抵押一部分账户余额竞选委员</p>
                             <el-button class="mbutton" type="primary" icon="el-icon-edit" @click="elect_visible = true">
                                 我要竞选</el-button>
+                            <el-button class="mbutton" type="primary" icon="el-icon-refresh-right"
+                                @click="query_committee()">
+                                刷新信息</el-button>
                             <p class="item-text" style="color: white;">下表将显示委员会候选人名单，若有已存在的委员会，则同时显示委员会成员</p>
                         </div>
 
@@ -996,7 +1016,7 @@
                         'amount': this.order_form.amount,
                         'price': this.order_form.price,
                     }).then(Response => {
-                        //console.log(Response['data'])
+                        // console.log(Response['data']);
                         if (Response['data']['status'] == 'NoCommittee') {
                             this.$notify({
                                 title: '失败',
@@ -1004,16 +1024,22 @@
                                 type: 'warning',
                                 offset: 100
                             });
-                        }
-                        else if (Response['data']['status'] == 'NotAvailable') {
+                        } else if (Response['data']['status'] == 'NotAvailable') {
                             this.$notify({
                                 title: '失败',
                                 message: '账户余额不足',
                                 type: 'warning',
                                 offset: 100
                             });
-                        }
-                        else {
+                        } else if (Response['data']['status'] == false) {
+                            this.$notify({
+                                title: '失败',
+                                message: '订单创建失败，正在为您重试',
+                                type: 'warning',
+                                offset: 100
+                            });
+                            this.create_order();
+                        } else {
                             this.$notify({
                                 title: '成功',
                                 message: '订单创建成功',
@@ -1121,6 +1147,22 @@
                 handleCurrentChange_dealed_order(val) {
                     this.currentDealedOrderPage = val;
                 },
+                // 碎片表格合并
+                objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+                    if (columnIndex === 0) {
+                        if (rowIndex % 2 === 0) {
+                            return {
+                                rowspan: 2,
+                                colspan: 1
+                            };
+                        } else {
+                            return {
+                                rowspan: 0,
+                                colspan: 0
+                            };
+                        }
+                    }
+                }
             },
             created: function () {
                 this.get_transfer();

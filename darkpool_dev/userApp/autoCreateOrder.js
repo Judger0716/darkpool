@@ -16,7 +16,7 @@ async function createOrder() {
   let username = usernames[JSON.stringify(Math.ceil(Math.random() * 4))];
   // = req.body.type;
   let amount = Math.round(Math.random() * 10000);
-  let price = Math.round(Math.random() * 10000);
+  let price = Math.round(Math.random() * 50);
   let item;
 
   if (Math.random() > 0.5) {

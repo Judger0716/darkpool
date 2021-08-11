@@ -17,6 +17,22 @@ function transfer_item(item) {
     }
 }
 
+function transfer_shares(shares) {
+    let newShares = [];
+    for (let name of Object.keys(shares)) {
+        // let segments = [];
+        let share = shares[name];
+        for (let segment of Object.keys(share)) {
+            newShares.push({
+                name: name,
+                seq: segment,
+                data: share[segment]
+            });
+        }
+    }
+    return newShares;
+}
+
 function transfer_order(json_order) {
     let user_start = json_order['creator'].search('CN=') + 3;
     let user_end = json_order['creator'].search('C=') - 3;
@@ -32,6 +48,7 @@ function transfer_order(json_order) {
     json_order['deal_time'] = date.toLocaleString();
     json_order['item'] = transfer_item(json_order['item']);
     json_order['deal'] = json_order['deal'].toString();
+    json_order['shares'] = transfer_shares(json_order['shares']);
     json_order['share_info_visible'] = false;
 
     return json_order;
