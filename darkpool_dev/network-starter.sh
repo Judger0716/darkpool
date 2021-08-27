@@ -48,9 +48,9 @@ node regUser.js will ;
 
 # Transfer
 cd ${DIR}/tokenApp ; node enrollAdmin.js ; 
-for i in {0..4} ; do node queryToken.js ${userNames[i]} Tether 100 ; done ;
-node queryToken.js will Tether 100
+for i in {0..4} ; do node queryToken.js ${userNames[i]} Tether 100000 ; done ;
+node queryToken.js will Tether 100000
 # for i in {0..4} ; do node queryToken.js ${userNames[i]} Dogecoin 100 ; done 
 # for i in {0..4} ; do node queryToken.js ${userNames[i]} Bitcoin 100 ; done 
 cd ${DIR}/userApp
-for i in {0..2} ; do node applyForCommittee.js ${userNames[i]} 50 ; done 
+for i in {0..2} ; do node applyForCommittee.js ${userNames[i]} 100000 ; done 

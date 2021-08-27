@@ -81,6 +81,7 @@ exports.QueryBalance = async function (username) {
                 'balance': balance,
                 'freeze': freezedtoken,
                 'available': balance-freezedtoken,
+                'credit': '100'
             });
         }
 
