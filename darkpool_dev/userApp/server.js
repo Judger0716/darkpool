@@ -186,9 +186,18 @@ app.post('/query_new_value', function (req, res) {
 
 // Query Block
 app.post('/query_block', function (req, res) {
+    // let begin = req.body.begin;
+    // let end = Math.max(begin + 100, block_list.length);
+    let num = req.body.num;
+    if (num === 'all') {
+        num = block_list.length;
+    }
+
+    num = block_list.length;
+
     res.json({
-        'block_list': block_list.sort(function (a, b) { return b.blockNumber - a.blockNumber }),
-    })
+        'block_list': block_list.slice(0, num)// block_list.sort(function (a, b) { return b.blockNumber - a.blockNumber }),
+    });
 })
 
 // login
@@ -509,8 +518,22 @@ var server = app.listen(80, async function () {
 
     const listener = async (event) => {
         // Handle block event
-        //console.log(event.blockData.metadata);
+        // let type = event.blockData.data.data[0].payload.header.channel_header.typeString;
+        //if(JSON.stringify(event).indexOf('action') !== -1) {
+        //    console.log(JSON.stringify());
+        //    process.exit(1);
+        //}
+        // console.log(`Block number: ${event.blockNumber}.`);
+
+        //if (event.blockData.data.data.length > 1) {
+        //    console.log(event.blockData.data.data[1].payload.data.actions[0].payload.action.proposal_response_payload.extension.events);
+        // console.log(event.blockData.data.data[0].payload.data.actions[0].payload.action.proposal_response_payload.extension.events);
+        //}
+        // console.log(event)
+
+
         var cur_block = {};
+        cur_block['events'] = [];
         cur_block['blockNumber'] = parseInt(event.blockNumber);
         cur_block['header'] = {};
         cur_block['header']['number'] = parseInt(event.blockData.header.number);
@@ -538,6 +561,33 @@ var server = app.listen(80, async function () {
                 })
             }
         }
+
+        for (let data of event.blockData.data.data) {
+            if (data.payload.data.actions) {
+                for (let action of data.payload.data.actions) {
+                    let _event = action.payload.action.proposal_response_payload.extension.events;
+                    if (_event.event_name !== "") {
+                        let payload = JSON.parse(_event.payload.toString());
+                        if (_event.event_name === 'NewOrder') {
+                            payload.item = payload.item === 'Bitcoin' ? 'Gold' : 'Carbon';
+                        }
+                        cur_block['events'].push({
+                            name: _event.event_name,
+                            payload: JSON.stringify(payload, null, 4)
+                        });
+                    }
+                    // let payload = 
+                    // console.log(action.payload.action.proposal_response_payload.extension.events.payload.toString());
+                }
+            }
+        }
+        cur_block.display_more = false;
+        cur_block.show_events = false;
+
+        if (cur_block['events'].length > 1) {
+            // console.log(cur_block['events']);
+        }
+
         block_list.push(cur_block);
     }
     const options = {

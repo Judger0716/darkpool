@@ -82,6 +82,10 @@
         .el-form-item__label {
             margin-bottom: 0;
         }
+
+        .el-tooltip__popper {
+            max-width: 1200px;
+        }
     </style>
 
 
@@ -132,7 +136,8 @@
                 <div class="col-md-12">
                     <div class="banner-title text-center">
                         <h2 style="font-family: Lora, serif; font-weight: 700;">区块信息浏览</h2>
-                        <h2 style="font-family: Lora, serif; font-weight: 700; font-size: medium;">HyperLedger Fabric 区块信息浏览</h2>
+                        <h2 style="font-family: Lora, serif; font-weight: 700; font-size: medium;">HyperLedger Fabric
+                            区块信息浏览</h2>
                     </div>
                 </div>
             </div>
@@ -189,6 +194,34 @@
                             <el-table-column label="区块数据哈希" prop="header.data_hash"></el-table-column>
                         </el-table-column>
                         <el-table-column label="区块数据签名(详细点击左侧查看)" prop="data.signature"></el-table-column>
+                        <el-table-column align="center" label="区块事件">
+                            <el-table-column align="center" label="数目" prop="events.length" width="50%">
+                            </el-table-column>
+                            <el-table-column align="center" label="内容">
+                                <template slot-scope="scope">
+                                    <el-button icon="el-icon-document" type="text" v-if="scope.row.events.length > 0"
+                                        @click="scope.row.show_events = true;">
+                                        查看事件</el-button>
+                                    <div v-else>无事件</div>
+                                    <el-dialog title="事件信息" v-if="scope.row.events.length > 0" :append-to-body="true"
+                                        :visible.sync="scope.row.show_events" center>
+
+                                        <el-table :data="scope.row.events">
+                                            <el-table-column align="center" prop="name" label="事件名" width="100%">
+                                            </el-table-column>
+                                            <el-table-column align="center" label="事件内容" prop="payload"
+                                                show-overflow-tooltip>
+                                            </el-table-column>
+                                        </el-table>
+
+                                        <span slot="footer" class="dialog-footer" center>
+                                            <el-button type="primary" @click="scope.row.show_events = false;">确定
+                                            </el-button>
+                                        </span>
+                                    </el-dialog>
+                                </template>
+                            </el-table-column>
+                        </el-table-column>
                     </el-table>
                     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                         :current-page="currentPage" :page-sizes="[10, 20, 30, 50, 100]" :page-size="pageSize"
@@ -309,16 +342,24 @@
                 pageSize: 10, // 查询结果每页多少条
             },
             methods: {
+                log(obj) {
+                    console.log(obj);
+                },
                 // 查询转账信息
                 query_block() {
-                    axios.post('/query_block')
-                        .then(Response => {
-                            //console.log(Response['data']['block_list'])
-                            this.block_list = Response['data']['block_list']
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        })
+                    axios.post('/query_block', {
+                        num: 100
+                    }).then(Response => {
+                        // console.log(Response['data']['block_list']);
+                        if (Response['data']['block_list'].length > 0) {
+                            this.block_list = this.block_list.concat(Response['data']['block_list']);
+                            // setTimeout(this.query_block, 1000);
+                        } else {
+                            // setTimeout(this.query_block, 500);
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    })
                 },
                 // 每页多少条
                 handleSizeChange(val) {

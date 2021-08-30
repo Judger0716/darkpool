@@ -527,8 +527,7 @@
                                             <pre> {[order_list[scope.$index].shares]} </pre>
                                         -->
 
-                                        <el-table :data="order_list[scope.$index].shares"
-                                            :span-method="objectSpanMethod">
+                                        <el-table :data="order_list[scope.$index].shares">
                                             <el-table-column align="center" prop="name" label="用户名" width="80%">
                                             </el-table-column>
                                             <el-table-column align="center" label="碎片">
