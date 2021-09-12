@@ -2,10 +2,10 @@
 
 ## 测试环境
 
-+ Ubuntu 16.04 LTS
-+ Docker version 20.10.6, build 370c289
++ Ubuntu 20.04 LTS
++ Docker version 20.10.7, build 20.10.7-0ubuntu1~20.04.1
 + docker-compose version 1.29.0, build 07737305
-+ nodejs v14.17.0
++ nodejs v14.17.6
 + npm 7.14.0
 + Fabric v2.3.1
 + Fabric CA v1.4.9
