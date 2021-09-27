@@ -1,8 +1,18 @@
 # 基于区块链技术的高效暗池交易系统
 
-## 测试环境
+## 测试环境（阿里云ECS）
 
-+ Ubuntu 20.04 LTS
+### 系统环境
+
++ 实例规格: ecs.n4.small
++ CPU: 1核
++ 内存: 2G
++ 镜像ID: ubuntu_20_04_x64_20G_alibase_20210623.vhd
++ 操作系统: Linux
++ 系统名称: Ubuntu 20.04 64位
+
+### Hyperledger Fabric环境
+
 + Docker version 20.10.7, build 20.10.7-0ubuntu1~20.04.1
 + docker-compose version 1.29.0, build 07737305
 + nodejs v14.17.6
@@ -15,7 +25,8 @@
 ```shell
 git clone https://github.com/data61/MP-SPDZ.git
 apt-get install automake build-essential git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 python3 texinfo yasm
-make -j 8 tldr
+# 由于测试环境CPU为单核，-j参数设置为2，条件允许可采用更高的并发数编译
+make -j 2 tldr 
 ./compile.py tutorial
 echo 1 2 3 4 > Player-Data/Input-P0-0
 echo 1 2 3 4 > Player-Data/Input-P1-0
@@ -47,7 +58,22 @@ node server.js  # 运行服务端程序
 ## 错误及解决办法
 
 1. 安装MPDZ时报错"g++: fatal error: Killed signal terminated program cc1plus"
-[解决方案](https://www.lxx1.com/3886)
+
+[内存不足所致，可通过设置2G交换分区解决](https://www.lxx1.com/3886)
+
+'''shell
+#获取要增加的2G的SWAP文件块
+dd if=/dev/zero of=/swapfile bs=1k count=2048000
+#创建SWAP文件
+mkswap /swapfile 
+#激活SWAP文件
+swapon /swapfile   
+#查看SWAP信息是否正确
+swapon -s  
+#添加到fstab文件中让系统引导时自动启动
+echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab
+'''
 
 2. 安装SPDZ时其他问题
+
 [解决方案](https://blog.csdn.net/shengsikandan/article/details/116654618)
