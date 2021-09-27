@@ -10,6 +10,18 @@
 + Fabric v2.3.1
 + Fabric CA v1.4.9
 
+## SPDZ搭建
+
+```shell
+git clone https://github.com/data61/MP-SPDZ.git
+apt-get install automake build-essential git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 python3 texinfo yasm
+make -j 8 tldr
+./compile.py tutorial
+echo 1 2 3 4 > Player-Data/Input-P0-0
+echo 1 2 3 4 > Player-Data/Input-P1-0
+Scripts/mascot.sh tutorial
+```
+
 ## 作品测试相关命令
 
 首先安装 Fabric 环境（推荐在临时目录下完成，安装完以后删除临时目录）：
