@@ -43,3 +43,11 @@ node server.js  # 运行服务端程序
 ```
 
 然后在Web前端操作即可，使用账户 `will` 登录。
+
+## 错误及解决办法
+
+1. 安装MPDZ时报错"g++: fatal error: Killed signal terminated program cc1plus"
+[解决方案](https://www.lxx1.com/3886)
+
+2. 安装SPDZ时其他问题
+[解决方案](https://blog.csdn.net/shengsikandan/article/details/116654618)
