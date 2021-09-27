@@ -46,7 +46,7 @@ curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.3.1 1.4.9
 
 然后进入 `darkpool_dev`目录：
 
-```shell
+```shelld
 bash network-starter.sh # 自动启动系统并安装链码
 ```
 
