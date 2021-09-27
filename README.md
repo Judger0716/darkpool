@@ -25,10 +25,13 @@
 ```shell
 # clone SPDZ库
 git clone https://github.com/data61/MP-SPDZ.git
+
 # 安装所需依赖
 apt-get install automake build-essential git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 python3 texinfo yasm
+
 # 由于测试环境CPU为单核，-j参数设置为2，条件允许可采用更高的并发数编译
 make -j 2 tldr 
+
 # tutorial测试实例
 ./compile.py tutorial
 echo 1 2 3 4 > Player-Data/Input-P0-0
@@ -64,19 +67,38 @@ node server.js  # 运行服务端程序
 
 [内存不足所致，可通过设置2G交换分区解决](https://www.lxx1.com/3886)
 
-'''shell
+```shell
 #获取要增加的2G的SWAP文件块
 dd if=/dev/zero of=/swapfile bs=1k count=2048000
+```
+
+```shell
 #创建SWAP文件
-mkswap /swapfile 
+mkswap /swapfile
+``` 
+
+```shell
 #激活SWAP文件
 swapon /swapfile   
+```
+
+```shell
 #查看SWAP信息是否正确
 swapon -s  
+```
+
+```shell
 #添加到fstab文件中让系统引导时自动启动
 echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab
-'''
+```
 
-2. 安装SPDZ时其他问题
+2. 安装SPDZ编译OT-Extension.o时卡死
+
+```shell
+# 修改make -j x tldr中x的参数为合适值
+make -j 2 tldr
+```
+
+3. 安装SPDZ时其他问题
 
 [解决方案](https://blog.csdn.net/shengsikandan/article/details/116654618)
