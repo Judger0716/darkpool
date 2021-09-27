@@ -23,10 +23,13 @@
 ## SPDZ搭建
 
 ```shell
+# clone SPDZ库
 git clone https://github.com/data61/MP-SPDZ.git
+# 安装所需依赖
 apt-get install automake build-essential git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 python3 texinfo yasm
 # 由于测试环境CPU为单核，-j参数设置为2，条件允许可采用更高的并发数编译
 make -j 2 tldr 
+# tutorial测试实例
 ./compile.py tutorial
 echo 1 2 3 4 > Player-Data/Input-P0-0
 echo 1 2 3 4 > Player-Data/Input-P1-0
