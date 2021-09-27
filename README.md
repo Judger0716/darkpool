@@ -63,31 +63,21 @@ node server.js  # 运行服务端程序
 
 ## 错误及解决办法
 
-1. 安装MPDZ时报错"g++: fatal error: Killed signal terminated program cc1plus"
-
-[内存不足所致，可通过设置2G交换分区解决](https://www.lxx1.com/3886)
+1. [安装MPDZ时报错"g++: fatal error: Killed signal terminated program cc1plus"](https://www.lxx1.com/3886)
 
 ```shell
 #获取要增加的2G的SWAP文件块
 dd if=/dev/zero of=/swapfile bs=1k count=2048000
-```
 
-```shell
 #创建SWAP文件
 mkswap /swapfile
-``` 
 
-```shell
 #激活SWAP文件
 swapon /swapfile   
-```
 
-```shell
 #查看SWAP信息是否正确
 swapon -s  
-```
 
-```shell
 #添加到fstab文件中让系统引导时自动启动
 echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab
 ```
@@ -99,6 +89,4 @@ echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab
 make -j 2 tldr
 ```
 
-3. 安装SPDZ时其他问题
-
-[解决方案](https://blog.csdn.net/shengsikandan/article/details/116654618)
+3. [安装SPDZ时其他问题](https://blog.csdn.net/shengsikandan/article/details/116654618)
