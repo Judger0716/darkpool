@@ -1,6 +1,6 @@
 # 基于区块链技术的高效暗池交易系统
 
-## 测试环境
+## 一、测试环境
 
 ### 系统环境（阿里云ECS）
 
@@ -20,7 +20,7 @@
 + Fabric v2.3.1
 + Fabric CA v1.4.9
 
-## SPDZ搭建
+## 二、通用安全多方计算框架SPDZ搭建
 
 ```shell
 # clone SPDZ库
@@ -39,7 +39,7 @@ echo 1 2 3 4 > Player-Data/Input-P1-0
 Scripts/mascot.sh tutorial
 ```
 
-## 作品测试相关命令
+## 三、暗池交易系统测试相关命令
 
 首先安装 Fabric 环境（推荐在临时目录下完成，安装完以后删除临时目录）：
 
@@ -61,7 +61,7 @@ node server.js  # 运行服务端程序
 
 然后在Web前端操作即可，使用账户 `will` 登录。
 
-## 错误及解决办法
+## 附录:错误及解决办法
 
 1. [安装MPDZ时报错"g++: fatal error: Killed signal terminated program cc1plus"](https://www.lxx1.com/3886)
 
