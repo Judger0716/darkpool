@@ -103,11 +103,11 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 
 ### 2021-09-29
 
-1. Implement simple three-party calculation following blog [安全多方计算之SPDZ实例初探（一）](https://blog.csdn.net/shengsikandan/article/details/115912186), based on shamir-bmr-party.
-2. Fixed path problem in the source code of darkpool trading system.
-3. Understood the basic grammar of MP-SPDZ's High-Level Interface and tried to compile customized mpc protocols.
++ Implement simple three-party calculation following blog [安全多方计算之SPDZ实例初探（一）](https://blog.csdn.net/shengsikandan/article/details/115912186), based on shamir-bmr-party.
++ Fixed path problem in the source code of darkpool trading system.
++ Understood the basic grammar of MP-SPDZ's High-Level Interface and tried to compile customized mpc protocols.
 
 ### 2021-09-27
 
-1. Successfully deployed MP-SPDZ on the ECS and ran the tutorial.
-2. Adjusted README.md for better reading.
++ Successfully deployed MP-SPDZ on the ECS and ran the tutorial.
++ Adjusted README.md for better reading.
