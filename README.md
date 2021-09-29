@@ -144,8 +144,6 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 ./network.sh up
 ```
 
-### [Other problems](https://blog.csdn.net/shengsikandan/article/details/116654618)
-
 ## DevLog
 
 ### 2021-09-29
