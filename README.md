@@ -2,7 +2,7 @@
 
 ## Efficient Darkpool Trading System Based on Blockchain Technology
 
-In recent years, as a useful supplement to the general trading mechanism, the block
+    In recent years, as a useful supplement to the general trading mechanism, the block
 trading mechanism plays an important role in the market structure. With the continuous
 development of the securities market, the proportion of institutional investors in the market
 share is rising rapidly, and the proportion of block trade is getting larger and larger.
@@ -13,7 +13,8 @@ investors' demand for confidentiality and liquidity in trading commodities, equi
 foreign exchange. The main function of dark pools is to significantly reduce the impact of
 large orders on the market, enabling investors to trade outside standard exchanges without
 worrying about negative market fluctuations.
-Dark pools in digital asset trading systems are similar to traditional stock markets. In the
+
+    Dark pools in digital asset trading systems are similar to traditional stock markets. In the
 existing dark pool trading systems, most of them are centralized systems, that is, through the
 third party agent to complete the trading match. This does not protect the private information
 in the orders of traders. Meanwhile, it is not transparent how the third party matches the
@@ -21,7 +22,8 @@ orders, which makes it easy for the third party to manipulate the trading matchi
 flow in the whole dark pool. As digital assets have relatively poor liquidity, large transactions
 may affect the market price because of the huge transaction amount. A single large purchase
 can pull the market, which will seriously affect the market order.
-In order to solve the problems existing in the centralized dark pool trading system, we
+
+    In order to solve the problems existing in the centralized dark pool trading system, we
 designed an efficient dark pool trading system based on blockchain technology, mainly to
 solve the security risks brought by the centralized system and the defects that the trading
 market cannot support large transactions. The main functions of the system include the
@@ -33,7 +35,8 @@ anonymity and consensus to achieve the purpose of the privacy protection and tra
 credible. Besides, it enables nodes to complete large transactions without a third party by
 means of agent secure multi-party computing, which has security guarantee and good
 scalability.
-The biggest innovation of this system lies in the adoption of agent security multi-party
+
+    The biggest innovation of this system lies in the adoption of agent security multi-party
 computing, which solves the matching problem of multi-user and multi-order under the
 condition of order data confidentiality. At the same time, the dark pool trading mode is
 combined with the blockchain technology and the nature of the blockchain itself ensures that
@@ -62,7 +65,7 @@ increases.
 + Fabric v2.3.1
 + Fabric CA v1.4.9
 
-## 2.[MP-SPDZ](https://github.com/data61/MP-SPDZ)Set-up
+## 2.[MP-SPDZ](https://github.com/data61/MP-SPDZ) Set-up
 
 ```shell
 # clone MP-SPDZ
@@ -103,9 +106,13 @@ node server.js  # Start server
 
 Other operation could be done in the front end, you can use username `will` to login.
 
+
+
+
+
 ## Appendix: Problems and Possible Solution
 
-1.["g++: fatal error: Killed signal terminated program cc1plus" when install MP-SPDZ](https://www.lxx1.com/3886)
+### (1)["g++: fatal error: Killed signal terminated program cc1plus"](https://www.lxx1.com/3886) when install MP-SPDZ
 
 ```shell
 dd if=/dev/zero of=/swapfile bs=1k count=2048000
@@ -115,20 +122,18 @@ swapon -s
 echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab
 ```
 
-2.Stuck in compiling OT-Extension.o
+### (2)Stuck in compiling OT-Extension.o
 
 ```shell
 # adjust -j attribute to a proper value (based on your CPU core)
 make -j 2 tldr
 ```
 
-3.["ERROR: manifest for hyperledger/fabric-orderer:latest not found: manifest unknown: manifest unknown"](https://blog.csdn.net/u010289909/article/details/115329957)
+### (3)["ERROR: manifest for hyperledger/fabric-orderer:latest not found: manifest unknown: manifest unknown"](https://blog.csdn.net/u010289909/article/details/115329957)
 
-This is caused by different version tags between local fabric components and those in manifest.
+This is caused by different version tags between local fabric components and those in manifest.Here is possible solution (Took fabric-orderer as an example):
 
-Here is possible solution (Took fabric-orderer as an example):
-
-1)Visit (https://hub.docker.com/r/hyperledger/fabric-orderer) to acquire the ideal version.
+1)Visit https://hub.docker.com/r/hyperledger/fabric-orderer to acquire the ideal version.
 
 2)Pull the ideal version down and match it to your manifest:
 
@@ -143,14 +148,18 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 ./network.sh up
 ```
 
-[Other problems](https://blog.csdn.net/shengsikandan/article/details/116654618)
+### [Other problems](https://blog.csdn.net/shengsikandan/article/details/116654618)
+
+
+
+
 
 ## DevLog
 
 ### 2021-09-27
 
-1.Successfully deployed MP-SPDZ on the ECS and ran the tutorial.
-2.Adjusted README.md for better reading.
+1. Successfully deployed MP-SPDZ on the ECS and ran the tutorial.
+2. Adjusted README.md for better reading.
 
 ### 2021-09-29
 
