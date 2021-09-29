@@ -82,7 +82,7 @@ make -j 2 tldr
 
 ### (3)["ERROR: manifest for hyperledger/fabric-orderer:latest not found: manifest unknown: manifest unknown"](https://blog.csdn.net/u010289909/article/details/115329957)
 
-This is caused by different version tags between local fabric components and those in manifest.Here is possible solution (Took fabric-orderer as an example):
+This is caused by different version tags between local fabric components and those in manifest. Here is possible solution (Took fabric-orderer as an example):
 
 1)Visit https://hub.docker.com/r/hyperledger/fabric-orderer to acquire the ideal version.
 
@@ -104,8 +104,8 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 ### 2021-09-29
 
 1. Implement simple three-party calculation following blog [安全多方计算之SPDZ实例初探（一）](https://blog.csdn.net/shengsikandan/article/details/115912186), based on shamir-bmr-party.
-
 2. Fixed path problem in the source code of darkpool trading system.
+3. Understood the basic grammar of MP-SPDZ's High-Level Interface and tried to compile customized mpc protocols.
 
 ### 2021-09-27
 
