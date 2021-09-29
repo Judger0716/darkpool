@@ -63,7 +63,7 @@ node server.js  # 运行服务端程序
 
 ## 附录:错误及解决办法
 
-1. [安装MPDZ时报错"g++: fatal error: Killed signal terminated program cc1plus"](https://www.lxx1.com/3886)
+1. [安装SPDZ时报错"g++: fatal error: Killed signal terminated program cc1plus"](https://www.lxx1.com/3886)
 
 ```shell
 #获取要增加的2G的SWAP文件块
