@@ -2,7 +2,7 @@
 
 ## Efficient Darkpool Trading System Based on Blockchain Technology
 
-    In recent years, as a useful supplement to the general trading mechanism, the block
+In recent years, as a useful supplement to the general trading mechanism, the block
 trading mechanism plays an important role in the market structure. With the continuous
 development of the securities market, the proportion of institutional investors in the market
 share is rising rapidly, and the proportion of block trade is getting larger and larger.
@@ -14,7 +14,7 @@ foreign exchange. The main function of dark pools is to significantly reduce the
 large orders on the market, enabling investors to trade outside standard exchanges without
 worrying about negative market fluctuations.
 
-    Dark pools in digital asset trading systems are similar to traditional stock markets. In the
+Dark pools in digital asset trading systems are similar to traditional stock markets. In the
 existing dark pool trading systems, most of them are centralized systems, that is, through the
 third party agent to complete the trading match. This does not protect the private information
 in the orders of traders. Meanwhile, it is not transparent how the third party matches the
@@ -23,7 +23,7 @@ flow in the whole dark pool. As digital assets have relatively poor liquidity, l
 may affect the market price because of the huge transaction amount. A single large purchase
 can pull the market, which will seriously affect the market order.
 
-    In order to solve the problems existing in the centralized dark pool trading system, we
+In order to solve the problems existing in the centralized dark pool trading system, we
 designed an efficient dark pool trading system based on blockchain technology, mainly to
 solve the security risks brought by the centralized system and the defects that the trading
 market cannot support large transactions. The main functions of the system include the
@@ -36,7 +36,7 @@ credible. Besides, it enables nodes to complete large transactions without a thi
 means of agent secure multi-party computing, which has security guarantee and good
 scalability.
 
-    The biggest innovation of this system lies in the adoption of agent security multi-party
+The biggest innovation of this system lies in the adoption of agent security multi-party
 computing, which solves the matching problem of multi-user and multi-order under the
 condition of order data confidentiality. At the same time, the dark pool trading mode is
 combined with the blockchain technology and the nature of the blockchain itself ensures that
@@ -106,8 +106,6 @@ node server.js  # Start server
 
 Other operation could be done in the front end, you can use username `will` to login.
 
-<br\>
-
 ## Appendix: Problems and Possible Solution
 
 ### (1)["g++: fatal error: Killed signal terminated program cc1plus"](https://www.lxx1.com/3886) when install MP-SPDZ
@@ -147,8 +145,6 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 ```
 
 ### [Other problems](https://blog.csdn.net/shengsikandan/article/details/116654618)
-
-<br\>
 
 ## DevLog
 
