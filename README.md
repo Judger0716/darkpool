@@ -9,7 +9,7 @@
 + Memory: 2G
 + MirrorID: ubuntu_20_04_x64_20G_alibase_20210623.vhd
 + OS: Linux
-+ OS Name: Ubuntu 20.04 64bit
++ OS Name: Ubuntu 20.04 64-bit
 
 ### Hyperledger Fabric Version
 
