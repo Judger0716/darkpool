@@ -106,9 +106,7 @@ node server.js  # Start server
 
 Other operation could be done in the front end, you can use username `will` to login.
 
-
-
-
+<br\>
 
 ## Appendix: Problems and Possible Solution
 
@@ -150,9 +148,7 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 
 ### [Other problems](https://blog.csdn.net/shengsikandan/article/details/116654618)
 
-
-
-
+<br\>
 
 ## DevLog
 
