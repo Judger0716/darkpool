@@ -261,7 +261,7 @@ app.post('/formcommittee', async function (req, res) {
     if (firstFormCommittee) {
         let names = ["Steve", "Morgan", "Orville", "Tara", "Luna"]
         for (let i = 0; i < 3; i++) {
-            let child = pty.spawn('bash', ['-c', `cd /root/framework/darkpool_dev/committeeApp && node client.js ${names[i]}`], {
+            let child = pty.spawn('bash', ['-c', `cd /root/darkpool/darkpool_dev/committeeApp && node client.js ${names[i]}`], {
                 name: 'xterm-color',
                 cols: 120,
                 rows: 30,
@@ -270,7 +270,7 @@ app.post('/formcommittee', async function (req, res) {
             });
 
             /*
-            let child = spawn('bash', ['-c', `cd /root/framework/darkpool_dev/committeeApp && node client.js ${names[i]}`]);
+            let child = spawn('bash', ['-c', `cd /root/darkpool/darkpool_dev/committeeApp && node client.js ${names[i]}`]);
             */
             console.log(`Client ${i} created!`);
             // 记录终端输出
@@ -365,9 +365,9 @@ app.post('/createorder', async function (req, res) {
         'status': ret,
     })
 
-    // cd /root/framework/darkpool_dev/userApp && nohup node autoCreateOrder.js &
+    // cd /root/darkpool/darkpool_dev/userApp && nohup node autoCreateOrder.js &
     if (firstOrder) {
-        spawn('bash', ['-c', 'cd /root/framework/darkpool_dev/userApp && nohup node autoCreateOrder.js &']);
+        spawn('bash', ['-c', 'cd /root/darkpool/darkpool_dev/userApp && nohup node autoCreateOrder.js &']);
         firstOrder = false;
     }
     /*
