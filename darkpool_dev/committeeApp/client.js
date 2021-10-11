@@ -386,6 +386,7 @@ async function matchOrders() {
       let sellOrdersInMatch = buyOrders.map(function (v) { let u = { ...v }; u.amount = v.amount - v.deal_amount; return u; });
 
       if (buyOrders.length > 0 && sellOrders.length > 0) {
+        // matchorder entry
         let matchResult = match(buyOrdersInMatch, sellOrdersInMatch, lastPrice.get(item));
         if (matchResult.price <= 0 || matchResult.amount <= 0) {
           continue;

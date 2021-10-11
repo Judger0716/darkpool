@@ -20,6 +20,10 @@
 + Fabric v2.3.1
 + Fabric CA v1.4.9
 
+### Python Extension Packages
+
++ utilitybelt v0.2.6
+
 ## 2.[MP-SPDZ](https://github.com/data61/MP-SPDZ) Set-up
 
 ```shell
@@ -111,3 +115,7 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 
 + Successfully deployed MP-SPDZ on the ECS and ran the tutorial.
 + Adjusted README.md for better reading.
+
+### 2021-10-11
+
++ Implement simple threshold shamir secret sharing on GF(2^64) with Python. [Details](https://github.com/Judger0716/Simple_SSS.git)
