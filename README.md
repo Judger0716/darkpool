@@ -155,11 +155,10 @@ def _(i):
             multi_sum[0] *= (sfix(0)-x_values[j]) / (x_values[i]-x_values[j])
     global secret
     secret += multi_sum[0] * y_values[i]
-    #print_ln('multi_sum = %s, y[i] = %s, secret = %s',multi_sum[0].reveal(),y_values[i].reveal(),secret.reveal())
 
 print_ln('secret = %s',secret.reveal())
 ```
-+ The above secret recovery can be used to recover shares splited by a polynomial on GF(2^16). Due to float number accurancy reason, the above secret recovery can only support numbers with less than 8 digits. As this is just a demo, it takes input from one person but use MASCOT protocol to do MPC computation.
++ The above secret recovery can be used to recover shares splited by a polynomial on GF(2^16). Due to float number accurancy reason, the above secret recovery can only support numbers with less than 8 digits. As this is just a demo, it takes input from one person but use MASCOT protocol to do MPC computation, the approximate running time for recover an 8-digit number is 42 seconds.
 + Secret recovery testing instruction (The above secret recovery scheme is written in `mytest.mpc`)
 
 ```shell
@@ -173,7 +172,8 @@ cat testdata.dat > Player-Data/Input-P0-0
 ./mascot-party.x -N 2 -p 1 mytest
 ```
 
-and testdata.dat looks like:
+  and testdata.dat looks like:
+
 ```shell
 1
 2
