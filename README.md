@@ -119,3 +119,68 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 ### 2021-10-11
 
 + Implemented simple threshold shamir secret sharing on GF(2^64) with Python. [Details](https://github.com/Judger0716/Simple_SSS.git)
+
+### 2021-10-15
+
++ Successfully implement secret recovery with MP-SPDZ with some restrictions by writing following `.mpc` file
+
+```Python
+sfix.set_precision(32, 64)
+print_float_precision(32)
+
+n = 4
+x_values = Array(n,sfix)
+y_values = Array(n,sfix)
+
+@for_range(n)
+def _(i): 
+    x_values[i] = sfix.get_input_from(0)
+
+@for_range(n)
+def _(i):
+    y_values[i] = sfix.get_input_from(0)
+
+secret = sfix(0)
+multi_sum = Array(1,sfix)
+
+@for_range(n)
+def _(i): 
+    global multi_sum
+    multi_sum[0] = 1
+    @for_range(n)
+    def _(j): 
+        @if_(i!=j)
+        def _():
+            global multi_sum
+            multi_sum[0] *= (sfix(0)-x_values[j]) / (x_values[i]-x_values[j])
+    global secret
+    secret += multi_sum[0] * y_values[i]
+    #print_ln('multi_sum = %s, y[i] = %s, secret = %s',multi_sum[0].reveal(),y_values[i].reveal(),secret.reveal())
+
+print_ln('secret = %s',secret.reveal())
+```
++ The above secret recovery can be used to recover shares splited by a polynomial on GF(2^16). Due to float number accurancy reason, the above secret recovery can only support numbers with less than 8 digits. As this is just a demo, it takes input from one person but use MASCOT protocol to do MPC computation.
++ Secret recovery testing instruction (The above secret recovery scheme is written in `mytest.mpc`)
+
+```shell
+# Compile
+make -j 2 mascot-party.x
+# Input
+cat testdata.dat > Player-Data/Input-P0-0
+# Run MASCOT protocol
+./mascot-party.x -N 2 -p 0 mytest
+# Run in another terminal
+./mascot-party.x -N 2 -p 1 mytest
+```
+
+and testdata.dat looks like:
+```shell
+1
+2
+3
+4
+18354939
+18505534
+18725697
+19015428
+```
