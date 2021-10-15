@@ -105,21 +105,6 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 
 ## DevLog
 
-### 2021-09-29
-
-+ Implemented simple three-party calculation following blog [安全多方计算之SPDZ实例初探（一）](https://blog.csdn.net/shengsikandan/article/details/115912186), based on shamir-bmr-party.
-+ Fixed path problem in the source code of darkpool trading system.
-+ Understood the basic grammar of MP-SPDZ's High-Level Interface and tried to compile customized mpc protocols.
-
-### 2021-09-27
-
-+ Successfully deployed MP-SPDZ on the ECS and ran the tutorial.
-+ Adjusted README.md for better reading.
-
-### 2021-10-11
-
-+ Implemented simple threshold shamir secret sharing on GF(2^64) with Python. [Details](https://github.com/Judger0716/Simple_SSS.git)
-
 ### 2021-10-15
 
 + Successfully implement secret recovery with MP-SPDZ with some restrictions by writing following `.mpc` file
@@ -184,3 +169,18 @@ cat testdata.dat > Player-Data/Input-P0-0
 18725697
 19015428
 ```
+
+### 2021-10-11
+
++ Implemented simple threshold shamir secret sharing on GF(2^64) with Python. [Details](https://github.com/Judger0716/Simple_SSS.git)
+
+### 2021-09-29
+
++ Implemented simple three-party calculation following blog [安全多方计算之SPDZ实例初探（一）](https://blog.csdn.net/shengsikandan/article/details/115912186), based on shamir-bmr-party.
++ Fixed path problem in the source code of darkpool trading system.
++ Understood the basic grammar of MP-SPDZ's High-Level Interface and tried to compile customized mpc protocols.
+
+### 2021-09-27
+
++ Successfully deployed MP-SPDZ on the ECS and ran the tutorial.
++ Adjusted README.md for better reading.
