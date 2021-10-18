@@ -105,6 +105,44 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 
 ## DevLog
 
+### 2021-10-18
+
++ Successfully adjusted secret recovery scheme from single party computation to 3-parties computation. Due to the memory restriction, it could not be adapted into computation between more parties. For each secret recovery, the approximate time is about 82 seconds.
+
+```Python
+sfix.set_precision(16, 64)
+print_float_precision(16)
+
+n = 3
+x_values = Array(n,sfix)
+y_values = Array(n,sfix)
+
+@for_range(n)
+def _(i): 
+    x_values[i] = sfix.get_input_from(i)
+    y_values[i] = sfix.get_input_from(i)
+    #print_ln('x_value = %s, y_value = %s',x_values[i].reveal(),y_values[i].reveal())
+
+secret = sfix(0)
+multi_sum = Array(1,sfix)
+
+@for_range(n)
+def _(i): 
+    global multi_sum
+    multi_sum[0] = 1
+    @for_range(n)
+    def _(j): 
+        @if_(i!=j)
+        def _():
+            global multi_sum
+            multi_sum[0] *= (sfix(0)-x_values[j]) / (x_values[i]-x_values[j])
+    global secret
+    secret += multi_sum[0] * y_values[i]
+    #print_ln('multi_sum = %s, y[i] = %s, secret = %s',multi_sum[0].reveal(),y_values[i].reveal(),secret.reveal())
+
+print_ln('secret = %s',secret.reveal())
+```
+
 ### 2021-10-15
 
 + Successfully implement secret recovery with MP-SPDZ with some restrictions by writing following `.mpc` file

@@ -211,6 +211,8 @@ async function combineOrders() {
   if (committeeMembers.size > 0) {
     // let orders = Object.values(combiningOrders);
     for (let [order_id, order_body] of combiningOrders) {
+      console.log(order_id)
+      console.log(order_body)
 
       // Already decrypted.
       if (order_body.price) continue;
