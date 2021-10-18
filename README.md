@@ -121,7 +121,6 @@ y_values = Array(n,sfix)
 def _(i): 
     x_values[i] = sfix.get_input_from(i)
     y_values[i] = sfix.get_input_from(i)
-    #print_ln('x_value = %s, y_value = %s',x_values[i].reveal(),y_values[i].reveal())
 
 secret = sfix(0)
 multi_sum = Array(1,sfix)
@@ -138,7 +137,6 @@ def _(i):
             multi_sum[0] *= (sfix(0)-x_values[j]) / (x_values[i]-x_values[j])
     global secret
     secret += multi_sum[0] * y_values[i]
-    #print_ln('multi_sum = %s, y[i] = %s, secret = %s',multi_sum[0].reveal(),y_values[i].reveal(),secret.reveal())
 
 print_ln('secret = %s',secret.reveal())
 ```
