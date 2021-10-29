@@ -133,7 +133,7 @@ echo 3 1927933831279 > Player-Data/Input-P2-0
 
 ```Python
 sfix.set_precision(16, 64)
-print_float_precision(16)
+print_float_precision(32)
 
 n = 3
 x_values = Array(n,sfix)
