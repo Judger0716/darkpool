@@ -105,6 +105,28 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 
 ## DevLog
 
+### 2021-10-29
+
++ Successfully implemented secret recovery scheme of single trillion number using honest majority protocol `shamir-party`, the corresponding shamir threshold secret sharing was based on GF(2^32), which means the parametres of the polynomial is on GF(2^32).Now the average calculating time is below 0.2 second.
++ The improvement in efficiency basically comes from the protocol we choose to run our `.mpc` protocol. For the MASCOT protocol uses simple-OT and triples in computation, there is an efficiency concern in it. Since we don't have the worry of malicious committee members due to the `honest majority` hypothesis, we should take honest majority protocol instead.
++ Take the following steps for testing
+
+```shell
+# our customized .mpc file is now called `lagrange`
+# -M for avoiding memory errors, -F for expanded number field
+./compile.py -M -F 256 lagrange
+# get input for three parties
+echo 1 1926542137713 > Player-Data/Input-P0-0
+echo 2 1927237984496 > Player-Data/Input-P1-0
+echo 3 1927933831279 > Player-Data/Input-P2-0
+# terminal 1
+./shamir-party.x 0 lagrange
+# terminal 2
+./shamir-party.x 1 lagrange
+# terminal 3
+./shamir-party.x 2 lagrange
+```
+
 ### 2021-10-18
 
 + Successfully adjusted secret recovery scheme from single party computation to 3-parties computation. Due to the memory restriction, it could not be adapted into computation between more parties. For each secret recovery, the approximate time is about 82 seconds.
@@ -143,7 +165,7 @@ print_ln('secret = %s',secret.reveal())
 
 ### 2021-10-15
 
-+ Successfully implement secret recovery with MP-SPDZ with some restrictions by writing following `.mpc` file
++ Successfully implemented secret recovery with MP-SPDZ with some restrictions by writing following `.mpc` file
 
 ```Python
 sfix.set_precision(32, 64)

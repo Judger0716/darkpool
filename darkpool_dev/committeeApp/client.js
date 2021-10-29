@@ -392,6 +392,7 @@ async function matchOrders() {
           continue;
         }
         let itemResult = formMatchResult(buyOrders, sellOrders, matchResult);
+        console.log(itemResult)
         if (itemResult) {
           matchSuccess = true;
           msg.content[item] = itemResult;
