@@ -105,6 +105,53 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 
 ## DevLog
 
+### 2021-11-3
+
++ Successfully implemented the comparation between two integers while maintaining in ciphertext (or called shares). Since we don't use `reveal()` to recover the secret with its shares in the `shamir-party` protocol, the value of the secret should be secure and meet our expextation.
++ Adjusted the MPC program's structure as follows, making it modular.
+
+```python
+sfix.set_precision(16, 64)
+print_float_precision(32)
+
+def lagrange_interpolation(x_values,y_values,m,n):
+    # return an Array of m-secret
+    secret = Array(m,sfix)
+    # k stands for the k-th secret
+    @for_range(m)
+    def _(k):
+        multi_sum = Array(1,sfix)
+        # i stands for the i-th player
+        @for_range(n)
+        def _(i): 
+            multi_sum[0] = 1
+            # j stands for the j-th value
+            @for_range(n)
+            def _(j): 
+                @if_(i!=j)
+                def _():
+                    multi_sum[0] *= (sfix(0)-x_values[k][j]) / (x_values[k][i]-x_values[k][j])
+            secret[k] += multi_sum[0] * y_values[k][i]
+    return secret
+
+m = 2 # secret number
+n = 3 # player number
+x_values = Matrix(m,n,sfix)
+y_values = Matrix(m,n,sfix)
+
+@for_range(m)
+def _(i):
+    @for_range(n)
+    def _(j): 
+        x_values[i][j] = sfix.get_input_from(j)
+        y_values[i][j] = sfix.get_input_from(j)
+
+secret = lagrange_interpolation(x_values,y_values,m,n)
+#print_ln('%s',secret[0].reveal())
+#print_ln('%s',secret[1].reveal())
+print_ln('Secret[0] < Secret[1]: %s (1 for True, 0 for False)',(secret[0]<secret[1]).reveal())
+```
+
 ### 2021-10-29
 
 + Successfully implemented secret recovery scheme of single trillion number using honest majority protocol `shamir-party`, the corresponding shamir threshold secret sharing was based on GF(2^32), which means the parametres of the polynomial is on GF(2^32).Now the average calculating time is below 0.2 second.
