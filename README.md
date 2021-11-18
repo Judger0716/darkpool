@@ -103,6 +103,16 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 ./network.sh up
 ```
 
+## Reference
+
++ [MASCOT: Faster Malicious Arithmetic Secure Computation with Oblivious Transfer](https://eprint.iacr.org/2016/505.pdf)
++ [General Secure Multi-Party Computation from any Linear Secret-Sharing Scheme](https://link.springer.com/content/pdf/10.1007%2F3-540-45539-6_22.pdf)
++ [Linear (t,n) Secret Sharing Scheme based on Single Polynomial](https://www.ripublication.com/ijaer18/ijaerv13n14_37.pdf)
++ [Simplified VSS and Fact-Track Multiparty Computations with Applications to Threshold Cryptography](http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=DC08F471A4EE74C0701418D00C1B56CF?doi=10.1.1.47.6920&rep=rep1&type=pdf)
++ [Improved Primitives for Secure Multiparty Integer Computation](https://www1.cs.fau.de/filepool/publications/octavian_securescm/smcint-scn10.pdf)
++ [SecureSCM-D.9.2](https://www1.cs.fau.de/filepool/publications/octavian_securescm/SecureSCM-D.9.2.pdf)
++ [Unconditionally Secure Constant-Rounds Multi-party Computation for Equality, Comparison, Bits and Exponentiation](https://www.researchgate.net/profile/Jesper-Nielsen-8/publication/221354075_Unconditionally_Secure_Constant-Rounds_Multi-party_Computation_for_Equality_Comparison_Bits_and_Exponentiation/links/0fcfd50b464d7bd43d000000/Unconditionally-Secure-Constant-Rounds-Multi-party-Computation-for-Equality-Comparison-Bits-and-Exponentiation.pdf)
+
 ## DevLog
 
 ### 2021-11-3
