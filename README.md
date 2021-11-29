@@ -65,9 +65,13 @@ node server.js  # Start server
 
 Other operation could be done in the front end, you can use username `will` to login.
 
+After login with username `will`, you should first form the committee.
+
+Then you should create an order by yourself, then the system will automatically generate random orders for darkpool trading.
+
 ## Appendix: Problems and Possible Solution
 
-### (1)["g++: fatal error: Killed signal terminated program cc1plus"](https://www.lxx1.com/3886) when install MP-SPDZ
+### (1)[`g++: fatal error: Killed signal terminated program cc1plus`](https://www.lxx1.com/3886) when install MP-SPDZ
 
 ```shell
 dd if=/dev/zero of=/swapfile bs=1k count=2048000
@@ -84,7 +88,7 @@ echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab
 make -j 2 tldr
 ```
 
-### (3)["ERROR: manifest for hyperledger/fabric-orderer:latest not found: manifest unknown: manifest unknown"](https://blog.csdn.net/u010289909/article/details/115329957)
+### (3)[`ERROR: manifest for hyperledger/fabric-orderer:latest not found: manifest unknown: manifest unknown`](https://blog.csdn.net/u010289909/article/details/115329957)
 
 This is caused by different version tags between local fabric components and those in manifest. Here is possible solution (Took fabric-orderer as an example):
 
@@ -103,6 +107,18 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 ./network.sh up
 ```
 
+### (4)Browser(e.g Chrome) error `ERR_CERT_AUTHORITY_INVALID`
+
+This is often caused by updating the chaincode without restart the fabric network, sometimes it could due to internet problems. For solution, you can restart the fabric network by:
+
+```shell
+cd ~/darkpool/darkpool_dev
+# clean all the old network data
+./network-clean.sh
+# restart network
+./network-starter.sh
+```
+
 ## Reference
 
 + [MASCOT: Faster Malicious Arithmetic Secure Computation with Oblivious Transfer](https://eprint.iacr.org/2016/505.pdf)
@@ -112,6 +128,7 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 + [Improved Primitives for Secure Multiparty Integer Computation](https://www1.cs.fau.de/filepool/publications/octavian_securescm/smcint-scn10.pdf)
 + [SecureSCM-D.9.2](https://www1.cs.fau.de/filepool/publications/octavian_securescm/SecureSCM-D.9.2.pdf)
 + [Unconditionally Secure Constant-Rounds Multi-party Computation for Equality, Comparison, Bits and Exponentiation](https://www.researchgate.net/profile/Jesper-Nielsen-8/publication/221354075_Unconditionally_Secure_Constant-Rounds_Multi-party_Computation_for_Equality_Comparison_Bits_and_Exponentiation/links/0fcfd50b464d7bd43d000000/Unconditionally-Secure-Constant-Rounds-Multi-party-Computation-for-Equality-Comparison-Bits-and-Exponentiation.pdf)
++ [Multiparty Computation for Interval, Equality, and Comparison Without Bit-Decomposition Protocol](https://link.springer.com/content/pdf/10.1007%2F978-3-540-71677-8_23.pdf)
 
 ## DevLog
 
