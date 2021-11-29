@@ -344,6 +344,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
     }
   }
 
+  // format of itemResult
   let item_result = {
     result: JSON.stringify(matchResult.price) + ":" + JSON.stringify(amount),
     price: matchResult.price,
@@ -391,8 +392,10 @@ async function matchOrders() {
         if (matchResult.price <= 0 || matchResult.amount <= 0) {
           continue;
         }
+        // format of matchResult: {price: x, amount: y}
+        // get matchResult and form it 
         let itemResult = formMatchResult(buyOrders, sellOrders, matchResult);
-        console.log(itemResult)
+        // format of itemResult: check it in the above function
         if (itemResult) {
           matchSuccess = true;
           msg.content[item] = itemResult;
