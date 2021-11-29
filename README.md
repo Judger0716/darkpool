@@ -71,7 +71,7 @@ Then you should create an order by yourself, then the system will automatically 
 
 ## Appendix: Problems and Possible Solution
 
-### (1)[`g++: fatal error: Killed signal terminated program cc1plus`](https://www.lxx1.com/3886) when install MP-SPDZ
+### (1)[g++: fatal error: Killed signal terminated program cc1plus](https://www.lxx1.com/3886) when install MP-SPDZ
 
 ```shell
 dd if=/dev/zero of=/swapfile bs=1k count=2048000
@@ -88,7 +88,7 @@ echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab
 make -j 2 tldr
 ```
 
-### (3)[`ERROR: manifest for hyperledger/fabric-orderer:latest not found: manifest unknown: manifest unknown`](https://blog.csdn.net/u010289909/article/details/115329957)
+### (3)[ERROR: manifest for hyperledger/fabric-orderer:latest not found: manifest unknown: manifest unknown](https://blog.csdn.net/u010289909/article/details/115329957)
 
 This is caused by different version tags between local fabric components and those in manifest. Here is possible solution (Took fabric-orderer as an example):
 
@@ -107,7 +107,7 @@ docker tag hyperledger/fabric-orderer:1.4 hyperledger/fabric-orderer:latest
 ./network.sh up
 ```
 
-### (4)Browser(e.g Chrome) error `ERR_CERT_AUTHORITY_INVALID`
+### (4)Browser(e.g Chrome) error "ERR_CERT_AUTHORITY_INVALID"
 
 This is often caused by updating the chaincode without restart the fabric network, sometimes it could due to internet problems. For solution, you can restart the fabric network by:
 
