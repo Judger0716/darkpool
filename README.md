@@ -132,6 +132,86 @@ cd ~/darkpool/darkpool_dev
 
 ## DevLog
 
+### 2021-11-29
+
++ Altered the MPC program as follows, added order data in JSON format for implementing the order match. Take single order as an example, now the program can recover the secret price from the order data and plug it into the JSON structure.
++ The next step is implementing the sort of secret prices and the match rules.
++ [Reference Match Rules](https://www.jianshu.com/p/cce46cb696bb)
+
+```python
+# digital/float precision
+sfix.set_precision(16, 64)
+print_float_precision(32)
+
+# import
+import json
+
+# lagrange interpolation for secret recovery
+def lagrange_interpolation(dot,n):
+    secret = Array(1,sfix)
+    secret[0] = sfix(0)
+    multi_sum = Array(1,sfix)
+    # i stands for the i-th player
+    @for_range(n)
+    def _(i): 
+        multi_sum[0] = 1
+        # j stands for the j-th value
+        @for_range(n)
+        def _(j): 
+            @if_(i!=j)
+            def _():
+                multi_sum[0] *= (sfix(0)-dot[j][0]) / (dot[i][0]-dot[j][0])
+        secret[0] += multi_sum[0] * dot[i][1]
+    return secret[0]
+
+n = 3 # player number
+
+# input buyorders, which can be converted to file input as well 
+buyOrdersInMatch = [{
+    'id': '1',
+    'type': 'buy',
+    'creator': 'zhang',
+    'shares': Matrix(n,2,sfix),
+    'amount': 100,
+    'deal_amount': 0
+},{
+    'id': '2',
+    'type': 'buy',
+    'creator': 'zhang',
+    'shares': Matrix(n,2,sfix),
+    'amount': 110,
+    'deal_amount': 0
+},
+]
+
+# input sellorders, which can be converted to file input as well
+sellOrdersInMatch = [{
+    'id': '3',
+    'type': 'sell',
+    'creator': 'wang',
+    'shares': Matrix(n,2,sfix),
+    'amount': 90,
+    'deal_amount': 0
+},{
+    'id': '4',
+    'type': 'sell',
+    'creator': 'li',
+    'shares': Matrix(n,2,sfix),
+    'amount': 120,
+    'deal_amount': 0
+},]
+
+# take buyorder[0] as an example, each player input its share
+@for_range(n)
+def _(i): 
+    buyOrdersInMatch[0]['shares'][i][0] = sfix.get_input_from(i) # dot[i] x_value
+    buyOrdersInMatch[0]['shares'][i][1] = sfix.get_input_from(i) # dot[i] y_value
+
+# use lagrange interpolation to recover the price for the following comparison
+buyOrdersInMatch[0]['price'] = lagrange_interpolation(buyOrdersInMatch[0]['shares'],n)
+print_ln('%s',buyOrdersInMatch[0]['price'].reveal())
+```
+
 ### 2021-11-3
 
 + Successfully implemented the comparation between two integers while maintaining in ciphertext (or called shares). Since we don't use `reveal()` to recover the secret with its shares in the `shamir-party` protocol, the value of the secret should be secure and meet our expextation.
