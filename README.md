@@ -132,6 +132,10 @@ cd ~/darkpool/darkpool_dev
 
 ## DevLog
 
+### 2021-12-01
+
++ The orginal approach of realizing order matching using JSON format is <font color=red>***FAILED***</font> because of the mutually-exclusive variable type between `Python3` and `MP-SPDZ`, the index in 
+
 ### 2021-11-29
 
 + Altered the MPC program as follows, added order data in JSON format for implementing the order match. Take single order as an example, now the program can recover the secret price from the order data and plug it into the JSON structure.
