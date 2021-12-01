@@ -134,7 +134,84 @@ cd ~/darkpool/darkpool_dev
 
 ### 2021-12-01
 
-+ The orginal approach of realizing order matching using JSON format is <font color=red>***FAILED***</font> because of the mutually-exclusive variable type between `Python3` and `MP-SPDZ`, the index in 
++ The orginal approach of realizing order matching using JSON format is **FAILED** because of the mutually-exclusive variable type between `Python3` and `MP-SPDZ`, the index in the `@for_range` structure of `MP-SPDZ` is *`regint`*, but the index of Python3 list only support *`int`* or *`slice`*, the unique type *`regint`* cannot convert into *`int`* in `MP-SPDZ`.
++ As a result, there is another way of realizing the [Reference Match Rules](https://www.jianshu.com/p/cce46cb696bb). We can construce multiple MPC program for integer comparison and computation and use `shell` script to call them. The basic logic of the Reference Match Rules is still coded in `Node.js`.
++ For example, we can run the follwing script to do the integer comparison, the result will return in the terminal:
+
+```shell
+#!/bin/bash
+echo "starting integer comparison ..."
+cd /root/MP-SPDZ
+echo 1 6547524676 1 3419428149 > Player-Data/Input-P0-0
+echo 2 20418508967 2 10287910074 > Player-Data/Input-P1-0
+echo 3 41612952996 3 20605446009 > Player-Data/Input-P2-0
+./shamir-party.x 0 integer_comparison &
+./shamir-party.x 1 integer_comparison &
+./shamir-party.x 2 integer_comparison
+```
+
++ Meanwhile the interger compaison protocol is designed as follows:
+
+```python
+'''
+Comparison between two shared integers a,b
+Return 0,1,2
+0 stands for a=b
+1 stands for a<b
+2 stands for a>b
+'''
+
+# digital/float precision
+sfix.set_precision(16, 64)
+print_float_precision(32)
+
+# lagrange interpolation for secret recovery
+def lagrange_interpolation(x_values,y_values,m,n):
+    # return an Array of m-secret
+    secret = Array(m,sfix)
+    # k stands for the k-th secret
+    @for_range(m)
+    def _(k):
+        multi_sum = Array(1,sfix)
+        # i stands for the i-th player
+        @for_range(n)
+        def _(i): 
+            multi_sum[0] = 1
+            # j stands for the j-th value
+            @for_range(n)
+            def _(j): 
+                @if_(i!=j)
+                def _():
+                    multi_sum[0] *= (sfix(0)-x_values[k][j]) / (x_values[k][i]-x_values[k][j])
+            secret[k] += multi_sum[0] * y_values[k][i]
+    return secret
+
+m = 2 # secret number
+n = 3 # player number
+x_values = Matrix(m,n,sfix)
+y_values = Matrix(m,n,sfix)
+
+@for_range(m)
+def _(i):
+    @for_range(n)
+    def _(j): 
+        x_values[i][j] = sfix.get_input_from(j)
+        y_values[i][j] = sfix.get_input_from(j)
+
+secret = lagrange_interpolation(x_values,y_values,m,n)
+
+@if_( (secret[0]==secret[1]).reveal() )
+def _():
+    print_ln('%s',0)
+
+@if_( (secret[0]<secret[1]).reveal() )
+def _():
+    print_ln('%s',1)
+
+@if_( (secret[0]>secret[1]).reveal() )
+def _():
+    print_ln('%s',2)
+```
 
 ### 2021-11-29
 
