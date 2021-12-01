@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "starting integer comparison ..."
-cd /root/MP-SPDZ
+cd /root/darkpool/MP-SPDZ
 pwd
 echo 1 6547524676 1 3419428149 > Player-Data/Input-P0-0
 echo 2 20418508967 2 10287910074 > Player-Data/Input-P1-0

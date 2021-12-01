@@ -134,8 +134,9 @@ cd ~/darkpool/darkpool_dev
 
 ### 2021-12-01
 
-+ The orginal approach of realizing order matching using JSON format is **FAILED** because of the mutually-exclusive variable type between `Python3` and `MP-SPDZ`, the index in the `@for_range` structure of `MP-SPDZ` is *`regint`*, but the index of Python3 list only support *`int`* or *`slice`*, the unique type *`regint`* cannot convert into *`int`* in `MP-SPDZ`.
-+ As a result, there is another way of realizing the [Reference Match Rules](https://www.jianshu.com/p/cce46cb696bb). We can construce multiple MPC program for integer comparison and computation and use `shell` script to call them. The basic logic of the Reference Match Rules is still coded in `Node.js`.
++ The project structure has been modified!
++ The orginal approach of realizing order matching using JSON format is **FAILED** because of the mutually-exclusive variable type between **Python** and **MP-SPDZ**, the index in the `@for_range` structure of **MP-SPDZ** is *`regint`*, but the index of Python3 list only support *`int`* or *`slice`*, the unique type *`regint`* cannot convert into *`int`* in **MP-SPDZ**.
++ As a result, there is another way of realizing the [Reference Match Rules](https://www.jianshu.com/p/cce46cb696bb). We can construce multiple MPC program for integer comparison and computation and use **shell** script to call them. The basic logic of the Reference Match Rules is still coded in **Node.js**.
 + For example, we can run the follwing script to do the integer comparison, the result will return in the terminal:
 
 ```shell
@@ -215,7 +216,7 @@ def _():
 
 ### 2021-11-29
 
-+ Altered the MPC program as follows, added order data in JSON format for implementing the order match. Take single order as an example, now the program can recover the secret price from the order data and plug it into the JSON structure.
++ Altered the MPC program as follows, added order data in **JSON** format for implementing the order match. Take single order as an example, now the program can recover the secret price from the order data and plug it into the **JSON** structure.
 + The next step is implementing the sort of secret prices and the match rules.
 + [Reference Match Rules](https://www.jianshu.com/p/cce46cb696bb)
 
