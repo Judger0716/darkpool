@@ -135,7 +135,7 @@ cd ~/darkpool/darkpool_dev
 ### 2021-12-01
 
 + The project structure has been modified!
-+ The orginal approach of realizing order matching using JSON format is **FAILED** because of the mutually-exclusive variable type between **Python** and **MP-SPDZ**, the index in the `@for_range` structure of **MP-SPDZ** is *`regint`*, but the index of Python3 list only support *`int`* or *`slice`*, the unique type *`regint`* cannot convert into *`int`* in **MP-SPDZ**.
++ The orginal approach of realizing order matching using **JSON** format is **FAILED** because of the mutually-exclusive variable type between **Python** and **MP-SPDZ**, the index in the *`@for_range`* structure of **MP-SPDZ** is *`regint`*, but the index of Python3 list only support *`int`* or *`slice`*, the unique type *`regint`* cannot convert into *`int`* in **MP-SPDZ**.
 + As a result, there is another way of realizing the [Reference Match Rules](https://www.jianshu.com/p/cce46cb696bb). We can construce multiple MPC program for integer comparison and computation and use **shell** script to call them. The basic logic of the Reference Match Rules is still coded in **Node.js**.
 + For example, we can run the follwing script to do the integer comparison, the result will return in the terminal:
 
@@ -151,7 +151,7 @@ echo 3 41612952996 3 20605446009 > Player-Data/Input-P2-0
 ./shamir-party.x 2 integer_comparison
 ```
 
-+ Meanwhile the interger compaison protocol is designed as follows:
++ Meanwhile the interger compaison protocol named *`integer_comparison.mpc`* is designed as follows:
 
 ```python
 '''
@@ -212,6 +212,105 @@ def _():
 @if_( (secret[0]>secret[1]).reveal() )
 def _():
     print_ln('%s',2)
+```
+
++ And for the two key variable: `deal_price` and `max_execution` in our match rules, we will use a MPC program to calculate it independently, the inputs are divided into private inputs and public inputs, where private inputs correspond to price shares and public inputs correspond to order amount. Our output will be the `deal_price` and `max_execution`. The incomplete program named *`match_order.mpc`* is as follow:
+
+```python
+# import
+from Compiler.types import Array,sfix,cfix
+from Compiler.library import for_range,if_,print_float_precision,print_ln, public_input
+
+# set digital/float precision
+sfix.set_precision(16, 64)
+print_float_precision(32)
+
+# lagrange interpolation for secret recovery (single secret)
+def lagrange_interpolation(dot,n):
+    secret = Array(1,sfix)
+    secret[0] = sfix(0)
+    multi_sum = Array(1,sfix)
+    # i stands for the i-th player
+    @for_range(n)
+    def _(i): 
+        multi_sum[0] = 1
+        # j stands for the j-th value
+        @for_range(n)
+        def _(j): 
+            @if_(i!=j)
+            def _():
+                multi_sum[0] *= (sfix(0)-dot[j][0]) / (dot[i][0]-dot[j][0])
+        secret[0] += multi_sum[0] * dot[i][1]
+    return secret[0]
+
+# input share -> prices in sfix format
+def get_price_and_convert(order_num,n):
+    # input order price
+    shares = sfix.Tensor([order_num,n,2])
+    @for_range(n) # each player
+    def _(i):
+        @for_range(order_num) # each order
+        def _(j):
+            shares[j][i][0] = sfix.get_input_from(i) # x_value
+            shares[j][i][1] = sfix.get_input_from(i) # y_value
+
+    # use lagrange interpolation to recover the price for the following computation
+    prices = Array(order_num,sfix)
+    @for_range(order_num)
+    def _(i):
+        prices[i] = lagrange_interpolation(shares[i],n)
+        #print_ln('%s',prices[i].reveal())
+    return prices
+
+# get amounts in cfix format
+def get_amount(order_num):
+    orderAmount = Array(order_num,cfix)
+    @for_range(order_num)
+    def _(i):
+        orderAmount[i] = public_input()
+        #print_ln('%s',orderAmount[i])
+    return orderAmount
+
+# sort of orders
+def sort(prices,amounts,n):
+    # ascending prices
+    @for_range(n)
+    def _(i):
+        @for_range(n)
+        def _(j):
+            @if_((prices[i] < prices[j]).reveal())
+            def _():
+                tmp = prices[i]
+                prices[i] = prices[j]
+                prices[j] = tmp
+    # descending amounts
+    @for_range(n)
+    def _(i):
+        @for_range(n)
+        def _(j):
+            @if_(amounts[i] > amounts[j])
+            def _():
+                tmp = amounts[i]
+                amounts[i] = amounts[j]
+                amounts[j] = tmp
+    return prices,amounts
+
+n = 3 # player number
+buyOrderNum = 2 # number of buy orders
+sellOrderNum = 3 # number of sell orders
+referencePrice = 0 
+
+# input buyorders
+buyOrderPrice = get_price_and_convert(buyOrderNum,n)
+buyOrderAmount = get_amount(buyOrderNum)
+
+# input sellorders
+sellOrderPrice = get_price_and_convert(sellOrderNum,n)
+sellOrderAmount = get_amount(sellOrderNum)
+
+# maopao sort
+buyOrderPrice,buyOrderAmount = sort(buyOrderPrice,buyOrderAmount,buyOrderNum)
+sellOrderPrice,sellOrderAmount = sort(sellOrderPrice,sellOrderAmount,sellOrderNum)
 ```
 
 ### 2021-11-29
