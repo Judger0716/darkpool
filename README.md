@@ -137,10 +137,174 @@ cd ~/darkpool/darkpool_dev
 + Successfully implement a part of the matching rules, the preparation for calculating `deal_price` and `max_execution` is done. By changing the MPC program *`match_test.mpc`* as follows, it can now correctlly calculate `execution` and `imbalance`:
 
 ```python
+# import
+from Compiler.types import Array,sfix,cfix
+from Compiler.library import for_range, if_, if_e, else_, print_float_precision, print_ln, public_input
 
+# set digital/float precision
+sfix.set_precision(16, 64)
+print_float_precision(32)
+
+# lagrange interpolation for secret recovery (single secret)
+def lagrange_interpolation(dot,n):
+    secret = Array(1,sfix)
+    secret[0] = sfix(0)
+    multi_sum = Array(1,sfix)
+    # i stands for the i-th player
+    @for_range(n)
+    def _(i): 
+        multi_sum[0] = 1
+        # j stands for the j-th value
+        @for_range(n)
+        def _(j): 
+            @if_(i!=j)
+            def _():
+                multi_sum[0] *= (sfix(0)-dot[j][0]) / (dot[i][0]-dot[j][0])
+        secret[0] += multi_sum[0] * dot[i][1]
+    return secret[0]
+
+# input share -> prices in sfix format
+def get_price_and_convert(order_num,n):
+    # input order price
+    shares = sfix.Tensor([order_num,n,2])
+    @for_range(n) # each player
+    def _(i):
+        @for_range(order_num) # each order
+        def _(j):
+            shares[j][i][0] = sfix.get_input_from(i) # x_value
+            shares[j][i][1] = sfix.get_input_from(i) # y_value
+
+    # use lagrange interpolation to recover the price for the following computation
+    prices = Array(order_num,sfix)
+    @for_range(order_num)
+    def _(i):
+        prices[i] = lagrange_interpolation(shares[i],n)
+        #print_ln('%s',prices[i].reveal())
+    return prices
+
+# get amounts in cfix format
+def get_amount(order_num):
+    orderAmount = Array(order_num,cfix)
+    @for_range(order_num)
+    def _(i):
+        orderAmount[i] = public_input()
+        #print_ln('%s',orderAmount[i])
+    return orderAmount
+
+# sort of orders
+def sort(prices,amounts,n):
+    # ascending prices
+    @for_range(n)
+    def _(i):
+        @for_range(n)
+        def _(j):
+            @if_((prices[i] < prices[j]).reveal())
+            def _():
+                # change position
+                p_tmp = prices[i]
+                prices[i] = prices[j]
+                prices[j] = p_tmp
+                # also change correspond amount
+                a_tmp = amounts[i]
+                amounts[i] = amounts[j]
+                amounts[j] = a_tmp
+    return prices,amounts
+
+# get all_price -> for further optimization, the returned array should be a set
+def get_all_price(buyOrderNum,sellOrderNum,buyOrderPrice,sellOrderPrice):
+    allOrderPrice = Array(buyOrderNum+sellOrderNum,sfix)
+    # add buyprice to allprice
+    @for_range(buyOrderNum)
+    def _(i):
+        allOrderPrice[i] = buyOrderPrice[i]
+    # add sellprice to allprice
+    @for_range(sellOrderNum)
+    def _(j):
+        allOrderPrice[buyOrderNum+j] = sellOrderPrice[j]
+    print_ln('allprice: %s',allOrderPrice.reveal_list())
+    return allOrderPrice
+
+# calculate buy_sum,sell_sum,execution,imbalance
+def calculate_other_parametres(buyOrderNum,sellOrderNum,buyOrderPrice,buyOrderAmount,sellOrderPrice,sellOrderAmount,allOrderPrice):
+    length = len(allOrderPrice)
+    buy_sum = Array(length,sfix)
+    sell_sum = Array(length,sfix)
+    execution = Array(length,sfix)
+    imbalance = Array(length,sfix)
+    # iterate each buyprice
+    @for_range(length)
+    def _(i):
+        @for_range(buyOrderNum)
+        def _(j):
+            @if_( (buyOrderPrice[j]>=allOrderPrice[i]).reveal() )
+            def _():
+                buy_sum[i] += buyOrderAmount[j]
+    # iterate each sellprice
+    @for_range(length)
+    def _(i):
+        @for_range(sellOrderNum)
+        def _(j):
+            @if_( (sellOrderPrice[j]<=allOrderPrice[i]).reveal() )
+            def _():
+                sell_sum[i] += sellOrderAmount[j]
+    # calculate execution
+    @for_range(length)
+    def _(i):
+        @if_e( (buy_sum[i]<=sell_sum[i]).reveal() )
+        def _():
+            execution[i] = buy_sum[i]
+        @else_
+        def _():
+            execution[i] = sell_sum[i]
+    # calculate imbalance
+    @for_range(length)
+    def _(i):
+        imbalance[i] = buy_sum[i] - sell_sum[i]
+    return buy_sum,sell_sum,execution,imbalance
+
+# match order
+def match_order(buyOrderNum,sellOrderNum,buyOrderPrice,buyOrderAmount,sellOrderPrice,sellOrderAmount):
+    # no matching orders
+    @if_e( (buyOrderPrice[buyOrderNum-1]<sellOrderPrice[0]).reveal() )
+    def _():
+        return 0,0
+    # do matching
+    @else_
+    def _():
+        # TODO
+        return 1,1
+
+
+n = 3 # player number
+buyOrderNum = 2 # number of buy orders
+sellOrderNum = 3 # number of sell orders
+referencePrice = 0 
+
+# input buyorders
+buyOrderPrice = get_price_and_convert(buyOrderNum,n)
+buyOrderAmount = get_amount(buyOrderNum)
+
+# input sellorders
+sellOrderPrice = get_price_and_convert(sellOrderNum,n)
+sellOrderAmount = get_amount(sellOrderNum)
+
+# bubble sort, ascending prices, descending amount
+buyOrderPrice,buyOrderAmount = sort(buyOrderPrice,buyOrderAmount,buyOrderNum)
+sellOrderPrice,sellOrderAmount = sort(sellOrderPrice,sellOrderAmount,sellOrderNum)
+allOrderPrice = get_all_price(buyOrderNum,sellOrderNum,buyOrderPrice,sellOrderPrice)
+
+buy_sum,sell_sum,execution,imbalance = calculate_other_parametres(buyOrderNum,sellOrderNum,buyOrderPrice,buyOrderAmount,sellOrderPrice,sellOrderAmount,allOrderPrice)
+print_ln('buysum: %s',buy_sum.reveal_list())
+print_ln('sellsum: %s',sell_sum.reveal_list())
+print_ln('execution: %s',execution.reveal_list())
+print_ln('imbalance: %s',imbalance.reveal_list())
+
+# match order, returning deal_price and max_execution
+#deal_price,max_execution = match_order(buyOrderNum,sellOrderNum,buyOrderPrice,buyOrderAmount,sellOrderPrice,sellOrderAmount)
+#print_ln('%s %s',deal_price,max_execution)
 ```
 
-+ New **JS** file named *`match_test`* in */darkpool_dev/committeeApp* is a test script for verifying the result of the above MPC program.
++ New **JS** file named *`match_test`* in *~/darkpool_dev/committeeApp* is a test script for verifying the result of the above MPC program.
 
 ### 2021-12-01
 
