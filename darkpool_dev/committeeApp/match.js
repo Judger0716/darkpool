@@ -28,6 +28,8 @@ function match(buyOrders, sellOrders, referencePrice) {
 
   let all_price = new Set(buy_price.concat(sell_price));
   all_price = [...all_price.values()].sort();
+  // print all_price
+  console.log(all_price)
 
   let buy_sum = [], sell_sum = [], execution = [], imbalance = [];
 
@@ -55,6 +57,12 @@ function match(buyOrders, sellOrders, referencePrice) {
     execution.push(Math.min(buy_sum[i], sell_sum[i]));
     imbalance.push(buy_sum[i] - sell_sum[i]);
   })
+
+  // print
+  console.log('buy_sum:',buy_sum)
+  console.log('sell_sum:',sell_sum)
+  console.log('execution:',execution)
+  console.log('imbalance:',imbalance)
 
   if (Math.max(...buy_price) < Math.min(...sell_price)) {
     return {

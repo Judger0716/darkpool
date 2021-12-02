@@ -132,6 +132,16 @@ cd ~/darkpool/darkpool_dev
 
 ## DevLog
 
+### 2021-12-02
+
++ Successfully implement a part of the matching rules, the preparation for calculating `deal_price` and `max_execution` is done. By changing the MPC program *`match_test.mpc`* as follows, it can now correctlly calculate `execution` and `imbalance`:
+
+```python
+
+```
+
++ New **JS** file named *`match_test`* in */darkpool_dev/committeeApp* is a test script for verifying the result of the above MPC program.
+
 ### 2021-12-01
 
 + The project structure has been modified!
