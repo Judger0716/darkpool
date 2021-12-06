@@ -134,7 +134,7 @@ cd ~/darkpool/darkpool_dev
 
 ### 2021-12-06
 
-+ Successfully implement full matching rules, now it can take price shares and amount as input and output the `deal_price` and `max_execution`, the MPC program *`match_test.mpc`* is as follows:
++ Successfully implement full matching rules, now it can take price shares and amount as **input** and **output** the `deal_price` and `max_execution`, the MPC program *`match_test.mpc`* is as follows:
 
 ```python
 # import
@@ -552,7 +552,7 @@ print_ln('--End--\n')
     Deal Price: 100
 
     Max Execution: 281
-    
+
     --End--
     
 
