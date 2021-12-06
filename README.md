@@ -24,6 +24,11 @@
 
 + utilitybelt v0.2.6
 
+### Dependency
+
++ [MP-SPDZ](https://github.com/data61/MP-SPDZ)
++ [Simple_SSS](https://github.com/Judger0716/Simple_SSS.git)
+
 ## 2.[MP-SPDZ](https://github.com/data61/MP-SPDZ) Set-up
 
 ```shell
