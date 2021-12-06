@@ -546,14 +546,12 @@ print_ln('--End--\n')
     ```
 
     - Then the terminal would print the matching result like this:
-
+    ```shell
     --Final Result--
-
     Deal Price: 100
-
     Max Execution: 281
-
     --End--
+    ```
     
 
 ### 2021-12-02
