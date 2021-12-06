@@ -124,14 +124,14 @@ buyOrdersInMatch = [{
     'type': 'buy',
     'creator': 'zhang',
     'price': 100,
-    'amount': 648,
+    'amount': 100,
     'deal_amount': 0
 },{
     'id': '2',
     'type': 'buy',
     'creator': 'zhang',
     'price': 120,
-    'amount': 375,
+    'amount': 200,
     'deal_amount': 0
 },
 ]
@@ -140,27 +140,27 @@ sellOrdersInMatch = [{
     'type': 'sell',
     'creator': 'wang',
     'price': 90,
-    'amount': 695,
+    'amount': 300,
     'deal_amount': 0
 },{
     'id': '4',
     'type': 'sell',
     'creator': 'li',
     'price': 140,
-    'amount': 648,
+    'amount': 100,
     'deal_amount': 0
 },{
   'id': '5',
   'type': 'sell',
   'creator': 'a',
   'price': 130,
-  'amount': 362,
+  'amount': 200,
   'deal_amount': 0
 }]
 
 // matchorder entry
-matchResult = match(buyOrdersInMatch, sellOrdersInMatch, 0);
+matchResult = match(buyOrdersInMatch, sellOrdersInMatch, 100);
 console.log(matchResult)
 if (matchResult.price <= 0 || matchResult.amount <= 0) {
-    console.log('fuck!');
+    console.log('?????');
   }
