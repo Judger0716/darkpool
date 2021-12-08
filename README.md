@@ -137,7 +137,7 @@ cd ~/darkpool/darkpool_dev
 
 ## DevLog
 
-### 2021-12-06
+### 2021-12-08
 
 + Add the automatic way to generate shares in *`Simple_SSS`*.
 + Find the way to write match result into file. When run the MPC program, use the following code:
