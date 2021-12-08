@@ -139,6 +139,15 @@ cd ~/darkpool/darkpool_dev
 
 ### 2021-12-06
 
++ Add the automatic way to generate shares in *`Simple_SSS`*.
++ Find the way to write match result into file. When run the MPC program, use the following code:
+```shell
+# write result to MatchResult-P0-0
+./shamir-party.x -OF MatchResult 0 match_order & ./shamir-party.x 1 match_order & ./shamir-party.x 2 match_order
+```
+
+### 2021-12-06
+
 + Successfully implement full matching rules, now it can take price shares and amount as **input** and **output** the `deal_price` and `max_execution`, the MPC program *`match_test.mpc`* is as follows:
 
 ```python
