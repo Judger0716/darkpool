@@ -137,6 +137,10 @@ cd ~/darkpool/darkpool_dev
 
 ## DevLog
 
+### 2021-12-09
+
++ Change secret sharing in *`~/darkpool_dev/userApp/server.js`* to Python version.
+
 ### 2021-12-08
 
 + Add the automatic way to generate shares in *`Simple_SSS`*.
