@@ -738,16 +738,14 @@ async function nodeHandshake(peerId) {
 }
 
 function decryptShare(shares) {
+  console.log(shares)
   let len = Object.keys(shares).length;
-  // crypto.privateDecrypt({ key: prvKeyForDecryption, passphrase: '', padding: crypto.constants.RSA_PKCS1_PADDING }, Buffer.from(hex, 'hex')).toString()
-  // let strres = Array.from([...Array(len).keys()], function (x) {
-  //   return jsrsasign.KJUR.crypto.Cipher.decrypt(shares[x], jsrsasign.KEYUTIL.getKey(prvKeyForDecryption));
-  // }).join("");
+  console.log('len',len)
   let strres = Array.from(
     [...Array(len).keys()],
     x => crypto.privateDecrypt({ key: prvKeyForDecryption, padding: crypto.constants.RSA_PKCS1_PADDING }, Buffer.from(shares[x], 'hex')).toString()
-  ).join("");
-  // console.log(strres);
+  );
+  console.log(strres);
   return Buffer.from(strres.split(','));
 }
 
