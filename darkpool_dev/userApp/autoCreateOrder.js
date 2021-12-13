@@ -58,7 +58,7 @@ async function createOrder() {
             }
             json_shares[cmt_name] = enc_i;
         }
-        console.log(json_shares)
+        //console.log(json_shares)
     });
   }
 
