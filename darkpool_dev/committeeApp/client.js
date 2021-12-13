@@ -493,16 +493,15 @@ async function orderEventHandler(event) {
         eventJson.price = null;
         let share = eventJson.shares[username];
         eventJson.shares[username] = decryptShare(share);
-
-        // console.log("Decrypt my share: ", eventJson.shares[username]);
+        console.log("Decrypt my share: ", eventJson.shares[username]);
         /*
          * Share with peers.
-         */
+         
         for (let [peerString, peerId] of peerList) {
           nodeSendAndClose(peerId, JSON.stringify({
             type: 'shares', content: [{ order_id: eventJson.order_id, name: username, share: eventJson.shares[username] }]
           }));
-        }
+        }*/
         combiningOrders.set(eventJson.order_id, eventJson);
       }
       // [eventJson.order_id] = eventJson;
@@ -738,15 +737,14 @@ async function nodeHandshake(peerId) {
 }
 
 function decryptShare(shares) {
-  console.log(shares)
+  //console.log(shares)
   let len = Object.keys(shares).length;
-  console.log('len',len)
   let strres = Array.from(
     [...Array(len).keys()],
     x => crypto.privateDecrypt({ key: prvKeyForDecryption, padding: crypto.constants.RSA_PKCS1_PADDING }, Buffer.from(shares[x], 'hex')).toString()
   );
   console.log(strres);
-  return Buffer.from(strres.split(','));
+  return [parseInt(strres[0]),parseInt(strres[1])];
 }
 
 async function fetchCommittee() {
