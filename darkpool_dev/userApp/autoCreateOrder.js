@@ -4,6 +4,7 @@ const jsrsasign = require('jsrsasign');
 const sss = require('shamirs-secret-sharing')
 const CreateOrder = require('./createOrder');
 const QueryCommittee = require('./queryCommittee');
+const exec = require('child_process').exec;
 
 async function createOrder() {
   let type;
@@ -36,27 +37,29 @@ async function createOrder() {
   else {
     let t = 3;
     // Shamir Secret Sharing
-    console.log(price);
-    let secret = Buffer.from(price.toString());
-    //console.log(secret)
-    let shares = sss.split(secret, { shares: n, threshold: t })
-    for (let i = 0; i < n; i++) {
-      let share_i = shares[i].toJSON()['data'].toString();
-      let blocknum = Math.ceil(share_i.length / 32);
-      // Encrypt with committees' public keys
-      // let start = PubKeys['committee'][i]['name'].search('CN=') + 3;
-      // let end = PubKeys['committee'][i]['name'].search('C=') - 3;
-      let cmt_name = PubKeys['committee'][i]['name']
-      let pub_i = PubKeys['committee'][i]['pub'];
-      let enc_i = {};
-      for (let j = 0; j < blocknum - 1; j++) {
-        enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring(j * 32, (j + 1) * 32), jsrsasign.KEYUTIL.getKey(pub_i));
-        jsrsasign.hextob64(enc_i[j]);
-      }
-      enc_i[blocknum - 1] = jsrsasign.KJUR.crypto.Cipher.encrypt(share_i.substring((blocknum - 1) * 32, share_i.length), jsrsasign.KEYUTIL.getKey(pub_i));
-      jsrsasign.hextob64(enc_i[blocknum - 1]);
-      json_shares[cmt_name] = enc_i;
-    }
+    // console.log('order price:',price);
+    // use Python script sss.py for generating shares
+    exec('python3 /root/darkpool/Simple_SSS/sss.py ' + price + ' '+ t + ' '+ n, function (error, stdout, stderr) {
+        if(error){
+            console.error('error: ' + error);
+            return;
+        }
+        // convert it to json
+        var shares = JSON.parse(stdout);
+        // console.log(shares);
+        // for each committee, encrypt their shares
+        for (let i = 0; i < n; i++) {
+            let cmt_name = PubKeys['committee'][i]['name'];
+            let pub_i = PubKeys['committee'][i]['pub'];
+            let enc_i = [];
+            // each share has two value, encrypt them both
+            for (let j = 0; j < 2; j++) {
+                enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(shares[i][j].toString(), jsrsasign.KEYUTIL.getKey(pub_i));
+            }
+            json_shares[cmt_name] = enc_i;
+        }
+        console.log(json_shares)
+    });
   }
 
   await CreateOrder.createOrder(username, type, amount, item, JSON.stringify(json_shares));

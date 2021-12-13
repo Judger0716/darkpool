@@ -338,7 +338,7 @@ app.post('/createorder', async function (req, res) {
         // Shamir Secret Sharing
         // console.log('order price:',price);
         // use Python script sss.py for generating shares
-        exec('python3 /root/darkpool/Simple_SSS/sss.py ' + price + ' '+ t + ' '+ n, function (error, stdout, stderr) {
+        exec('python3 /root/darkpool/Simple_SSS/sss.py ' + price + ' '+ t + ' '+ n, async function (error, stdout, stderr) {
             if(error){
                 console.error('error: ' + error);
                 return;
@@ -353,26 +353,26 @@ app.post('/createorder', async function (req, res) {
                 let enc_i = [];
                 // each share has two value, encrypt them both
                 for (let j = 0; j < 2; j++) {
-                    enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(shares[i][j], jsrsasign.KEYUTIL.getKey(pub_i));
+                    enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(shares[i][j].toString(), jsrsasign.KEYUTIL.getKey(pub_i));
                 }
                 json_shares[cmt_name] = enc_i;
             }
-            console.log(json_shares)
+            // console.log(json_shares)
+            let ret;
+            while (!(ret = await CreateOrder.createOrder(username, type, amount, item, JSON.stringify(json_shares)))) {
+                console.log('Retrying............');
+            }
+            res.json({
+                'status': ret,
+            })
         });
     }
-    let ret;
-    while (!(ret = await CreateOrder.createOrder(username, type, amount, item, JSON.stringify(json_shares)))) {
-        console.log('Retrying............');
-    }
-    res.json({
-        'status': ret,
-    })
-
+    /*
     // cd /root/darkpool/darkpool_dev/userApp && nohup node autoCreateOrder.js &
     if (firstOrder) {
         spawn('bash', ['-c', 'cd /root/darkpool/darkpool_dev/userApp && nohup node autoCreateOrder.js &']);
         firstOrder = false;
-    }
+    }*/
     /*
     .then(ret => {
 
