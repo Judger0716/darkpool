@@ -39,7 +39,7 @@ git clone https://github.com/data61/MP-SPDZ.git
 apt-get install automake build-essential git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 python3 texinfo yasm
 
 # compilation
-make -j 2 tldr 
+make -j 1 tldr 
 
 # tutorial
 ./compile.py tutorial
@@ -60,6 +60,12 @@ Enter `darkpool_dev` directory：
 
 ```shell
 bash network-starter.sh # Automatically start the system and install chaincode
+```
+
+Enter `darkpool_dev/userApp`, `darkpool_dev/tokenApp`, `darkpool_dev/committeeApp` and run:
+
+```shell
+npm install # install npm dependency
 ```
 
 Enter `darkpool_dev/userApp` directory and run：
@@ -136,6 +142,51 @@ cd ~/darkpool/darkpool_dev
 + [Multiparty Computation for Interval, Equality, and Comparison Without Bit-Decomposition Protocol](https://link.springer.com/content/pdf/10.1007%2F978-3-540-71677-8_23.pdf)
 
 ## DevLog
+
+### 2021-12-13
+
++ Change secret sharing in *`~/darkpool_dev/userApp/autoCreateOrder.js`* to Python version.
++ Since **NodeJs** execute code in **asynchronous** way, so in *`~/darkpool_dev/userApp/server.js`* we should let function *create_order* execute after the secret sharing by plug it into the *exec()* function.
++ In route function *`createorder`* in *`~/darkpool_dev/userApp/server.js`*, the encryption process should take **string** variables as input, for the generated shares in Python version, use *`toString()`* method to convert it from **int** to **string**.
+
+```javascript
+enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(shares[i][j].toString(), jsrsasign.KEYUTIL.getKey(pub_i));
+```
+
++ Cancelled autoCreateOrder momentarily by not calling *`~/darkpool_dev/userApp/autoCreateOrder.js`*.
+
+```javascript
+// use Python script sss.py for generating shares
+exec('python3 /root/darkpool/Simple_SSS/sss.py ' + price + ' '+ t + ' '+ n, async function (error, stdout, stderr) {
+    if(error){
+        console.error('error: ' + error);
+        return;
+    }
+    // convert it to json
+    var shares = JSON.parse(stdout);
+    // console.log('Python print result:',shares);
+    // for each committee, encrypt their shares
+    for (let i = 0; i < n; i++) {
+        let cmt_name = PubKeys['committee'][i]['name'];
+        let pub_i = PubKeys['committee'][i]['pub'];
+        let enc_i = [];
+        // each share has two value, encrypt them both
+        for (let j = 0; j < 2; j++) {
+            enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(shares[i][j], jsrsasign.KEYUTIL.getKey(pub_i));
+            jsrsasign.hextob64(enc_i[j]);
+        }
+        json_shares[cmt_name] = enc_i;
+    }
+    // EXECUTE AFTER SECRET SHARING
+    let ret;
+    while (!(ret = await CreateOrder.createOrder(username, type, amount, item, JSON.stringify(json_shares)))) {
+        console.log('Retrying............');
+    }
+    res.json({
+        'status': ret,
+    })
+});
+```
 
 ### 2021-12-09
 
