@@ -58,11 +58,12 @@ function match(buyOrders, sellOrders, referencePrice) {
     imbalance.push(buy_sum[i] - sell_sum[i]);
   })
 
-  // print
+  /* print
   console.log('buy_sum:',buy_sum)
   console.log('sell_sum:',sell_sum)
   console.log('execution:',execution)
   console.log('imbalance:',imbalance)
+  */
 
   if (Math.max(...buy_price) < Math.min(...sell_price)) {
     return {

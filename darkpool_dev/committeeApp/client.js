@@ -17,6 +17,8 @@ const lp = require('it-length-prefixed')
 const path = require('path');
 const match = require('./match')
 const crypto = require('crypto');
+var exec = require('child_process').exec;
+const { stringify } = require('querystring');
 
 const PREPARING = 0, MATCHING = 1, WAITING = 2;
 const ec = new jsrsasign.KJUR.crypto.ECDSA({ 'curve': 'secp256r1' });
@@ -212,37 +214,29 @@ async function combineOrders() {
     // let orders = Object.values(combiningOrders);
     for (let [order_id, order_body] of combiningOrders) {
 
-      // Already decrypted.
-      if (order_body.price) continue;
-
-      let recover_shares = [];
+      let recover_shares = {};
       for (let [username, share] of Object.entries(order_body.shares)) {
-        // console.log(typeof shares[j], shares[j]);
-        if (share instanceof Buffer) {
-          recover_shares.push(share);
+        recover_shares[username] = []
+        for(let i = 0; i < 2; i++){
+          recover_shares[username].push(share[i]);
         }
       }
-      // console.log(recover_shares.length);
-      if (recover_shares.length >= 3) {
-        order_body.price = sss.combine(recover_shares.slice(0, 3)).toString();
-        // console.log(`Order ${order_id} has been decrypted, decrypted price: ${order_body.price}`);
-        console.log(`Order ${order_id} has been shared.`);
+      // console.log('recovershares:',recover_shares);
 
-        // Add the decrypted order to the matching pool.
-        let itemPool = matchingPool.get(order_body.item);
+      // Add the decrypted order to the matching pool.
+      let itemPool = matchingPool.get(order_body.item);
 
-        itemPool.get(order_body.type).set(order_body.order_id, {
-          id: order_body.order_id,
-          type: order_body.type,
-          creator: order_body.creator,
-          price: parseInt(order_body.price),
-          amount: parseInt(order_body.amount),
-          deal_amount: parseInt(order_body.deal_amount),
-          // time: order_body.create_time.seconds
-        });
+      itemPool.get(order_body.type).set(order_body.order_id, {
+        id: order_body.order_id,
+        type: order_body.type,
+        creator: order_body.creator,
+        shares: recover_shares[username],
+        // price: parseInt(order_body.price),
+        amount: parseInt(order_body.amount),
+        deal_amount: parseInt(order_body.deal_amount),
+        // time: order_body.create_time.seconds
+      });
 
-        // combiningOrders.delete();
-      }
     }
   }
   setTimeout(combineOrders, 1000);
@@ -384,12 +378,48 @@ async function matchOrders() {
       let sellOrders = JSON.parse(JSON.stringify(Array.from(pool.get('sell').values())));
 
       let buyOrdersInMatch = buyOrders.map(function (v) { let u = { ...v }; u.amount = v.amount - v.deal_amount; return u; });
-      let sellOrdersInMatch = buyOrders.map(function (v) { let u = { ...v }; u.amount = v.amount - v.deal_amount; return u; });
+      let sellOrdersInMatch = sellOrders.map(function (v) { let u = { ...v }; u.amount = v.amount - v.deal_amount; return u; });
 
-      if (buyOrders.length > 0 && sellOrders.length > 0) {
+      if (buyOrdersInMatch.length > 0 && sellOrdersInMatch.length > 0) {
+        console.log('Reset SPDZ private Input ...')
+        // TODO
+        console.log('Doing SPDZ private Input ...')
+        // public input > Programs/Public-Input/match_order
+        let public_input_cmd = 'echo '+buyOrdersInMatch.length.toString()+' '+sellOrdersInMatch.length.toString()+' ';
+        // Member input their share
+        // for buy orders
+        for (let i = 0; i < buyOrdersInMatch.length; i++){
+          public_input_cmd += buyOrdersInMatch[i].amount.toString();
+          public_input_cmd += ' ';
+          exec('echo ' + buyOrdersInMatch[i].shares[0] + ' '+ buyOrdersInMatch[i].shares[1] + ' >> ../../' + username + '_input', async function (error, stdout, stderr) {
+            if(error){
+              console.error('error: ' + error);
+            }
+          });          
+        }
+        // for sell orders
+        for (let i = 0; i < sellOrdersInMatch.length; i++){
+          public_input_cmd += sellOrdersInMatch[i].amount.toString();
+          public_input_cmd += ' ';
+          exec('echo ' + sellOrdersInMatch[i].shares[0] + ' '+ sellOrdersInMatch[i].shares[1] + ' >> ../../' + username + '_input', async function (error, stdout, stderr) {
+            if(error){
+              console.error('error: ' + error);
+            }
+          });          
+        }
+        // public input
+        console.log('Doing SPDZ public Input ...')
+        exec(public_input_cmd + '> ../../Public-Input', async function (error, stdout, stderr) {
+          if(error){
+            console.error('error: ' + error);
+          }
+        }); 
+
         // matchorder entry
         let matchResult = match(buyOrdersInMatch, sellOrdersInMatch, lastPrice.get(item));
+        console.log('matchResult:',matchResult)
         if (matchResult.price <= 0 || matchResult.amount <= 0) {
+          console.log('both < 0, continue')
           continue;
         }
         // format of matchResult: {price: x, amount: y}
@@ -496,12 +526,12 @@ async function orderEventHandler(event) {
         console.log("Decrypt my share: ", eventJson.shares[username]);
         /*
          * Share with peers.
-         
+         */
         for (let [peerString, peerId] of peerList) {
           nodeSendAndClose(peerId, JSON.stringify({
             type: 'shares', content: [{ order_id: eventJson.order_id, name: username, share: eventJson.shares[username] }]
           }));
-        }*/
+        }
         combiningOrders.set(eventJson.order_id, eventJson);
       }
       // [eventJson.order_id] = eventJson;
