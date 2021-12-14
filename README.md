@@ -143,11 +143,33 @@ cd ~/darkpool/darkpool_dev
 
 ## DevLog
 
+### 2021-12-14
+
++ Now every committee member can decrypt their own share and ready to input them into **MP-SPDZ** private input, the corresponding code is in *`~/darkpool_dev/userApp/client.js`* function *`matchOrders()`*. For example:
+
+```javascript
+// Member input their share
+// for buy orders
+for (let i = 0; i < buyOrdersInMatch.length; i++){
+    public_input_cmd += buyOrdersInMatch[i].amount.toString();
+    public_input_cmd += ' ';
+    exec('echo ' + buyOrdersInMatch[i].shares[0] + ' '+ buyOrdersInMatch[i].shares[1] + ' >> ../../' + username + '_input', async function (error, stdout, stderr) {
+    if(error){
+        console.error('error: ' + error);
+    }
+    });          
+}
+```
+
++ Modified the *`match_order.mpc`* to take `buy_order_num` and `sell_order_num` as two public input. Now we define a global variable called ***max_order_num*** to restrict the max number of buy/sell orders given in *`match_order.mpc`*, as a result, the MPC program can initialize the ***Array*** class properly.
+
 ### 2021-12-13
 
 + Change secret sharing in *`~/darkpool_dev/userApp/autoCreateOrder.js`* to Python version.
+
 + Since **NodeJs** execute code in **asynchronous** way, so in *`~/darkpool_dev/userApp/server.js`* we should let function *create_order* execute after the secret sharing by plug it into the *exec()* function.
-+ In route function *`createorder`* in *`~/darkpool_dev/userApp/server.js`*, the encryption process should take **string** variables as input, for the generated shares in Python version, use *`toString()`* method to convert it from **int** to **string**.
+
++ **[Debug Notice]**In route function *`createorder`* in *`~/darkpool_dev/userApp/server.js`*, the encryption process should take **string** variables as input, for the generated shares in Python version, use *`toString()`* method to convert it from **int** to **string**.
 
 ```javascript
 enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(shares[i][j].toString(), jsrsasign.KEYUTIL.getKey(pub_i));
@@ -162,6 +184,7 @@ enc_i[j] = jsrsasign.KJUR.crypto.Cipher.encrypt(shares[i][j].toString(), jsrsasi
 ### 2021-12-08
 
 + Add the automatic way to generate shares in *`Simple_SSS`*.
+
 + Find the way to write match result into file. When run the MPC program, use the following code:
 ```shell
 # write result to MatchResult-P0-0
@@ -767,8 +790,11 @@ print_ln('imbalance: %s',imbalance.reveal_list())
 ### 2021-12-01
 
 + The project structure has been modified!
+
 + The orginal approach of realizing order matching using **JSON** format is **FAILED** because of the mutually-exclusive variable type between **Python** and **MP-SPDZ**, the index in the *`@for_range`* structure of **MP-SPDZ** is *`regint`*, but the index of Python3 list only support *`int`* or *`slice`*, the unique type *`regint`* cannot convert into *`int`* in **MP-SPDZ**.
+
 + As a result, there is another way of realizing the [Reference Match Rules](https://www.jianshu.com/p/cce46cb696bb). We can construce multiple MPC program for integer comparison and computation and use **shell** script to call them. The basic logic of the Reference Match Rules is still coded in **Node.js**.
+
 + For example, we can run the follwing script named *`integer_comparison.sh`* in *~/darkpool_dev/committeeApp* to do the integer comparison, the result will return in the terminal. Noticed that it should be used with the **Python** script *`generate_shares.py`* in *~/Simple_SSS* and copy the terminal input into *`integer_comparison.sh`*.:
 
 ```shell
@@ -948,7 +974,9 @@ sellOrderPrice,sellOrderAmount = sort(sellOrderPrice,sellOrderAmount,sellOrderNu
 ### 2021-11-29
 
 + Altered the MPC program as follows, added order data in **JSON** format for implementing the order match. Take single order as an example, now the program can recover the secret price from the order data and plug it into the **JSON** structure.
+
 + The next step is implementing the sort of secret prices and the match rules.
+
 + [Reference Match Rules](https://www.jianshu.com/p/cce46cb696bb)
 
 ```python
@@ -1028,6 +1056,7 @@ print_ln('%s',buyOrdersInMatch[0]['price'].reveal())
 ### 2021-11-3
 
 + Successfully implemented the comparation between two integers while maintaining in ciphertext (or called shares). Since we don't use `reveal()` to recover the secret with its shares in the `shamir-party` protocol, the value of the secret should be secure and meet our expextation.
+
 + Adjusted the MPC program's structure as follows, making it modular.
 
 ```python
@@ -1075,7 +1104,9 @@ print_ln('Secret[0] < Secret[1]: %s (1 for True, 0 for False)',(secret[0]<secret
 ### 2021-10-29
 
 + Successfully implemented secret recovery scheme of single trillion number using honest majority protocol `shamir-party`, the corresponding shamir threshold secret sharing was based on GF(2^32), which means the parametres of the polynomial is on GF(2^32).Now the average calculating time is below 0.2 second.
+
 + The improvement in efficiency basically comes from the protocol we choose to run our `.mpc` protocol. For the MASCOT protocol uses simple-OT and triples in computation, there is an efficiency concern in it. Since we don't have the worry of malicious committee members due to the `honest majority` hypothesis, we should take honest majority protocol instead.
+
 + Take the following steps for testing
 
 ```shell
@@ -1169,6 +1200,7 @@ def _(i):
 print_ln('secret = %s',secret.reveal())
 ```
 + The above secret recovery can be used to recover shares splited by a polynomial on GF(2^16). Due to float number accurancy reason, the above secret recovery can only support numbers with less than 8 digits. As this is just a demo, it takes input from one person but use MASCOT protocol to do MPC computation, the approximate running time for recover an 8-digit number is 42 seconds.
+
 + Secret recovery testing instruction (The above secret recovery scheme is written in `mytest.mpc`)
 
 ```shell
@@ -1202,10 +1234,13 @@ cat testdata.dat > Player-Data/Input-P0-0
 ### 2021-09-29
 
 + Implemented simple three-party calculation following blog [安全多方计算之SPDZ实例初探（一）](https://blog.csdn.net/shengsikandan/article/details/115912186), based on shamir-bmr-party.
+
 + Fixed path problem in the source code of darkpool trading system.
+
 + Understood the basic grammar of MP-SPDZ's High-Level Interface and tried to compile customized mpc protocols.
 
 ### 2021-09-27
 
 + Successfully deployed MP-SPDZ on the ECS and ran the tutorial.
+
 + Adjusted README.md for better reading.
