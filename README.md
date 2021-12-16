@@ -145,18 +145,20 @@ cd ~/darkpool/darkpool_dev
 
 ### 2021-12-16
 
-+ *`match_order.mpc`* now can read `buy_order_num` and `sell_order_num` in the compiling process by the following code:
++ *`match_order.mpc`* now can read ***buy_order_num*** and ***sell_order_num*** in the compiling process by the following code:
 
 ```shell
 ./compile.py -M match_order $buy_order_num $sell_order_num
 ```
 
-+ Then **MP-SPDZ** will store the corresponding schedule and bytecode to *`/root/darkpool/MP-SPDZ/Programs/Schedules/match_order-[$buy_order_num]-[$sell_order_num].sch`* and  *`/root/darkpool/MP-SPDZ/Programs/Schedules/match_order-[$buy_order_num]-[$sell_order_num]-0.bc`*
++ Then **MP-SPDZ** will store the corresponding schedule and bytecode to */root/darkpool/MP-SPDZ/Programs/Schedules/match_order-[$buy_order_num]-[$sell_order_num].sch* and  */root/darkpool/MP-SPDZ/Programs/Schedules/match_order-[$buy_order_num]-[$sell_order_num]-0.bc*
 
 + To run the above MPC program, we should use the following code:
 
 ```shell
-././shamir-party.x 0 match_order-$buy_order_num-$sell_order_num & ./shamir-party.x 1 match_order-$buy_order_num-$sell_order_num & ./shamir-party.x 2 match_order-$buy_order_num-$sell_order_num
+./shamir-party.x 0 match_order-$buy_order_num-$sell_order_num & 
+./shamir-party.x 1 match_order-$buy_order_num-$sell_order_num & 
+./shamir-party.x 2 match_order-$buy_order_num-$sell_order_num
 ```
 
 + The **Python** Script *`~/Simple_SSS/generate_shares.py`* has been changed to generate the above terminal code as well.
@@ -179,7 +181,7 @@ for (let i = 0; i < buyOrdersInMatch.length; i++){
 }
 ```
 
-+ Modified the *`match_order.mpc`* to take `buy_order_num` and `sell_order_num` as two public input. Now we define a global variable called ***max_order_num*** to restrict the max number of buy/sell orders given in *`match_order.mpc`*, as a result, the MPC program can initialize the ***Array*** class properly.
++ Modified the *`match_order.mpc`* to take ***buy_order_num*** and ***sell_order_num*** as two public input. Now we define a global variable called ***max_order_num*** to restrict the max number of buy/sell orders given in *`match_order.mpc`*, as a result, the MPC program can initialize the ***Array*** class properly.
 
 ### 2021-12-13
 
