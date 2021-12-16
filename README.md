@@ -143,6 +143,24 @@ cd ~/darkpool/darkpool_dev
 
 ## DevLog
 
+### 2021-12-16
+
++ *`match_order.mpc`* now can read `buy_order_num` and `sell_order_num` in the compiling process by the following code:
+
+```shell
+./compile.py -M match_order $buy_order_num $sell_order_num
+```
+
++ Then **MP-SPDZ** will store the corresponding schedule and bytecode to *`/root/darkpool/MP-SPDZ/Programs/Schedules/match_order-[$buy_order_num]-[$sell_order_num].sch`* and  *`/root/darkpool/MP-SPDZ/Programs/Schedules/match_order-[$buy_order_num]-[$sell_order_num]-0.bc`*
+
++ To run the above MPC program, we should use the following code:
+
+```shell
+././shamir-party.x 0 match_order-$buy_order_num-$sell_order_num & ./shamir-party.x 1 match_order-$buy_order_num-$sell_order_num & ./shamir-party.x 2 match_order-$buy_order_num-$sell_order_num
+```
+
++ The **Python** Script *`~/Simple_SSS/generate_shares.py`* has been changed to generate the above terminal code as well.
+
 ### 2021-12-14
 
 + Now every committee member can decrypt their own share and ready to input them into **MP-SPDZ** private input, the corresponding code is in *`~/darkpool_dev/userApp/client.js`* function *`matchOrders()`*. For example:
