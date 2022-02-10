@@ -19,6 +19,9 @@
 + npm 7.14.0
 + Fabric v2.3.1
 + Fabric CA v1.4.9
++ hyperledger/fabric-tools v2.3.1
++ hyperledger/fabric-peer v2.3.1
++ hyperledger/fabric-orderer v2.3.1
 
 ### Python Extension Packages
 
@@ -56,16 +59,16 @@ Install the Fabric environment first (It is recommended to do this in a temporar
 curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.3.1 1.4.9
 ```
 
-Enter `darkpool_dev` directory：
-
-```shell
-bash network-starter.sh # Automatically start the system and install chaincode
-```
-
 Enter `darkpool_dev/userApp`, `darkpool_dev/tokenApp`, `darkpool_dev/committeeApp` and run:
 
 ```shell
 npm install # install npm dependency
+```
+
+Enter `darkpool_dev` directory：
+
+```shell
+bash network-starter.sh # Automatically start the system and install chaincode
 ```
 
 Enter `darkpool_dev/userApp` directory and run：
@@ -128,6 +131,22 @@ cd ~/darkpool/darkpool_dev
 ./network-clean.sh
 # restart network
 ./network-starter.sh
+```
+
+### (5)[Error response from daemon: cannot stop container](https://blog.csdn.net/qq_28719743/article/details/89017770)
+
+```shell
+aa-remove-unknown
+docker stop <container id>
+```
+
+### (6)[failed to invoke backing implementation of 'ApproveChaincodeDefinitionForMyOrg](https://blog.csdn.net/qq_28540443/article/details/104379132)
+
+change *install_chaincode.sh* in folder *contract*
+
+```shell
+# change from print $2 to print $1
+SEQUENCE=$(cat ${VER_PATH} | awk '{print $1}')
 ```
 
 ## Reference
