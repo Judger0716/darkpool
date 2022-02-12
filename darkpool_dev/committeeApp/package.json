@@ -10,20 +10,21 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@grpc/grpc-js": "0.6.9",
+    "@grpc/grpc-js": "^1.5.5",
     "crypto": "^1.0.1",
     "fabric-ca-client": "^2.2.4",
     "fabric-network": "^2.2.4",
     "js-yaml": "^3.12.0",
     "libp2p": "^0.36.2",
-    "libp2p-mdns": "^0.16.0",
+    "libp2p-mdns": "^0.18.0",
     "libp2p-mplex": "^0.10.3",
     "libp2p-noise": "^3.0.0",
     "libp2p-tcp": "^0.15.4",
     "libp2p-websockets": "^0.15.7",
-    "shamirs-secret-sharing": "^1.0.1"
+    "shamirs-secret-sharing": "^1.0.1",
+    "step": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^5.6.0"
+    "eslint": "^8.8.0"
   }
 }

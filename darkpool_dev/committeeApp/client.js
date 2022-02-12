@@ -15,7 +15,7 @@ const jsrsasign = require('jsrsasign');
 const pipe = require('it-pipe');
 const lp = require('it-length-prefixed')
 const path = require('path');
-const match = require('./match')
+const match = require('./match')  // change it to MP-SPDZ
 const crypto = require('crypto');
 var exec = require('child_process').exec;
 const { stringify } = require('querystring');
@@ -30,7 +30,7 @@ var prvKeyForDecryption;
 var masterName;
 var username = process.argv[2];
 var committeeContract, tokenContract, orderContract;
-
+var committeeNumber;  // sequence of committee's member
 var committeeMembers = new Map();
 var combiningOrders = new Map();
 let lastSet = new Set(), peerList = new Map();
@@ -246,6 +246,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
   let skip = "x509::/OU=client/OU=org2/OU=department1/CN=will::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server";
   let price = matchResult.price;
   let amount = matchResult.amount;
+  let cmpResult = matchResult.cmpResult;
 
   let context = {
     buy: Array.from(buyOrders, (x) => x.id),
@@ -255,13 +256,18 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
   let deal_buy_orders = [], deal_sell_orders = [];
   let buy_amount = amount, sell_amount = amount;
 
+  let index = 0;  // counter for circulation
+
   for (let order of buyOrders) {
     if (buy_amount === 0) break;
+
+    // manually skip orders of Will
     if (order.creator === skip) {
+      index += 1;
       continue;
     }
 
-    if (order.price >= price && buy_amount > 0) {
+    if (cmpResult[index] && buy_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= buy_amount) {
         // order.deal_amount = order.amount;
@@ -277,10 +283,11 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
   for (let order of sellOrders) {
     if (sell_amount === 0) break;
     if (order.creator === skip) {
+      index += 1;
       continue;
     }
 
-    if (order.price <= price && sell_amount > 0) {
+    if (cmpResult[index] && sell_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= sell_amount) {
         // order.deal_amount = order.amount;
@@ -299,13 +306,16 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
   if (amount <= 0)
     return null;
 
+  index = 0 // reset
+
   for (let order of buyOrders) {
     if (buy_amount === 0) break;
     if (order.creator === skip) {
+      index += 1;
       continue;
     }
 
-    if (order.price >= price && buy_amount > 0) {
+    if (cmpResult[index] && buy_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= buy_amount) {
         order.deal_amount = order.amount;
@@ -321,11 +331,12 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
   for (let order of sellOrders) {
     if (sell_amount === 0) break;
     if (order.creator === skip) {
+      index += 1;
       continue;
     }
 
 
-    if (order.price <= price && sell_amount > 0) {
+    if (cmpResult[index] && sell_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= sell_amount) {
         order.deal_amount = order.amount;
@@ -381,17 +392,20 @@ async function matchOrders() {
       let sellOrdersInMatch = sellOrders.map(function (v) { let u = { ...v }; u.amount = v.amount - v.deal_amount; return u; });
 
       if (buyOrdersInMatch.length > 0 && sellOrdersInMatch.length > 0) {
-        console.log('Reset SPDZ private Input ...')
-        // TODO
+        // get committeeNumber
+        committeeNumber = buyOrdersInMatch[0].shares[0]-1;
         console.log('Doing SPDZ private Input ...')
+
         // public input > Programs/Public-Input/match_order
         let public_input_cmd = 'echo '+buyOrdersInMatch.length.toString()+' '+sellOrdersInMatch.length.toString()+' ';
+
         // Member input their share
         // for buy orders
         for (let i = 0; i < buyOrdersInMatch.length; i++){
           public_input_cmd += buyOrdersInMatch[i].amount.toString();
           public_input_cmd += ' ';
-          exec('echo ' + buyOrdersInMatch[i].shares[0] + ' '+ buyOrdersInMatch[i].shares[1] + ' >> ../../' + username + '_input', async function (error, stdout, stderr) {
+          // private input > Player-Data/Input-P{}-0
+          exec('echo ' + buyOrdersInMatch[i].shares[0] + ' ' + buyOrdersInMatch[i].shares[1] + ' >> ../../MP-SPDZ/Player-Data/Input-P' + committeeNumber + '-0', async function (error, stdout, stderr) {
             if(error){
               console.error('error: ' + error);
             }
@@ -401,45 +415,73 @@ async function matchOrders() {
         for (let i = 0; i < sellOrdersInMatch.length; i++){
           public_input_cmd += sellOrdersInMatch[i].amount.toString();
           public_input_cmd += ' ';
-          exec('echo ' + sellOrdersInMatch[i].shares[0] + ' '+ sellOrdersInMatch[i].shares[1] + ' >> ../../' + username + '_input', async function (error, stdout, stderr) {
+          exec('echo ' + sellOrdersInMatch[i].shares[0] + ' ' + sellOrdersInMatch[i].shares[1] + ' >> ../../MP-SPDZ/Player-Data/Input-P' + committeeNumber + '-0', async function (error, stdout, stderr) {
             if(error){
               console.error('error: ' + error);
             }
           });          
         }
-        // public input
-        console.log('Doing SPDZ public Input ...')
-        exec(public_input_cmd + '> ../../Public-Input', async function (error, stdout, stderr) {
-          if(error){
-            console.error('error: ' + error);
-          }
-        }); 
+        
+        // master call for public input and match_order
+        if(username === masterName){
 
-        // matchorder entry
-        let matchResult = match(buyOrdersInMatch, sellOrdersInMatch, lastPrice.get(item));
-        console.log('matchResult:',matchResult)
-        if (matchResult.price <= 0 || matchResult.amount <= 0) {
-          console.log('both < 0, continue')
-          continue;
+          // public input
+          console.log('Doing SPDZ public Input ...')
+          exec(public_input_cmd + '> ../../MP-SPDZ/Programs/Public-Input/match_order', async function (error, stdout, stderr) {
+            if(error){
+              console.error('error: ' + error);
+            }
+          }); 
+
+          // matchorder entry
+          let matchResult = match();
+          // format of matchResult: {price: x, amount: y}
+          console.log('matchResult: ',matchResult)
+          if (matchResult.price <= 0 || matchResult.amount <= 0) {
+            console.log('both < 0, continue')
+            continue;
+          }
+          // get matchResult and form it 
+          let itemResult = formMatchResult(buyOrders, sellOrders, matchResult);
+          console.log('itemResult: ',itemResult);
+          if (itemResult) {
+            // broadcast matchResult
+            for (let [peerString, peerId] of peerList) {
+              nodeSendAndClose(peerId, JSON.stringify({
+                type: 'hasMatched', 
+                content: itemResult,
+                item: item,
+              }));
+            }
+            matchSuccess = true;
+            msg.content[item] = itemResult;
+          } else {
+            continue;
+          }
+          // Wait for result.
+          // stop = true;
         }
-        // format of matchResult: {price: x, amount: y}
-        // get matchResult and form it 
-        let itemResult = formMatchResult(buyOrders, sellOrders, matchResult);
-        // format of itemResult: check it in the above function
-        if (itemResult) {
-          matchSuccess = true;
-          msg.content[item] = itemResult;
-        } else {
-          continue;
-        }
-        // Wait for result.
-        // stop = true;
+        
       }
     }
   }
-
+  
   if (matchSuccess) {
     currentState = WAITING;
+    // RESET
+    console.log('Reset SPDZ private Input ...')
+    exec('rm -rf ../../MP-SPDZ/Player-Data/Input-P' + committeeNumber + '-0', async function (error, stdout, stderr) {
+      if(error){
+        console.error('error: ' + error);
+      }
+    });
+    if(username === masterName){
+      exec('rm -rf ../../MP-SPDZ/Programs/Public-Input/match_order', async function (error, stdout, stderr) {
+        if(error){
+          console.error('error: ' + error);
+        }
+      });
+    } 
 
     if (masterName && masterName === username) {
       for (let [item, pool] of resultPool) {
@@ -675,6 +717,33 @@ async function nodeEventHandler(stream) {
         }*/
       }
       break;
+    case 'hasMatched':
+      // non-master member sync match result
+      if(username !== masterName){
+
+        // change state
+        currentState = WAITING;
+        // init msg
+        let msg = {
+          type: "matchResult",
+          content: {
+            name: username
+          }
+        }
+        // RESET private input
+        console.log('Reset SPDZ private Input ...')
+        exec('rm -rf ../../MP-SPDZ/Player-Data/Input-P' + committeeNumber + '-0', async function (error, stdout, stderr) {
+          if(error){
+            console.error('error: ' + error);
+          }
+        });
+        // send msg
+        msg.content[message.item] = message.content;
+        for (let [peerString, peerId] of peerList) {
+          nodeSendAndClose(peerId, JSON.stringify(msg));
+        }
+      }
+      break;
     case 'restart':
       currentState = MATCHING;
       break;
@@ -773,7 +842,7 @@ function decryptShare(shares) {
     [...Array(len).keys()],
     x => crypto.privateDecrypt({ key: prvKeyForDecryption, padding: crypto.constants.RSA_PKCS1_PADDING }, Buffer.from(shares[x], 'hex')).toString()
   );
-  console.log(strres);
+  //console.log(strres);
   return [parseInt(strres[0]),parseInt(strres[1])];
 }
 

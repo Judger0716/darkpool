@@ -10,12 +10,12 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@grpc/grpc-js": "0.6.9",
+    "@grpc/grpc-js": "^1.5.5",
     "fabric-ca-client": "^2.2.4",
     "fabric-network": "^2.2.4",
     "js-yaml": "^3.12.0"
   },
   "devDependencies": {
-    "eslint": "^5.6.0"
+    "eslint": "^8.8.0"
   }
 }

@@ -10,7 +10,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@grpc/grpc-js": "0.6.9",
+    "@grpc/grpc-js": "^1.5.5",
     "body-parser": "latest",
     "cookie-parser": "latest",
     "ejs": "^3.1.6",
@@ -24,6 +24,6 @@
     "shamirs-secret-sharing": "^1.0.1"
   },
   "devDependencies": {
-    "eslint": "^5.6.0"
+    "eslint": "^8.8.0"
   }
 }

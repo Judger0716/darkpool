@@ -15,7 +15,7 @@
 
 + Docker version 20.10.7, build 20.10.7-0ubuntu1~20.04.1
 + docker-compose version 1.29.0, build 07737305
-+ nodejs v14.17.6
++ nodejs v14.17.6 -> v16.14.0
 + npm 7.14.0
 + Fabric v2.3.1
 + Fabric CA v1.4.9
@@ -41,11 +41,12 @@ git clone https://github.com/data61/MP-SPDZ.git
 # install dependency
 apt-get install automake build-essential git libboost-dev libboost-thread-dev libntl-dev libsodium-dev libssl-dev libtool m4 python3 texinfo yasm
 
-# compilation
+# compilation (in ECS)
 make -j 1 tldr 
 
 # tutorial
 ./compile.py tutorial
+Scripts/setup-ssl.sh [<number of parties>]
 echo 1 2 3 4 > Player-Data/Input-P0-0
 echo 1 2 3 4 > Player-Data/Input-P1-0
 Scripts/mascot.sh tutorial
@@ -140,15 +141,6 @@ aa-remove-unknown
 docker stop <container id>
 ```
 
-### (6)[failed to invoke backing implementation of 'ApproveChaincodeDefinitionForMyOrg](https://blog.csdn.net/qq_28540443/article/details/104379132)
-
-change *install_chaincode.sh* in folder *contract*
-
-```shell
-# change from print $2 to print $1
-SEQUENCE=$(cat ${VER_PATH} | awk '{print $1}')
-```
-
 ## Reference
 
 + [MASCOT: Faster Malicious Arithmetic Secure Computation with Oblivious Transfer](https://eprint.iacr.org/2016/505.pdf)
@@ -161,6 +153,152 @@ SEQUENCE=$(cat ${VER_PATH} | awk '{print $1}')
 + [Multiparty Computation for Interval, Equality, and Comparison Without Bit-Decomposition Protocol](https://link.springer.com/content/pdf/10.1007%2F978-3-540-71677-8_23.pdf)
 
 ## DevLog
+
+### 2022-02-12
+
++ Successfully use **MP-SPDZ** to realize order matching (currently orders are generated manually).
+
++ **[Modification 1]** The original **MP-SPDZ** program for order matching now do the price comparision as well by adding the following functions, meanwhile the printed result is seperated by *\n* in terminal:
+
+```python
+# price comparision
+def price_comparision(buyOrderNum,sellOrderNum,buyOrderPrice,sellOrderPrice):
+    # sell <= buy >=
+    cmpResult = Array(len(buyOrderPrice)+len(sellOrderPrice),sfix)
+    @for_range(buyOrderNum)
+    def _(i):
+        cmpResult[i] = buyOrderPrice[i] >= deal_price
+    @for_range(sellOrderNum)
+    def _(i):
+        cmpResult[buyOrderNum+i] = sellOrderPrice[i] <= deal_price
+    return cmpResult
+
+# price comparision
+cmpResult = price_comparision(buyOrderNum,sellOrderNum,buyOrderPrice,sellOrderPrice)
+@for_range(buyOrderNum+sellOrderNum)
+def _(i):
+    print_ln('%s',cmpResult[i].reveal())
+```
+
++ **[Modification 2]** The original **Nodejs** order matching script *`~/darkpool_dev/committeeApp/match.js`* was changed into the following one, now we ***spawnSync*** method in ***child_process*** module for getting the result of *`match_order.mpc`*:
+
+```javascript
+function match(){
+  const { spawn, spawnSync } = require('child_process');
+  const matchResult = spawnSync('bash',['match.sh']);
+  resultString = matchResult.stdout.toString();
+  spdz_result = resultString.substring(0,resultString.length-1).split('\n');
+  deal_price = parseInt(spdz_result[0]);
+  max_execution = parseInt(spdz_result[1]);
+  comparision = [];
+  for(let i = 2; i < spdz_result.length; i++){
+    comparision[i-2] = parseInt(spdz_result[i]);
+  }
+  console.log(deal_price,max_execution,comparision);
+  return {
+    price: deal_price,
+    amount: max_execution,
+    cmpResult: comparision
+  }
+}
+module.exports = match;
+```
+
++ **[Modification 3]** There are multiple modifications in *`~/darkpool_dev/committeeApp/client.js`*:
+
+    + Take the sequence of members in committee as global variable *committeeNumber*
+
+    ```javascript
+    var committeeNumber;  // sequence of committee's member
+    ```
+
+    + Now non-master committee members **ONLY** do MP-SPDZ private input in *matchOrders()*, but the master does both MP-SPDZ private input and MP-SPDZ public input.
+
+    + The call of *`~/darkpool_dev/committeeApp/match.js`* and the formation of *matchResult* are now done by the master alone. After the matching is completed, the master will broadcast the result to other non-master committee members.
+
+    ```javascript
+    // master call for public input and match_order
+    if(username === masterName){
+
+        // public input
+        console.log('Doing SPDZ public Input ...')
+        exec(public_input_cmd + '> ../../MP-SPDZ/Programs/Public-Input/match_order', async function (error, stdout, stderr) {
+        if(error){
+            console.error('error: ' + error);
+        }
+        }); 
+
+        // matchorder entry
+        let matchResult = match();
+        // format of matchResult: {price: x, amount: y}
+        console.log('matchResult: ',matchResult)
+        if (matchResult.price <= 0 || matchResult.amount <= 0) {
+        console.log('both < 0, continue')
+        continue;
+        }
+
+        // get matchResult and form it 
+        let itemResult = formMatchResult(buyOrders, sellOrders, matchResult);
+        console.log('itemResult: ',itemResult);
+
+        if (itemResult) {
+        // broadcast matchResult
+        for (let [peerString, peerId] of peerList) {
+            nodeSendAndClose(peerId, JSON.stringify({
+            type: 'hasMatched', 
+            content: itemResult,
+            item: item,
+            }));
+        }
+        matchSuccess = true;
+        msg.content[item] = itemResult;
+        } else {
+        continue;
+        }
+        // Wait for result.
+        // stop = true;
+    }
+    ```
+
+    + While non-master committee members receive the *matchResult* sent by the master, they will verify it and send the final result to the **fabric** blockchain, meanwhile they will clean(reset) their MP-SPDZ private input.
+
+    ```javascript
+    case 'hasMatched':
+      // non-master member sync match result
+      if(username !== masterName){
+
+        // change state
+        currentState = WAITING;
+        // init msg
+        let msg = {
+          type: "matchResult",
+          content: {
+            name: username
+          }
+        }
+        // RESET private input
+        console.log('Reset SPDZ private Input ...')
+        exec('rm -rf ../../MP-SPDZ/Player-Data/Input-P' + committeeNumber + '-0', async function (error, stdout, stderr) {
+          if(error){
+            console.error('error: ' + error);
+          }
+        });
+        // send msg
+        msg.content[message.item] = message.content;
+        for (let [peerString, peerId] of peerList) {
+          nodeSendAndClose(peerId, JSON.stringify(msg));
+        }
+      }
+      break;
+      ```
+
++ **[Future Work]**
+
+    + Clean debug print in the terminal.
+    
+    + Modified *`~/darkpool_dev/userApp/autoCreateOrder.js`* for current version.
+
+    + Add judge condition for committee members doing their MP-SDPZ private input.(Avoid constantly writing into files)
 
 ### 2021-12-16
 

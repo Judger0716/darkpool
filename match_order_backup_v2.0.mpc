@@ -1,0 +1,410 @@
+# import
+from Compiler.types import Array,sfix,cfix,cint
+from Compiler.library import for_range, if_, if_e, else_, print_float_precision, print_ln, public_input
+
+# set digital/float precision
+sfix.set_precision(16, 64)
+print_float_precision(32)
+max_order_num = 100
+
+# get max value in an array, return its value and index (secret element)
+def get_max_secret(arr,length):
+    cur_max = Array(1,sfix)
+    cur_max[0] = arr[0]
+    cur_index = Array(1,cint)
+    cur_index[0] = 0
+    @for_range(length)
+    def _(i):
+        @if_( (arr[i]>cur_max[0]).reveal() )
+        def _():
+            cur_max[0] = arr[i]
+            cur_index[0] = i
+    return cur_max[0],cur_index[0]
+
+# get max value in an array, return its value and index (public element)
+def get_max_public(arr,length):
+    cur_max = Array(1,cfix)
+    cur_max[0] = arr[0]
+    cur_index = Array(1,cint)
+    cur_index[0] = 0
+    @for_range(length)
+    def _(i):
+        @if_(arr[i]>cur_max[0])
+        def _():
+            cur_max[0] = arr[i]
+            cur_index[0] = i
+    return cur_max[0],cur_index[0]
+
+# get min value in an array, return its value and index (secret element)
+def get_min_secret(arr,length):
+    cur_min = Array(1,sfix)
+    cur_min[0] = arr[0]
+    cur_index = Array(1,cint)
+    cur_index[0] = 0
+    @for_range(length)
+    def _(i):
+        @if_( (arr[i]<cur_min[0]).reveal() )
+        def _():
+            cur_min[0] = arr[i]
+            cur_index[0] = i
+    return cur_min[0],cur_index[0]
+
+# get min value in an array, return its value and index (public element)
+def get_min_public(arr,length):
+    cur_min = Array(1,cfix)
+    cur_min[0] = arr[0]
+    cur_index = Array(1,cint)
+    cur_index[0] = 0
+    @for_range(length)
+    def _(i):
+        @if_(arr[i]<cur_min[0])
+        def _():
+            cur_min[0] = arr[i]
+            cur_index[0] = i
+    return cur_min[0],cur_index[0]
+
+# judge certain value is in the array or not (secret element)
+def is_in(val,arr):
+    @for_range(len(arr))
+    def _(i):
+        @if_( (val==arr[i]).reveal() )
+        def _():
+            return True
+    return False
+
+# judge whether all the values in the array is above certain value (secret element)
+def is_all_above(val,arr,length):
+    @for_range(length)
+    def _(i):
+        @if_( (arr[i]<val).reveal() )
+        def _():
+            return False
+    return True
+
+# judge whether all the values in the array is below certain value (secret element)
+def is_all_below(val,arr,length):
+    @for_range(length)
+    def _(i):
+        @if_( (arr[i]>val).reveal() )
+        def _():
+            return False
+    return True
+
+# lagrange interpolation for secret recovery (single secret)
+def lagrange_interpolation(dot,n):
+    secret = Array(1,sfix)
+    secret[0] = sfix(0)
+    multi_sum = Array(1,sfix)
+    # i stands for the i-th player
+    @for_range(n)
+    def _(i): 
+        multi_sum[0] = 1
+        # j stands for the j-th value
+        @for_range(n)
+        def _(j): 
+            @if_(i!=j)
+            def _():
+                multi_sum[0] *= (sfix(0)-dot[j][0]) / (dot[i][0]-dot[j][0])
+        secret[0] += multi_sum[0] * dot[i][1]
+    return secret[0]
+
+# input share -> prices in sfix format
+def get_price_and_convert(order_num,n):
+    # input order price
+    shares = sfix.Tensor([max_order_num,n,2])
+    @for_range(n) # each player
+    def _(i):
+        @for_range(order_num) # each order
+        def _(j):
+            shares[j][i][0] = sfix.get_input_from(i) # x_value
+            shares[j][i][1] = sfix.get_input_from(i) # y_value
+
+    # use lagrange interpolation to recover the price for the following computation
+    prices = Array(max_order_num,sfix)
+    @for_range(order_num)
+    def _(i):
+        prices[i] = lagrange_interpolation(shares[i],n)
+        #print_ln('%s',prices[i].reveal())
+    return prices
+
+# get amounts in cfix format
+def get_amount(order_num):
+    orderAmount = Array(max_order_num,cfix)
+    @for_range(order_num)
+    def _(i):
+        orderAmount[i] = public_input()
+        #print_ln('%s',orderAmount[i])
+    return orderAmount
+
+# get reference price and weight, ToDo
+def get_rfp_and_wt():
+    return
+
+# sort of orders, ascending prices
+def sort(prices,amounts,n):
+    # ascending prices
+    @for_range(n)
+    def _(i):
+        @for_range(n)
+        def _(j):
+            @if_((prices[i] < prices[j]).reveal())
+            def _():
+                # change position
+                p_tmp = prices[i]
+                prices[i] = prices[j]
+                prices[j] = p_tmp
+                # also change correspond amount
+                a_tmp = amounts[i]
+                amounts[i] = amounts[j]
+                amounts[j] = a_tmp
+    return prices,amounts
+
+# get all_price -> for further optimization, the returned array should be a set
+def get_all_price(buyOrderNum,sellOrderNum,buyOrderPrice,sellOrderPrice):
+    allOrderPrice = Array(2*max_order_num,sfix)
+    # add buyprice to allprice
+    @for_range(buyOrderNum)
+    def _(i):
+        allOrderPrice[i] = buyOrderPrice[i]
+    # add sellprice to allprice
+    @for_range(sellOrderNum)
+    def _(j):
+        allOrderPrice[buyOrderNum+j] = sellOrderPrice[j]
+    return allOrderPrice
+
+# calculate buy_sum,sell_sum,execution,imbalance
+def calculate_other_parametres(buyOrderNum,sellOrderNum,buyOrderPrice,buyOrderAmount,sellOrderPrice,sellOrderAmount,allOrderPrice):
+    length = len(allOrderPrice)
+    buy_sum = Array(length,cfix)
+    sell_sum = Array(length,cfix)
+    execution = Array(length,cfix)
+    imbalance = Array(length,cfix)
+    # iterate each buyprice
+    @for_range(length)
+    def _(i):
+        @for_range(buyOrderNum)
+        def _(j):
+            @if_( (buyOrderPrice[j]>=allOrderPrice[i]).reveal() )
+            def _():
+                buy_sum[i] += buyOrderAmount[j]
+    # iterate each sellprice
+    @for_range(length)
+    def _(i):
+        @for_range(sellOrderNum)
+        def _(j):
+            @if_( (sellOrderPrice[j]<=allOrderPrice[i]).reveal() )
+            def _():
+                sell_sum[i] += sellOrderAmount[j]
+    # calculate execution
+    @for_range(length)
+    def _(i):
+        @if_e( buy_sum[i]<=sell_sum[i] )
+        def _():
+            execution[i] = buy_sum[i]
+        @else_
+        def _():
+            execution[i] = sell_sum[i]
+    # calculate imbalance
+    @for_range(length)
+    def _(i):
+        imbalance[i] = buy_sum[i] - sell_sum[i]
+    return execution,imbalance
+
+# imbalance judgement, 1 for all positve, -1 for all negative, 0 for containing both
+def judge_imbalance(imbalance):
+    ret = 0
+    # init returen value
+    @if_e(imbalance[0]<0)
+    def _():
+        ret = -1
+    @else_
+    def _():
+        ret = 1
+    @for_range(len(imbalance))
+    def _(i):
+        @if_ ( imbalance[i]*ret<0 )
+        def _():
+            return 0
+    return ret
+
+# match order
+def match_order(buyOrderNum,sellOrderNum,buyOrderPrice,buyOrderAmount,sellOrderPrice,sellOrderAmount,allOrderPrice,referencePrice,weight):
+    # no matching orders, deal_price = 0
+    @if_e( (buyOrderPrice[buyOrderNum-1]<sellOrderPrice[0]).reveal() )
+    def _():
+        global deal_price
+        deal_price = 0
+    # do matching
+    @else_
+    def _():
+        # calculate execution, imbalance
+        execution,imbalance = calculate_other_parametres(buyOrderNum,sellOrderNum,buyOrderPrice,buyOrderAmount,sellOrderPrice,sellOrderAmount,allOrderPrice)
+        '''
+        debug print
+        print_ln('execution: %s',execution)
+        print_ln('imbalance: %s',imbalance)
+        '''
+
+        # get max execution
+        global max_execution
+        max_execution,max_execution_index = get_max_public(execution,len(execution)) # meanwhile alter the value of max_execution
+        #print_ln('max execution: %s',max_execution)
+        #print_ln('max execution index: %s',max_execution_index)
+
+        # count the number of max execution
+        priceCorrespondMaxExec = Array(len(allOrderPrice),sfix) # store prices of orders whose execution equal to max execution
+        max_execution_count = Array(1,cint) # store the number of orders whose execution equal to max exexution
+        max_execution_count[0] = 0 # init it with 0
+        @for_range(len(execution))
+        def _(i):
+            # if execution value equal to max execution
+            @if_(execution[i]==max_execution)
+            def _():
+                # check if its price has been counted
+                @if_( not is_in(allOrderPrice[i],priceCorrespondMaxExec) )
+                def _():
+                    # if not, add its price and count it
+                    priceCorrespondMaxExec[max_execution_count[0]] = allOrderPrice[i]
+                    max_execution_count[0] += 1
+        #print_ln('max execution count: %s',max_execution_count[0])
+        #print_ln('correspond price: %s',priceCorrespondMaxExec.reveal_list())
+
+        # if there is only one max execution
+        @if_e(max_execution_count[0]==1)
+        def _():
+            global deal_price
+            deal_price = allOrderPrice[max_execution_index]
+
+        # else we should choose another price
+        @else_
+        def _():
+            # use imbalance to judge different situation
+            market_pressure = judge_imbalance(imbalance)
+            #print_ln('market pressure: %s',market_pressure)
+
+            # buy market pressure
+            @if_(market_pressure==1)
+            def _():
+                # all the price is below reference price
+                @if_(is_all_below(referencePrice*(1+weight),priceCorrespondMaxExec,max_execution_count[0]))
+                def _():
+                    # return the max price
+                    dp,me = get_max_secret(priceCorrespondMaxExec,max_execution_count[0])
+                    global deal_price
+                    deal_price = dp
+                # all the price is above reference price
+                @if_e(is_all_above(referencePrice*(1+weight),priceCorrespondMaxExec,max_execution_count[0]))
+                def _():
+                    # return the min price
+                    dp,me = get_min_secret(priceCorrespondMaxExec,max_execution_count[0])
+                    global deal_price
+                    deal_price = dp
+                # else
+                @else_
+                def _():
+                    # let reference price multiply a weight
+                    global deal_price
+                    deal_price = referencePrice*(1+weight)
+
+            # sell market pressure
+            @if_(market_pressure==-1)
+            def _():
+                # all the price is above reference price
+                @if_(is_all_above(referencePrice*(1-weight),priceCorrespondMaxExec,max_execution_count[0]))
+                def _():
+                    # return the min price
+                    dp,me = get_min_secret(priceCorrespondMaxExec,max_execution_count[0])
+                    global deal_price
+                    deal_price = dp
+                # all the price is below reference price
+                @if_e(is_all_below(referencePrice*(1-weight),priceCorrespondMaxExec,max_execution_count[0]))
+                def _():
+                    # return the max price
+                    dp,me = get_max_secret(priceCorrespondMaxExec,max_execution_count[0])
+                    global deal_price
+                    deal_price = dp
+                # else
+                @else_
+                def _():
+                    # let reference price multiply a weight
+                    global deal_price
+                    deal_price = referencePrice*(1-weight)
+
+            # no obvious market pressure, take further comparison
+            @if_(market_pressure==0)
+            def _():
+                # if order prices contatin reference price, use it for matching
+                @if_e(is_in(referencePrice,priceCorrespondMaxExec))
+                def _():
+                    global deal_price
+                    deal_price = referencePrice
+                # else
+                @else_
+                def _():
+                    # find the price which is the closest to reference price
+                    abs_value = Array(len(allOrderPrice),sfix) # store abs value
+                    @for_range(max_execution_count[0])
+                    def _(i):
+                        abs_value[i] = priceCorrespondMaxExec[i]
+                        @if_e( (abs_value[i]>referencePrice).reveal() )
+                        def _():
+                            abs_value[i] = abs_value[i] - referencePrice
+                        @else_
+                        def _():
+                            abs_value[i] = referencePrice - abs_value[i]
+                    min_abs,min_abs_index = get_min_secret(abs_value,max_execution_count[0])
+                    closest_price = priceCorrespondMaxExec[min_abs_index]
+                    # return the closest price
+                    global deal_price
+                    deal_price = closest_price
+
+# price comparision
+def price_comparision(buyOrderNum,sellOrderNum,buyOrderPrice,sellOrderPrice):
+    # sell <= buy >=
+    cmpResult = Array(len(buyOrderPrice)+len(sellOrderPrice),sfix)
+    @for_range(buyOrderNum)
+    def _(i):
+        cmpResult[i] = buyOrderPrice[i] >= deal_price
+    @for_range(sellOrderNum)
+    def _(i):
+        cmpResult[buyOrderNum+i] = sellOrderPrice[i] <= deal_price
+    return cmpResult
+
+
+n = 3 # player number
+buyOrderNum = public_input() # number of buy orders
+sellOrderNum = public_input() # number of sell orders
+referencePrice = 0 
+
+# input buyorders
+buyOrderPrice = get_price_and_convert(buyOrderNum,n)
+buyOrderAmount = get_amount(buyOrderNum)
+
+# input sellorders
+sellOrderPrice = get_price_and_convert(sellOrderNum,n)
+sellOrderAmount = get_amount(sellOrderNum)
+
+# bubble sort, ascending prices, descending amount
+buyOrderPrice,buyOrderAmount = sort(buyOrderPrice,buyOrderAmount,buyOrderNum)
+sellOrderPrice,sellOrderAmount = sort(sellOrderPrice,sellOrderAmount,sellOrderNum)
+allOrderPrice = get_all_price(buyOrderNum,sellOrderNum,buyOrderPrice,sellOrderPrice)
+# print_ln('allprice: %s',allOrderPrice.reveal_list())
+
+# prepare the parametres for matching orders
+# they should be public, but due to the calculation needs, we declare them as sfix
+referencePrice = sfix(100)
+weight = sfix(0.05)
+
+# take wanted result as global variable
+deal_price = cfix(0) 
+max_execution = cfix(0)
+
+# match order, returning deal_price and max_execution
+match_order(buyOrderNum,sellOrderNum,buyOrderPrice,buyOrderAmount,sellOrderPrice,sellOrderAmount,allOrderPrice,referencePrice,weight)
+print_ln('%s\n%s',deal_price.reveal(),max_execution)
+
+# price comparision
+cmpResult = price_comparision(buyOrderNum,sellOrderNum,buyOrderPrice,sellOrderPrice)
+@for_range(buyOrderNum+sellOrderNum)
+def _(i):
+    print_ln('%s',cmpResult[i].reveal())
