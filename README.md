@@ -309,8 +309,7 @@ module.exports = match;
     + Clean debug print in the terminal.
     
     + Modified *`~/darkpool_dev/userApp/autoCreateOrder.js`* for current version.
-
-    + Add judge condition for committee members doing their MP-SDPZ private input.(Avoid constantly writing into files)
+    
 
 ### 2021-12-16
 
