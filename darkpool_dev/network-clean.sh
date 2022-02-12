@@ -28,5 +28,7 @@ rm -rf ${DIR}/organization/darkpool/gateway/connection-org2.*
 rm -rf ${DIR}/organization/token/gateway/connection-org1.*
 
 # remove any stopped containers
+aa-remove-unknown # added 20220212
+docker stop $(docker ps -aq) # added 20220212
 docker rm $(docker ps -aq)
 

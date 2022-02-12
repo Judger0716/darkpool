@@ -528,13 +528,10 @@
                                         -->
 
                                         <el-table :data="order_list[scope.$index].shares">
-                                            <el-table-column align="center" prop="name" label="用户名" width="80%">
-                                            </el-table-column>
+                                            <el-table-column align="center" prop="name" label="用户名" width="80%"></el-table-column>
                                             <el-table-column align="center" label="碎片">
-                                                <el-table-column align="center" prop="seq" label="序号" width="60%">
-                                                </el-table-column>
-                                                <el-table-column align="center" prop="data" label="内容"
-                                                    show-overflow-tooltip></el-table-column>
+                                                <el-table-column align="center" prop="seq" label="序号" width="60%"></el-table-column>
+                                                <el-table-column align="center" prop="data" label="内容" show-overflow-tooltip></el-table-column>
                                             </el-table-column>
                                         </el-table>
 
@@ -1101,7 +1098,7 @@
                         } else if (Response['data']['status'] == false) {
                             this.$notify({
                                 title: '失败',
-                                message: '订单创建失败，正在为您重试',
+                                message: '订单创建失败,正在为您重试',
                                 type: 'warning',
                                 offset: 100
                             });

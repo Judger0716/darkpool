@@ -141,6 +141,18 @@ aa-remove-unknown
 docker stop <container id>
 ```
 
+### (6)Error: chaincode install failed with status: 500 - error in simulation: failed to execute transaction a77662ef0bac180ca5a4448434ab1cd90d30fae399901f49690b6b0c2b455991: error sending: timeout expired while executing transaction
+
+This is caused by unknown reason, try run *network-clean.sh* for multiple times.
+
+```shell
+cd ~/darkpool/darkpool_dev
+# run multiple times
+./network-clean.sh
+# then restart network
+./network-starter.sh
+```
+
 ## Reference
 
 + [MASCOT: Faster Malicious Arithmetic Secure Computation with Oblivious Transfer](https://eprint.iacr.org/2016/505.pdf)

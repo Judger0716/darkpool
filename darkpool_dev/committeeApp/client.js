@@ -267,7 +267,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
       continue;
     }
 
-    if (cmpResult[index] && buy_amount > 0) {
+    if (cmpResult[index]===1 && buy_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= buy_amount) {
         // order.deal_amount = order.amount;
@@ -278,6 +278,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
       }
       // deal_buy_orders.push(order);
     }
+    else index += 1;
   }
 
   for (let order of sellOrders) {
@@ -287,7 +288,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
       continue;
     }
 
-    if (cmpResult[index] && sell_amount > 0) {
+    if (cmpResult[index]===1 && sell_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= sell_amount) {
         // order.deal_amount = order.amount;
@@ -298,6 +299,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
       }
       // deal_sell_orders.push(order);
     }
+    else index += 1;
   }
 
   amount = Math.min(amount - sell_amount, amount - buy_amount);
@@ -315,7 +317,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
       continue;
     }
 
-    if (cmpResult[index] && buy_amount > 0) {
+    if (cmpResult[index]===1 && buy_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= buy_amount) {
         order.deal_amount = order.amount;
@@ -326,6 +328,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
       }
       deal_buy_orders.push(order);
     }
+    else index += 1;
   }
 
   for (let order of sellOrders) {
@@ -336,7 +339,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
     }
 
 
-    if (cmpResult[index] && sell_amount > 0) {
+    if (cmpResult[index]===1 && sell_amount > 0) {
       let remaining_amount = order.amount - order.deal_amount;
       if (remaining_amount <= sell_amount) {
         order.deal_amount = order.amount;
@@ -347,6 +350,7 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
       }
       deal_sell_orders.push(order);
     }
+    else index += 1;
   }
 
   // format of itemResult
@@ -405,11 +409,20 @@ async function matchOrders() {
           public_input_cmd += buyOrdersInMatch[i].amount.toString();
           public_input_cmd += ' ';
           // private input > Player-Data/Input-P{}-0
-          exec('echo ' + buyOrdersInMatch[i].shares[0] + ' ' + buyOrdersInMatch[i].shares[1] + ' >> ../../MP-SPDZ/Player-Data/Input-P' + committeeNumber + '-0', async function (error, stdout, stderr) {
-            if(error){
-              console.error('error: ' + error);
-            }
-          });          
+          if(i === 0){
+            exec('echo ' + buyOrdersInMatch[i].shares[0] + ' ' + buyOrdersInMatch[i].shares[1] + ' > ../../MP-SPDZ/Player-Data/Input-P' + committeeNumber + '-0', async function (error, stdout, stderr) {
+              if(error){
+                console.error('error: ' + error);
+              }
+            });   
+          }
+          else{
+            exec('echo ' + buyOrdersInMatch[i].shares[0] + ' ' + buyOrdersInMatch[i].shares[1] + ' >> ../../MP-SPDZ/Player-Data/Input-P' + committeeNumber + '-0', async function (error, stdout, stderr) {
+              if(error){
+                console.error('error: ' + error);
+              }
+            });   
+          }      
         }
         // for sell orders
         for (let i = 0; i < sellOrdersInMatch.length; i++){
