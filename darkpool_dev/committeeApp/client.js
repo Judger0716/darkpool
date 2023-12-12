@@ -34,9 +34,15 @@ var committeeNumber;  // sequence of committee's member
 var committeeMembers = new Map();
 var combiningOrders = new Map();
 let lastSet = new Set(), peerList = new Map();
+// 20220719
 let lastPrice = new Map(
   [['Bitcoin', 0],
-  ['Dogecoin', 0]]
+  ['Dogecoin', 0],
+  ['Ethereum', 0],
+  ['Litecoin', 0],
+  ['Cardano', 0],
+  ['Decred', 0],
+  ['Cosmos', 0]]
 );
 
 let currentState = PREPARING, currentVersion = undefined;
@@ -51,15 +57,28 @@ let currentState = PREPARING, currentVersion = undefined;
  * amount: amount (amount for matching).
  * time: create_time.seconds (timestamp).
  */
-var matchingPool = new Map(
-  [['Bitcoin', new Map([['buy', new Map()], ['sell', new Map()]])],
-  ['Dogecoin', new Map([['buy', new Map()], ['sell', new Map()]])]]
-);
 
-let resultPool = new Map(
-  [['Bitcoin', new Map()],
-  ['Dogecoin', new Map()]]
-);
+// 20220719
+var matchingPool = new Map([
+  ['Bitcoin', new Map([['buy', new Map()], ['sell', new Map()]])],
+  ['Dogecoin', new Map([['buy', new Map()], ['sell', new Map()]])],
+  ['Ethereum', new Map([['buy', new Map()], ['sell', new Map()]])],
+  ['Litecoin', new Map([['buy', new Map()], ['sell', new Map()]])],
+  ['Cardano', new Map([['buy', new Map()], ['sell', new Map()]])],
+  ['Cosmos', new Map([['buy', new Map()], ['sell', new Map()]])],
+  ['Decred', new Map([['buy', new Map()], ['sell', new Map()]])]
+]);
+
+let resultPool = new Map([
+  ['Bitcoin', new Map()],
+  ['Dogecoin', new Map()],
+  ['Ethereum', new Map()],
+  ['Litecoin', new Map()],
+  ['Cardano', new Map()],
+  ['Cosmos', new Map()],
+  ['Decred', new Map()]
+]);
+
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -231,6 +250,7 @@ async function combineOrders() {
         type: order_body.type,
         creator: order_body.creator,
         shares: recover_shares[username],
+        item: order_body.item, // 20220718
         // price: parseInt(order_body.price),
         amount: parseInt(order_body.amount),
         deal_amount: parseInt(order_body.deal_amount),
@@ -243,8 +263,9 @@ async function combineOrders() {
 }
 
 function formMatchResult(buyOrders, sellOrders, matchResult) {
-  let skip = "x509::/OU=client/OU=org2/OU=department1/CN=will::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server";
-  let price = matchResult.price;
+  let skip = "none";
+  // let skip = "x509::/OU=client/OU=org2/OU=department1/CN=will::/C=US/ST=North Carolina/O=Hyperledger/OU=Fabric/CN=fabric-ca-server";
+  let price = matchResult.deal_price; // 20220718
   let amount = matchResult.amount;
   let cmpResult = matchResult.cmpResult;
 
@@ -355,8 +376,8 @@ function formMatchResult(buyOrders, sellOrders, matchResult) {
 
   // format of itemResult
   let item_result = {
-    result: JSON.stringify(matchResult.price) + ":" + JSON.stringify(amount),
-    price: matchResult.price,
+    result: JSON.stringify(matchResult.deal_price) + ":" + JSON.stringify(amount), // 20220718
+    deal_price: matchResult.deal_price, // 20220718
     amount: amount,
     deal_orders: {
       buy: deal_buy_orders,
@@ -450,13 +471,13 @@ async function matchOrders() {
           let matchResult = match();
           // format of matchResult: {price: x, amount: y}
           console.log('matchResult: ',matchResult)
-          if (matchResult.price <= 0 || matchResult.amount <= 0) {
+          if (matchResult.deal_price <= 0 || matchResult.amount <= 0) { // 20220718
             console.log('both < 0, continue')
             continue;
           }
           // get matchResult and form it 
           let itemResult = formMatchResult(buyOrders, sellOrders, matchResult);
-          console.log('itemResult: ',itemResult);
+          // 20220718 console.log('itemResult: ',itemResult);
           if (itemResult) {
             // broadcast matchResult
             for (let [peerString, peerId] of peerList) {
@@ -507,7 +528,7 @@ async function matchOrders() {
             pool.set(str_result, {
               num: 1,
               item: item,
-              price: msg.content[item].price,
+              deal_price: msg.content[item].deal_price, // 20220718
               amount: msg.content[item].amount,
               content: [{ name: username, matchResult: msg.content[item] }]
             });
@@ -543,6 +564,7 @@ async function countOrders(times) {
 
     let sorted_result = Array.from(pool.values()).sort(function (a, b) { return parseInt(b.num) - parseInt(a.num); });
     let result_body = sorted_result[0];
+
     // Result got, send to Fabric
     if (count >= 3 || times >= 20) {
       if (result_body.num >= 3) {
@@ -638,7 +660,7 @@ async function orderEventHandler(event) {
       eventJson.buy = eventJson.buy.map((v) => { return v.order_id; })
       eventJson.sell = eventJson.sell.map((v) => { return v.order_id; })
 
-      eventJson.context.item = 'Gold';
+      // 20220718 eventJson.context.item = eventJson.buy[0].item; 
       console.log("OrderDeal: ", eventJson);
     } else {
       // console.log(matchingPool);
@@ -709,7 +731,7 @@ async function nodeEventHandler(stream) {
               pool.set(str_result, {
                 num: 1,
                 item: item,
-                price: message.content[item].price,
+                deal_price: message.content[item].deal_price, // 20220718
                 amount: message.content[item].amount,
                 content: [{ name: message.content.name, matchResult: message.content[item] }]
               });

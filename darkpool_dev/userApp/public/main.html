@@ -117,8 +117,14 @@
                             <!-- 顶部跳转按钮 -->
                             <ul class="pull-right header-list">
                                 <li><a href="/"><span class="glyphicon glyphicon-log-out"></span>退出登录</a></li>
-                                <li><a href=" /public/kline/basic.html"><span
-                                            class="glyphicon glyphicon glyphicon-stats"></span>查看行情</a></li>
+                                <!-- 20220718 -->
+                                <li><a href="/public/incentive.html"><span
+                                    class="glyphicon glyphicon-info-sign"></span>激励机制</a></li>
+                                <!-- 20220719 -->
+                                <li><a href="/public/data.html"><span
+                                    class="glyphicon glyphicon-stats"></span>数据展示</a></li>
+                                <!-- 20220719 <li><a href=" /public/kline/basic.html"><span
+                                            class="glyphicon glyphicon glyphicon-stats"></span>查看行情</a></li> -->
                                 <li><a href="/public/block_explorer.html"><span
                                             class="glyphicon glyphicon-globe"></span>区块浏览</a></li>
                                 <li><a href="#" onclick="return false"><span
@@ -127,26 +133,26 @@
                                         <li><a href="/public/tutorial.html">快速入门<img
                                                     src="/public/images/footer/tutorial.png"
                                                     style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
+                                        <!-- 20220718
                                         <li><a href="#">绑定银行卡<img src="/public/images/footer/card.png"
                                                     style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
                                         <li><a href="#">绑定微信<img src="/public/images/footer/wechat.png"
                                                     style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
                                         <li><a href="#">绑定支付宝<img src="/public/images/footer/alipay.png"
                                                     style="height: 18px; width: 18px; margin-left: 10px;"></a></li>
-                                        <li><a href="#">账户充值</a></li>
+                                        <li><a href="#">账户充值</a></li> -->
                                         <li>
                                             <a href="#" @click="get_userinfo()" onclick="return false">查看余额信息</a>
                                             <!-- 查看个人信息 -->
                                             <el-dialog title="余额信息" :visible.sync="infoFormVisible" width="50%"
                                                 :append-to-body="true">
                                                 <el-table :data="userinfo" stripe style="width: 100%">
-                                                    <!-- <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column> -->
-                                                    <el-table-column prop="balance" label="总额度" width="180">
-                                                    </el-table-column>
-                                                    <el-table-column prop="freeze" label="已冻结额度" width="180">
-                                                    </el-table-column>
+                                                    <!-- 20220718 -->
+                                                    <el-table-column prop="symbol" label="代币名称" width="180"></el-table-column>
+                                                    <el-table-column prop="balance" label="总额度" width="180"></el-table-column>
+                                                    <el-table-column prop="freeze" label="已冻结额度" width="180"></el-table-column>
                                                     <el-table-column prop="available" label="可用额度"></el-table-column>
-                                                    <el-table-column prop="credit" label="信誉积分"></el-table-column>
+                                                    <!-- 20220718 <el-table-column prop="credit" label="信誉积分"></el-table-column> -->
                                                 </el-table>
                                                 <div slot="footer" class="dialog-footer" style="margin-top: 15px;">
                                                     <el-button type="primary" @click="infoFormVisible = false">确 定
@@ -335,82 +341,96 @@
                         <div id="token"
                             class="cryptocurrency-slide custom-nav owl-carousel owl-theme boxshadow wow fadeInUp"
                             data-wow-duration="0.3s" data-wow-delay="0.2s">
+                            <!-- 20220718 Front -->
                             <div class="currency-price pr">
                                 <div class="image">
-                                    <img src="/public/images/icon/gold.png" alt="">
+                                    <img src="/public/images/icon/btc.png" alt="">
                                 </div>
                                 <div class="text-content">
-                                    <h4><a href="">Gold</a></h4>
-                                    <p class="dolar">{[priceList['Gold'].price]}</p>
-                                    <p v-if="priceList['Gold'].isup==true" class="price-up">
-                                        <span>%{[priceList['Gold'].rate]}</span>
+                                    <h4><a href="">BTC</a></h4>
+                                    <p class="dolar">{[priceList['btc'].price]}</p>
+                                    <p v-if="priceList['btc'].isup==true" class="price-up">
+                                        <span>%{[priceList['btc'].rate]}</span>
                                     </p>
-                                    <p v-else class="price-down"><span>%{[priceList['Gold'].rate]}</span></p>
+                                    <p v-else class="price-down"><span>{[priceList['btc'].rate]}%</span></p>
                                 </div>
                             </div>
                             <div class="currency-price pr">
                                 <div class="image">
-                                    <img src="/public/images/icon/sliver.png" alt="">
+                                    <img src="/public/images/icon/eth.png" alt="">
                                 </div>
                                 <div class="text-content">
-                                    <h4><a href="">Sliver</a></h4>
-                                    <p class="dolar">{[priceList['Sliver'].price]}</p>
-                                    <p v-if="priceList['Sliver'].isup==true" class="price-up">
-                                        <span>%{[priceList['Sliver'].rate]}</span>
+                                    <h4><a href="">ETH</a></h4>
+                                    <p class="dolar">{[priceList['eth'].price]}</p>
+                                    <p v-if="priceList['eth'].isup==true" class="price-up">
+                                        <span>%{[priceList['eth'].rate]}</span>
                                     </p>
-                                    <p v-else class="price-down"><span>%{[priceList['Sliver'].rate]}</span></p>
+                                    <p v-else class="price-down"><span>{[priceList['eth'].rate]}%</span></p>
                                 </div>
                             </div>
                             <div class="currency-price pr">
                                 <div class="image">
-                                    <img src="/public/images/icon/iron.png" alt="">
+                                    <img src="/public/images/icon/ltc.png" alt="">
                                 </div>
                                 <div class="text-content">
-                                    <h4><a href="">Iron</a></h4>
-                                    <p class="dolar">{[priceList['Iron'].price]}</p>
-                                    <p v-if="priceList['Iron'].isup==true" class="price-up">
-                                        <span>%{[priceList['Iron'].rate]}</span>
+                                    <h4><a href="">LTC</a></h4>
+                                    <p class="dolar">{[priceList['ltc'].price]}</p>
+                                    <p v-if="priceList['ltc'].isup==true" class="price-up">
+                                        <span>%{[priceList['ltc'].rate]}</span>
                                     </p>
-                                    <p v-else class="price-down"><span>%{[priceList['Iron'].rate]}</span></p>
+                                    <p v-else class="price-down"><span>{[priceList['ltc'].rate]}%</span></p>
                                 </div>
                             </div>
                             <div class="currency-price pr">
                                 <div class="image">
-                                    <img src="/public/images/icon/oil.png" alt="">
+                                    <img src="/public/images/icon/doge.png" alt="">
                                 </div>
                                 <div class="text-content">
-                                    <h4><a href="">Oil</a></h4>
-                                    <p class="dolar">{[priceList['Oil'].price]}</p>
-                                    <p v-if="priceList['Oil'].isup==true" class="price-up">
-                                        <span>%{[priceList['Oil'].rate]}</span>
+                                    <h4><a href="">DOGE</a></h4>
+                                    <p class="dolar">{[priceList['doge'].price]}</p>
+                                    <p v-if="priceList['doge'].isup==true" class="price-up">
+                                        <span>%{[priceList['doge'].rate]}</span>
                                     </p>
-                                    <p v-else class="price-down"><span>%{[priceList['Oil'].rate]}</span></p>
+                                    <p v-else class="price-down"><span>{[priceList['doge'].rate]}%</span></p>
                                 </div>
                             </div>
                             <div class="currency-price pr">
                                 <div class="image">
-                                    <img src="/public/images/icon/carbon.png" alt="">
+                                    <img src="/public/images/icon/ada.png" alt="">
                                 </div>
                                 <div class="text-content">
-                                    <h4><a href="">Carbon</a></h4>
-                                    <p class="dolar">{[priceList['Carbon'].price]}</p>
-                                    <p v-if="priceList['Carbon'].isup==true" class="price-up">
-                                        <span>%{[priceList['Carbon'].rate]}</span>
+                                    <h4><a href="">ADA</a></h4>
+                                    <p class="dolar">{[priceList['ada'].price]}</p>
+                                    <p v-if="priceList['ada'].isup==true" class="price-up">
+                                        <span>%{[priceList['ada'].rate]}</span>
                                     </p>
-                                    <p v-else class="price-down"><span>%{[priceList['Carbon'].rate]}</span></p>
+                                    <p v-else class="price-down"><span>{[priceList['ada'].rate]}%</span></p>
                                 </div>
                             </div>
                             <div class="currency-price pr">
                                 <div class="image">
-                                    <img src="/public/images/icon/moutai.png" alt="">
+                                    <img src="/public/images/icon/atom.png" alt="">
                                 </div>
                                 <div class="text-content">
-                                    <h4><a href="">Moutai</a></h4>
-                                    <p class="dolar">{[priceList['Moutai'].price]}</p>
-                                    <p v-if="priceList['Moutai'].isup==true" class="price-up">
-                                        <span>%{[priceList['Moutai'].rate]}</span>
+                                    <h4><a href="">ATOM</a></h4>
+                                    <p class="dolar">{[priceList['atom'].price]}</p>
+                                    <p v-if="priceList['atom'].isup==true" class="price-up">
+                                        <span>%{[priceList['atom'].rate]}</span>
                                     </p>
-                                    <p v-else class="price-down"><span>%{[priceList['Moutai'].rate]}</span></p>
+                                    <p v-else class="price-down"><span>{[priceList['atom'].rate]}%</span></p>
+                                </div>
+                            </div>
+                            <div class="currency-price pr">
+                                <div class="image">
+                                    <img src="/public/images/icon/dcr.png" alt="">
+                                </div>
+                                <div class="text-content">
+                                    <h4><a href="">DCR</a></h4>
+                                    <p class="dolar">{[priceList['dcr'].price]}</p>
+                                    <p v-if="priceList['dcr'].isup==true" class="price-up">
+                                        <span>%{[priceList['dcr'].rate]}</span>
+                                    </p>
+                                    <p v-else class="price-down"><span>{[priceList['dcr'].rate]}%</span></p>
                                 </div>
                             </div>
                         </div>
@@ -508,9 +528,10 @@
                         <el-table :data="order_list.slice((currentOrderPage-1)*pageSize,currentOrderPage*pageSize)"
                             style="width: 100%">
                             <el-table-column prop="order_id" label="订单编号"></el-table-column>
-                            <el-table-column prop="creator" label="创建者"
-                                :filters="[{text: '仅显示自己的订单', value: 'only_mine'}]" :filter-method="filterHandler">
-                            </el-table-column>
+                            <!-- 20220719 -->
+                            <el-table-column prop="creator" label="创建者" v-if="false"></el-table-column>
+                            <el-table-column prop="creator_addr" label="创建者" min-width="280" 
+                            :show-overflow-tooltip="true" :filters="[{text: '仅显示自己的订单', value: 'only_mine'}]" :filter-method="filterHandler"></el-table-column>
                             <el-table-column prop="create_time" label="创建时间"></el-table-column>
                             <el-table-column prop="type" label="订单类型"></el-table-column>
                             <el-table-column prop="item" label="交易物品"></el-table-column>
@@ -543,8 +564,8 @@
                                 </template>
                             </el-table-column>
                             <el-table-column prop="deal" label="是否成交"></el-table-column>
-                            <el-table-column prop="deal_price" label="成交价格"></el-table-column>
-                            <el-table-column prop="deal_time" label="成交时间"></el-table-column>
+                            <!-- 20220719 <el-table-column prop="deal_price" label="成交价格"></el-table-column> -->
+                            <el-table-column prop="deal_time" label="最近成交时间"></el-table-column>
                         </el-table>
                         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange_order"
                             :current-page="currentOrderPage" :page-sizes="[10, 20, 30, 50, 100]" :page-size="pageSize"
@@ -610,20 +631,34 @@
                     <el-table
                         :data="dealed_order_list.slice((currentDealedOrderPage-1)*pageSize,currentDealedOrderPage*pageSize)"
                         style="width: 100%">
-                        <el-table-column label="成交序号" prop="deal_id" width="50"></el-table-column>
+                        <el-table-column label="成交序号" prop="deal_id" width="100"></el-table-column>
                         <el-table-column label="成交物品" prop="buy_order[0].item" width="100"></el-table-column>
-                        <el-table-column label="成交价格" prop="deal_price" width="50"></el-table-column>
-                        <el-table-column label="成交时间" prop="deal_time" width="200"></el-table-column>
+                        <el-table-column label="成交价格" prop="deal_price" width="100"></el-table-column>
+                        <el-table-column label="成交时间" prop="deal_time" width="100"></el-table-column>
                         <el-table-column label="买单信息" width="150">
                             <template slot-scope="scope">
-                                <el-popover placement="top" width="600" trigger="click">
+                                <el-popover placement="top" width="1000" trigger="click">
                                     <el-table :data="scope.row.buy_order" stripe style="width: 100%">
                                         <el-table-column prop="order_id" label="订单序号" width="50"></el-table-column>
+                                        <!-- 20220719 
                                         <el-table-column prop="creator" label="买家" width="100"></el-table-column>
+                                        -->
+                                        <el-table-column prop="creator_addr" label="买家" width="100" min-width="100" :show-overflow-tooltip="true"></el-table-column>
                                         <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
                                         <el-table-column prop="amount" label="交易数量" width="100"></el-table-column>
+                                        <el-table-column prop="price" label="订单报价" width="100"></el-table-column>
+                                        <!-- 展示shares 20220719 -->
+                                        <el-table-column align="center" label="解密碎片">
+                                            <template slot-scope="sh">
+                                                <el-table :data="sh.row.shares">
+                                                    <el-table-column align="center" prop="name" label="用户名" width="80%"></el-table-column>
+                                                    <el-table-column align="center" prop="seq" label="序号" width="60%"></el-table-column>
+                                                    <el-table-column align="center" prop="data" label="内容" min-width="50" show-overflow-tooltip></el-table-column>
+                                                </el-table>
+                                            </template>
+                                        </el-table-column>
                                         <el-table-column prop="deal_amount" label="已成交数量" width="100"></el-table-column>
-                                        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+                                        <el-table-column prop="create_time" label="创建时间" width="100"></el-table-column>
                                     </el-table>
                                     <el-button slot="reference">点击查看</el-button>
                                 </el-popover>
@@ -631,26 +666,41 @@
                         </el-table-column>
                         <el-table-column label="卖单信息" width="150">
                             <template slot-scope="scope">
-                                <el-popover placement="top" width="600" trigger="click">
+                                <el-popover placement="top" width="1000" trigger="click">
                                     <el-table :data="scope.row.sell_order" stripe style="width: 100%">
                                         <el-table-column prop="order_id" label="订单序号" width="50"></el-table-column>
+                                        <!-- 20220719 
                                         <el-table-column prop="creator" label="买家" width="100"></el-table-column>
+                                        -->
+                                        <el-table-column prop="creator_addr" label="卖家" width="100" min-width="100" :show-overflow-tooltip="true"></el-table-column>
                                         <el-table-column prop="item" label="交易物品" width="100"></el-table-column>
                                         <el-table-column prop="amount" label="交易数量" width="100"></el-table-column>
+                                        <el-table-column prop="price" label="订单报价" width="100"></el-table-column>
+                                        <!-- 展示shares 20220719 -->
+                                        <el-table-column align="center" label="解密碎片">
+                                            <template slot-scope="sh">
+                                                <el-table :data="sh.row.shares">
+                                                    <el-table-column align="center" prop="name" label="用户名" width="80%"></el-table-column>
+                                                    <el-table-column align="center" prop="seq" label="序号" width="60%"></el-table-column>
+                                                    <el-table-column align="center" prop="data" label="内容" min-width="50" show-overflow-tooltip></el-table-column>
+                                                </el-table>
+                                            </template>
+                                        </el-table-column>
                                         <el-table-column prop="deal_amount" label="已成交数量" width="100"></el-table-column>
-                                        <el-table-column prop="create_time" label="创建时间"></el-table-column>
+                                        <el-table-column prop="create_time" label="创建时间" width="100"></el-table-column>
                                     </el-table>
                                     <el-button slot="reference">点击查看</el-button>
                                 </el-popover>
                             </template>
                         </el-table-column>
-                        <el-table-column label="相关委员" width="150">
+                        <el-table-column label="相关委员">
                             <template slot-scope="props">
                                 <div v-for="comm in props.row.related_comm" style="display:inline">
                                     {[ comm ]}
                                 </div>
                             </template>
                         </el-table-column>
+                        <el-table-column prop="fee" label="交易费" width="100"></el-table-column>
                         <el-table-column label="举报" width="150">
                             <template slot-scope="props">
                                 <el-button type="danger" @click="props.row.report_visible = true">点击举报</el-button>
@@ -866,44 +916,43 @@
             el: "#darkpool",
             delimiters: ["{[", "]}"],
             data: {
-                tokenList: ['Gold', 'Sliver', 'Iron', 'Oil', 'Carbon', 'Moutai'],
+                tokenList: ['btc','eth','ltc','doge','ada','atom','dcr'], // 20220719 Front
                 priceList: {
-                    'Gold': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: true,
-                        rate: Math.random().toFixed(2),
+                    'btc': {
+                        price: 22290, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 2.16,  // 涨跌幅
                     },
-                    'Sliver': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: false,
-                        rate: Math.random().toFixed(2),
+                    'eth': {
+                        price: 1456.44, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 1.38,  // 涨跌幅
                     },
-                    'Iron': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: true,
-                        rate: Math.random().toFixed(2),
+                    'ltc': {
+                        price: 58.53, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 0.01,  // 涨跌幅
                     },
-                    'Oil': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: false,
-                        rate: Math.random().toFixed(2),
+                    'doge': {
+                        price: 0.06, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 0.47,  // 涨跌幅
                     },
-                    'Carbon': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: true,
-                        rate: Math.random().toFixed(2),
+                    'ada': {
+                        price: 0.47, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 0.79,  // 涨跌幅
                     },
-                    'Moutai': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: true,
-                        rate: Math.random().toFixed(2),
+                    'atom':{
+                        price: 9.53, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 1.63,  // 涨跌幅
                     },
+                    'dcr':{
+                        price: 24.73, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 0.05,  // 涨跌幅
+                    }
                 },
 
                 userinfo: [], // 当前用户信息
@@ -963,12 +1012,28 @@
                 }],
 
                 // 币种选择-创建订单
+                // 20220718
                 itemoptions_order: [{
                     'value': 'Bitcoin',
-                    'label': 'Gold',
+                    'label': 'BTC',
                 }, {
                     'value': 'Dogecoin',
-                    'label': 'Carbon',
+                    'label': 'DOGE',
+                }, {
+                    'value': 'Ethereum',
+                    'label': 'ETH',
+                }, {
+                    'value': 'Litecoin',
+                    'label': 'LTC',
+                }, {
+                    'value': 'Cardano',
+                    'label': 'ADA',
+                }, {
+                    'value': 'Cosmos',
+                    'label': 'ATOM',
+                },{
+                    'value': 'Decred',
+                    'label': 'DCR',
                 }],
 
                 // 控制参数
@@ -1115,8 +1180,7 @@
                 },
                 // 订单显示过滤器，按用户名
                 filterHandler(value, row, column) {
-                    const property = column['property'];
-                    return row[property] === this.username;
+                    return row['creator'] === this.username;
                 },
                 // 查询订单信息
                 get_order() {
@@ -1124,6 +1188,7 @@
                         'username': this.username,
                     }).then(Response => {
                         this.order_list = Response['data']['OrderList']
+                        this.order_list.reverse()
                     })
                 },
                 // 查询匹配交易信息
@@ -1261,19 +1326,13 @@
                 }
             },
             created: function () {
-                this.get_transfer();
+                // this.get_transfer();
                 this.get_order();
                 this.get_dealed_order();
                 this.query_committee();
+                
                 var that = this;
-                // setInterval不会清除定时器队列，每重复执行1次都会导致定时器叠加 \
-                window.setInterval(() => {
-                    // setTimeout是自带清除定时器
-                    setTimeout(function () {
-                        for (var index = 0; index < that.tokenList.length; index++) {
-                            that.priceList[that.tokenList[index]].oldprice = that.priceList[that.tokenList[index]].price;
-                        }
-                        axios.post('/update_priceList', {
+                axios.post('/update_priceList', {
                             'priceList': that.priceList,
                         }).then(function (res) {
                             var data = res.data;
@@ -1281,7 +1340,19 @@
                         }).catch(function (err) {
                             console.log("=err====" + err);
                         })
-                    }, 600)
+                // setInterval不会清除定时器队列，每重复执行1次都会导致定时器叠加 \
+                window.setInterval(() => {
+                    // setTimeout是自带清除定时器
+                    setTimeout(function () {
+                        axios.post('/update_priceList', {
+                            'priceList': that.priceList,
+                        }).then(function (res) {
+                            var data = res.data;
+                            that.priceList = data['priceList'];
+                        }).catch(function (err) {
+                            console.log("=err====" + err);
+                        });
+                    }, 5000)
                 }, 5000)
                 this.updateConsole();
             }

@@ -82,6 +82,7 @@ class Order extends Contract {
 
     const oid = await this.IncreaseAndGetOrderID(ctx, orderIDKey);
     const creator = await ctx.clientIdentity.getID().toString();
+    const creator_addr = await ctx.clientIdentity.getAttributeValue("pubKey").toString();
     const orderCompositeKey = await ctx.stub.createCompositeKey(orderKey, [matchingOrderKey, oid]);
     // parse the shares
     const json_shares = JSON.parse(shares);
@@ -90,6 +91,7 @@ class Order extends Contract {
       order_id: oid,
       create_time: ctx.stub.getTxTimestamp(),
       creator: creator,
+      creator_addr: creator_addr,
       type: type,
       item: itemname,
       amount: parseInt(amount),

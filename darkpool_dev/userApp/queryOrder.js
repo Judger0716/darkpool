@@ -47,7 +47,7 @@ function transfer_order(json_order) {
         date.setTime(parseInt(json_order['deal_time']['seconds']) * 1000);
         json_order['deal_time'] = date.toLocaleString();
     }
-    json_order['item'] = transfer_item(json_order['item']);
+    // 20220718 json_order['item'] = transfer_item(json_order['item']);
     // deal_time = date.toUTCString();
     json_order['shares'] = transfer_shares(json_order['shares']);
     json_order['deal'] = json_order['deal'].toString();

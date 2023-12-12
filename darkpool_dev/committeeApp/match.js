@@ -10,9 +10,9 @@ function match(){
   for(let i = 2; i < spdz_result.length; i++){
     comparision[i-2] = parseInt(spdz_result[i]);
   }
-  console.log(deal_price,max_execution,comparision);
+  // console.log(deal_price,max_execution,comparision); 20220718
   return {
-    price: deal_price,
+    deal_price: deal_price,
     amount: max_execution,
     cmpResult: comparision
   }

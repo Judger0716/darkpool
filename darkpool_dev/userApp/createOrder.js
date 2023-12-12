@@ -5,7 +5,8 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
-const tokenlist = ['Bitcoin', 'Dogecoin', 'Tether'];
+const tokenlist = ['Bitcoin','Dogecoin','Tether','Ethereum','Cardano','Litecoin','Cosmos','Decred']; // 20220719, consist with index.js
+// const tokenlist = ['Bitcoin', 'Dogecoin', 'Tether'];
 
 // Main program function
 exports.createOrder = async function (username, type, amount, itemname, shares) {

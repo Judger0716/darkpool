@@ -46,7 +46,7 @@ function transfer_order(json_order) {
     json_order['create_time'] = date.toLocaleString();
     date.setTime(parseInt(json_order['deal_time']['seconds']) * 1000);
     json_order['deal_time'] = date.toLocaleString();
-    json_order['item'] = transfer_item(json_order['item']);
+    // json_order['item'] = transfer_item(json_order['item']); 20220718
     json_order['deal'] = json_order['deal'].toString();
     json_order['shares'] = transfer_shares(json_order['shares']);
     json_order['share_info_visible'] = false;
@@ -115,7 +115,7 @@ exports.queryDealedOrder = async function (username) {
             for (let c of record['context']['content']) {
                 related_comm.push(c.name);
             }
-            let deal_price = record['context']['content'][0]['matchResult']['price']
+            let deal_price = record['context']['content'][0]['matchResult']['deal_price'] // 20220718
 
             let buy_orders = [], sell_orders = [];
             for (let order of record['buy']) {

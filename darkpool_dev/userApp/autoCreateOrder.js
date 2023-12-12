@@ -18,14 +18,10 @@ async function createOrder() {
   // = req.body.type;
   let amount = Math.round(Math.random() * 10000);
   let price = Math.round(Math.random() * 50);
-  let item;
 
-  if (Math.random() > 0.5) {
-    item = 'Bitcoin';
-  } else {
-    item = 'Bitcoin';
-  }
-
+  let tokenlist = ['Bitcoin','Dogecoin','Ethereum','Cardano','Litecoin','Cosmos','Decred'];
+  let item = tokenlist[Math.ceil(Math.random() * 6)];
+  
   let json_shares = {};
   // Get committees' PubKey
   let PubKeys = await QueryCommittee.queryCommittee(username);
@@ -64,7 +60,7 @@ async function createOrder() {
 
 async function main() {
   await createOrder();
-  setTimeout(main, 2000);
+  setTimeout(main, 5000);
 }
 
 main();

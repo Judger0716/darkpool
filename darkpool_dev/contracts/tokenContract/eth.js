@@ -6,20 +6,20 @@ SPDX-License-Identifier: Apache-2.0
 
 const tokenERC20Contract = require('./tokenERC20.js');
 
-class Token extends tokenERC20Contract {
+class Ethereum extends tokenERC20Contract {
   constructor() {
     // Unique namespace when multiple contracts per chaincode file
-    super('Tether', 'Tether', '6');
+    super('Ethereum', 'ETH', '6');
   }
   /**
-   * Return the name of the token - e.g. "MyToken".
-   * The original function name is `name` in ERC20 specification.
-   * However, 'name' conflicts with a parameter `name` in `Contract` class.
-   * As a work around, we use `TokenName` as an alternative function name.
-   *
-   * @param {Context} ctx the transaction context
-   * @returns {String} Returns the name of the token
-  */
+ * Return the name of the token - e.g. "MyToken".
+ * The original function name is `name` in ERC20 specification.
+ * However, 'name' conflicts with a parameter `name` in `Contract` class.
+ * As a work around, we use `TokenName` as an alternative function name.
+ *
+ * @param {Context} ctx the transaction context
+ * @returns {String} Returns the name of the token
+*/
   async TokenName(ctx) {
     return super.TokenName(ctx);
   }
@@ -195,4 +195,4 @@ class Token extends tokenERC20Contract {
   }
 }
 
-module.exports = Token;
+module.exports = Ethereum;

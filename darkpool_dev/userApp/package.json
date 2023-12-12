@@ -13,6 +13,7 @@
     "@grpc/grpc-js": "^1.5.5",
     "body-parser": "latest",
     "cookie-parser": "latest",
+    "echarts": "^5.3.3",
     "ejs": "^3.1.6",
     "express": "latest",
     "fabric-ca-client": "^2.2.6",
@@ -21,6 +22,7 @@
     "jsrsasign": "latest",
     "multer": "latest",
     "node-pty": "^0.10.1",
+    "request": "^2.88.2",
     "shamirs-secret-sharing": "^1.0.1"
   },
   "devDependencies": {

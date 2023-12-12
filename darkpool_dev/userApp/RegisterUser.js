@@ -25,7 +25,7 @@ exports.RegUser = async function(username) {
         // Create a new file system based wallet for managing identities.
         const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
+        // console.log(`Wallet path: ${walletPath}`);
     
         // Check to see if we've already enrolled the user.
         const userIdentity = await wallet.get(username);
@@ -49,12 +49,12 @@ exports.RegUser = async function(username) {
         // 生产密钥对
         var date1 = new Date().getTime()
         var rsaKeypair = jsrsasign.KEYUTIL.generateKeypair("RSA", 512);
-        console.log(new Date().getTime() - date1) //314
+    //     console.log(new Date().getTime() - date1) //314
         // 密钥对象获取pem格式的密钥
         var pub = jsrsasign.KEYUTIL.getPEM(rsaKeypair.pubKeyObj);
         var prv = jsrsasign.KEYUTIL.getPEM(rsaKeypair.prvKeyObj, 'PKCS8PRV');
-        console.log("pub:",pub)
-        console.log("prv:",prv)
+      //   console.log("pub:",pub)
+    //     console.log("prv:",prv)
         // 保存私钥至本地
         const prvKeyPath = path.resolve(walletPath + '/' + username + '.prvKey')
         fs.writeFileSync(prvKeyPath,prv)
@@ -83,8 +83,8 @@ exports.RegUser = async function(username) {
           type: 'X.509',
         };
         await wallet.put(username, x509Identity);
-        console.log('Successfully registered and enrolled admin user "' + username + '" and imported it into the wallet');
-        return 'REG_SUC';
+        // console.log('Successfully registered and enrolled admin user "' + username + '" and imported it into the wallet');
+        return pub;
     
     } catch (error) {
         console.error(`Failed to register user "${username}": ${error}`);

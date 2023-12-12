@@ -98,10 +98,16 @@
                         <!-- 顶部跳转按钮 -->
                         <ul class="pull-right header-list">
                             <li><a href="/"><span class="glyphicon glyphicon-home"></span>首页</a></li>
-                            <li><a href="/public/kline/basic.html"><span
+                            <!-- 20220718 -->
+                            <li><a href="/public/incentive.html"><span
+                                class="glyphicon glyphicon-info-sign"></span>激励机制</a></li>
+                            <!-- 20220719 -->
+                            <li><a href="/public/data.html"><span
+                                class="glyphicon glyphicon-stats"></span>数据展示</a></li>
+                            <!-- 20220719 <li><a href="/public/kline/basic.html"><span
                                         class="glyphicon glyphicon glyphicon-stats"></span>查看行情</a></li>
                             <li><a href="/public/tutorial.html"><span
-                                        class="glyphicon glyphicon-info-sign"></span>快速入门</a></li>
+                                        class="glyphicon glyphicon-info-sign"></span>快速入门</a></li> -->
                             <li><a href="/public/block_explorer.html"><span
                                         class="glyphicon glyphicon-globe"></span>区块浏览</a></li>
                             <li><a href="/public/login.html"><span class="glyphicon glyphicon-log-in"></span>登录/注册</a>
@@ -258,82 +264,96 @@
                     <div id="token"
                         class="cryptocurrency-slide custom-nav owl-carousel owl-theme boxshadow wow fadeInUp"
                         data-wow-duration="0.3s" data-wow-delay="0.2s">
+                        <!-- 20220718 Front -->
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="/public/images/icon/gold.png" alt="">
+                                <img src="/public/images/icon/btc.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Gold</a></h4>
-                                <p class="dolar">{[priceList['Gold'].price]}</p>
-                                <p v-if="priceList['Gold'].isup==true" class="price-up">
-                                    <span>%{[priceList['Gold'].rate]}</span>
+                                <h4><a href="">BTC</a></h4>
+                                <p class="dolar">{[priceList['btc'].price]}</p>
+                                <p v-if="priceList['btc'].isup==true" class="price-up">
+                                    <span>%{[priceList['btc'].rate]}</span>
                                 </p>
-                                <p v-else class="price-down"><span>%{[priceList['Gold'].rate]}</span></p>
+                                <p v-else class="price-down"><span>{[priceList['btc'].rate]}%</span></p>
                             </div>
                         </div>
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="/public/images/icon/sliver.png" alt="">
+                                <img src="/public/images/icon/eth.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Sliver</a></h4>
-                                <p class="dolar">{[priceList['Sliver'].price]}</p>
-                                <p v-if="priceList['Sliver'].isup==true" class="price-up">
-                                    <span>%{[priceList['Sliver'].rate]}</span>
+                                <h4><a href="">ETH</a></h4>
+                                <p class="dolar">{[priceList['eth'].price]}</p>
+                                <p v-if="priceList['eth'].isup==true" class="price-up">
+                                    <span>%{[priceList['eth'].rate]}</span>
                                 </p>
-                                <p v-else class="price-down"><span>%{[priceList['Sliver'].rate]}</span></p>
+                                <p v-else class="price-down"><span>{[priceList['eth'].rate]}%</span></p>
                             </div>
                         </div>
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="/public/images/icon/iron.png" alt="">
+                                <img src="/public/images/icon/ltc.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Iron</a></h4>
-                                <p class="dolar">{[priceList['Iron'].price]}</p>
-                                <p v-if="priceList['Iron'].isup==true" class="price-up">
-                                    <span>%{[priceList['Iron'].rate]}</span>
+                                <h4><a href="">LTC</a></h4>
+                                <p class="dolar">{[priceList['ltc'].price]}</p>
+                                <p v-if="priceList['ltc'].isup==true" class="price-up">
+                                    <span>%{[priceList['ltc'].rate]}</span>
                                 </p>
-                                <p v-else class="price-down"><span>%{[priceList['Iron'].rate]}</span></p>
+                                <p v-else class="price-down"><span>{[priceList['ltc'].rate]}%</span></p>
                             </div>
                         </div>
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="/public/images/icon/oil.png" alt="">
+                                <img src="/public/images/icon/doge.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Oil</a></h4>
-                                <p class="dolar">{[priceList['Oil'].price]}</p>
-                                <p v-if="priceList['Oil'].isup==true" class="price-up">
-                                    <span>%{[priceList['Oil'].rate]}</span>
+                                <h4><a href="">DOGE</a></h4>
+                                <p class="dolar">{[priceList['doge'].price]}</p>
+                                <p v-if="priceList['doge'].isup==true" class="price-up">
+                                    <span>%{[priceList['doge'].rate]}</span>
                                 </p>
-                                <p v-else class="price-down"><span>%{[priceList['Oil'].rate]}</span></p>
+                                <p v-else class="price-down"><span>{[priceList['doge'].rate]}%</span></p>
                             </div>
                         </div>
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="/public/images/icon/carbon.png" alt="">
+                                <img src="/public/images/icon/ada.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Carbon</a></h4>
-                                <p class="dolar">{[priceList['Carbon'].price]}</p>
-                                <p v-if="priceList['Carbon'].isup==true" class="price-up">
-                                    <span>%{[priceList['Carbon'].rate]}</span>
+                                <h4><a href="">ADA</a></h4>
+                                <p class="dolar">{[priceList['ada'].price]}</p>
+                                <p v-if="priceList['ada'].isup==true" class="price-up">
+                                    <span>%{[priceList['ada'].rate]}</span>
                                 </p>
-                                <p v-else class="price-down"><span>%{[priceList['Carbon'].rate]}</span></p>
+                                <p v-else class="price-down"><span>{[priceList['ada'].rate]}%</span></p>
                             </div>
                         </div>
                         <div class="currency-price pr">
                             <div class="image">
-                                <img src="/public/images/icon/moutai.png" alt="">
+                                <img src="/public/images/icon/atom.png" alt="">
                             </div>
                             <div class="text-content">
-                                <h4><a href="">Moutai</a></h4>
-                                <p class="dolar">{[priceList['Moutai'].price]}</p>
-                                <p v-if="priceList['Moutai'].isup==true" class="price-up">
-                                    <span>%{[priceList['Moutai'].rate]}</span>
+                                <h4><a href="">ATOM</a></h4>
+                                <p class="dolar">{[priceList['atom'].price]}</p>
+                                <p v-if="priceList['atom'].isup==true" class="price-up">
+                                    <span>%{[priceList['atom'].rate]}</span>
                                 </p>
-                                <p v-else class="price-down"><span>%{[priceList['Moutai'].rate]}</span></p>
+                                <p v-else class="price-down"><span>{[priceList['atom'].rate]}%</span></p>
+                            </div>
+                        </div>
+                        <div class="currency-price pr">
+                            <div class="image">
+                                <img src="/public/images/icon/dcr.png" alt="">
+                            </div>
+                            <div class="text-content">
+                                <h4><a href="">DCR</a></h4>
+                                <p class="dolar">{[priceList['dcr'].price]}</p>
+                                <p v-if="priceList['dcr'].isup==true" class="price-up">
+                                    <span>%{[priceList['dcr'].rate]}</span>
+                                </p>
+                                <p v-else class="price-down"><span>{[priceList['dcr'].rate]}%</span></p>
                             </div>
                         </div>
                     </div>
@@ -479,6 +499,7 @@
     <!--/#counter-->
 
     <!-- 实时查看行情 -->
+    <!-- 20220719 
     <section class="section-padding">
         <div class="container">
             <div class="row">
@@ -495,7 +516,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!--/.section-padding-->
 
     <div class="quote-section section-padding">
@@ -597,55 +618,60 @@
             el: "#token",
             delimiters: ["{[", "]}"],
             data: {
-                tokenList: ['Gold', 'Sliver', 'Iron', 'Oil', 'Carbon', 'Moutai'],
+                tokenList: ['btc','eth','ltc','doge','ada','atom','dcr'], // 20220719 Front
                 priceList: {
-                    'Gold': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: true,
-                        rate: Math.random().toFixed(2),
+                    'btc': {
+                        price: 22290, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 2.16,  // 涨跌幅
                     },
-                    'Sliver': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: false,
-                        rate: Math.random().toFixed(2),
+                    'eth': {
+                        price: 1456.44, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 1.38,  // 涨跌幅
                     },
-                    'Iron': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: true,
-                        rate: Math.random().toFixed(2),
+                    'ltc': {
+                        price: 58.53, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 0.01,  // 涨跌幅
                     },
-                    'Oil': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: false,
-                        rate: Math.random().toFixed(2),
+                    'doge': {
+                        price: 0.06, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 0.47,  // 涨跌幅
                     },
-                    'Carbon': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: true,
-                        rate: Math.random().toFixed(2),
+                    'ada': {
+                        price: 0.47, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 0.79,  // 涨跌幅
                     },
-                    'Moutai': {
-                        oldprice: (Math.random() * 10000).toFixed(2),
-                        price: (Math.random() * 10000).toFixed(2),
-                        isup: true,
-                        rate: Math.random().toFixed(2),
+                    'atom':{
+                        price: 9.53, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 1.63,  // 涨跌幅
                     },
+                    'dcr':{
+                        price: 24.73, // 兑换美元
+                        isup: true,  // 涨/跌
+                        rate: 0.05,  // 涨跌幅
+                    }
                 },
             },
             created: function () {
+                
                 var that = this;
+                axios.post('/update_priceList', {
+                            'priceList': that.priceList,
+                        }).then(function (res) {
+                            var data = res.data;
+                            that.priceList = data['priceList'];
+                        }).catch(function (err) {
+                            console.log("=err====" + err);
+                        })
                 // setInterval不会清除定时器队列，每重复执行1次都会导致定时器叠加 \
                 window.setInterval(() => {
                     // setTimeout是自带清除定时器
                     setTimeout(function () {
-                        for (var index = 0; index < that.tokenList.length; index++) {
-                            that.priceList[that.tokenList[index]].oldprice = that.priceList[that.tokenList[index]].price;
-                        }
                         axios.post('/update_priceList', {
                             'priceList': that.priceList,
                         }).then(function (res) {
@@ -655,7 +681,7 @@
                             .catch(function (err) {
                                 console.log("=err====" + err);
                             })
-                    }, 600)
+                    }, 5000)
                 }, 5000)
             },
         })

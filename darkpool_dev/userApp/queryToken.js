@@ -5,8 +5,8 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const { exit } = require('process');
-// const tokenlist = ['Bitcoin','Dogecoin','Tether'];
-const tokenlist = ['Tether'];
+const tokenlist = ['Bitcoin','Dogecoin','Tether','Ethereum','Cardano','Litecoin','Cosmos','Decred']; // 20220719, consist with index.js
+// const tokenlist = ['Tether'];
 
 // Main program function
 exports.QueryBalance = async function (username) {
@@ -81,7 +81,7 @@ exports.QueryBalance = async function (username) {
                 'balance': balance,
                 'freeze': freezedtoken,
                 'available': balance-freezedtoken,
-                'credit': '100'
+                // 20220718 'credit': '100'
             });
         }
 
